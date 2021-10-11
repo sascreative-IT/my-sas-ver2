@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Inventory;
 
 use App\Domains\Inventory\Actions\CreateInventoryStockIn;
 use App\Domains\Inventory\Actions\IncreaseAvailableQuantity;

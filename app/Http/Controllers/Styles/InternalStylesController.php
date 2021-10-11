@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Styles;
 
 use App\Domains\Styles\Actions\CreateStyle;
 use App\Domains\Styles\Dto\Style as StyleDto;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Styles\StyleStoreRequest;
 use App\Models\Factory;
 use App\Models\Style;

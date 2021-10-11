@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,17 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
+
+            $domain_path = base_path('routes/domains/');
+            $domain_routes = File::files($domain_path);
+            if (count($domain_routes) > 0) {
+                foreach ($domain_routes as $domain_route) {
+                    Route::middleware('web')
+                        ->namespace($this->namespace)
+                        ->group(base_path('routes/domains/') . $domain_route->getFilename());
+                }
+            }
+
         });
     }
 

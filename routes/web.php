@@ -3,11 +3,6 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CustomersController;
-use App\Http\Controllers\FactoryOrderController;
-use App\Http\Controllers\InternalStylesController;
-use App\Http\Controllers\InventoryAdjustmentController;
-use App\Http\Controllers\InventoryController;
-use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\SettingsColourController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SettingsFactoryController;
@@ -112,8 +107,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::put('/customers/addresses/{address}',[AddressController::class, 'update'])->name('customers.addresses.update');
     Route::delete('/customers/addresses/{address}', [AddressController::class, 'delete'])->name('customers.addresses.delete');
 
-    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
-    Route::get('/inventory/{materialInventory}/details', [InventoryController::class, 'show'])->name('inventory.show');
+
 
     Route::get('/suppliers', [SuppliersController::class, 'index'])->name('suppliers.index');
     Route::get('/suppliers/create', [SuppliersController::class, 'create'])->name('suppliers.create');
@@ -130,20 +124,4 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/suppliers/addresses', [SupplierAddressController::class, 'store'])->name('suppliers.addresses.store');
     Route::put('/suppliers/addresses/{address}',[SupplierAddressController::class, 'update'])->name('suppliers.addresses.update');
     Route::delete('/suppliers/addresses/{address}', [SupplierAddressController::class, 'delete'])->name('suppliers.addresses.delete');
-
-    Route::get('/invoices/create', [InvoicesController::class, 'create'])->name('invoices.create');
-    Route::post('/invoices', [InvoicesController::class, 'store'])->name('invoice.store');
-    Route::get('/invoices/{invoice}',[InvoicesController::class, 'show'])->name('invoices.show');
-
-    Route::post('/inventory/{inventory}/adjust', [InventoryAdjustmentController::class, 'store'])->name('inventory.adjust');
-
-    Route::get('/internal-styles/create', [InternalStylesController::class, 'create'])->name('style.internal.create');
-
-    Route::get('/factory', [FactoryOrderController::class, 'index'])->name('factory.orders.index');
-    Route::get('/factory/create', [FactoryOrderController::class, 'create'])->name('factory.orders.create');
-    Route::post('/factory/order', [FactoryOrderController::class, 'store'])->name('factory.orders.store');
-    Route::get('/factory/order/show', [FactoryOrderController::class, 'show'])->name('factory.orders.show');
-    Route::get('/internal-styles/edit/{style}', [InternalStylesController::class, 'edit'])->name('style.internal.edit');
-    Route::get('/internal-styles', [InternalStylesController::class, 'index'])->name('style.internal.index');
-    Route::post('/internal-styles', [InternalStylesController::class, 'store'])->name('style.internal.store');
 });
