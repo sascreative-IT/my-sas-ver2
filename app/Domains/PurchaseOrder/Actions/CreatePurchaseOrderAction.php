@@ -10,9 +10,7 @@ use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrder;
 
 class CreatePurchaseOrderAction
 {
-    public function execute(
-        PurchaseOrderData $purchaseOrderData
-    ): MaterialPurchaseOrder
+    public function execute(PurchaseOrderData $purchaseOrderData): MaterialPurchaseOrder
     {
         $materialPurchaseOrder = MaterialPurchaseOrder::create(
             [
@@ -21,7 +19,9 @@ class CreatePurchaseOrderAction
             ]
         );
 
-        (new CreatePurchaseOrderItemAction())->execute($purchaseOrderData->purchase_order_items, $materialPurchaseOrder);
+        (new CreatePurchaseOrderItemAction())
+            ->execute($purchaseOrderData->purchase_order_items, $materialPurchaseOrder);
+
         return $materialPurchaseOrder;
     }
 }
