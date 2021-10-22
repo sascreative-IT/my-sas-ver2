@@ -5,15 +5,18 @@ namespace Tests\Feature\Domains\PurchaseOrder\Dtos;
 use App\Domains\PurchaseOrder\Dtos\PurchaseOrderData;
 use App\Http\Requests\PurchaseOrder\StorePurchaseOrderRequest;
 use App\Models\Factory;
+use App\Models\MaterialVariation;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class PurchaseOrderDtoTest extends TestCase
 {
     use RefreshDatabase;
+    use WithFaker;
 
     public function test_store_purchase_order_request()
     {
@@ -25,7 +28,23 @@ class PurchaseOrderDtoTest extends TestCase
             'supplier_id' => $supplier->id,
             'factory_id' => $factory->id,
             'approved_by' => $user->id,
-            'approved_at' => now()
+            'approved_at' => now(),
+            'purchase_order_items' => [
+                [
+                    'material_variation_id' => MaterialVariation::factory()->create()->id,
+                    'quantity' => rand(1, 10),
+                    'unit' => 'm',
+                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'currency' => 'NZD'
+                ],
+                [
+                    'material_variation_id' => MaterialVariation::factory()->create()->id,
+                    'quantity' => rand(1, 10),
+                    'unit' => 'm',
+                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'currency' => 'NZD'
+                ]
+            ]
         ]));
 
         $this->assertInstanceOf(PurchaseOrderData::class, $dto);
@@ -38,7 +57,23 @@ class PurchaseOrderDtoTest extends TestCase
 
         $dto = PurchaseOrderData::fromRequest(new StorePurchaseOrderRequest([
             'supplier_id' => $supplier->id,
-            'factory_id' => $factory->id
+            'factory_id' => $factory->id,
+            'purchase_order_items' => [
+                [
+                    'material_variation_id' => MaterialVariation::factory()->create()->id,
+                    'quantity' => rand(1, 10),
+                    'unit' => 'm',
+                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'currency' => 'NZD'
+                ],
+                [
+                    'material_variation_id' => MaterialVariation::factory()->create()->id,
+                    'quantity' => rand(1, 10),
+                    'unit' => 'm',
+                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'currency' => 'NZD'
+                ]
+            ]
         ]));
 
         $this->assertInstanceOf(PurchaseOrderData::class, $dto);
@@ -54,7 +89,23 @@ class PurchaseOrderDtoTest extends TestCase
         PurchaseOrderData::fromRequest(new StorePurchaseOrderRequest([
             'factory_id' => $factory->id,
             'approved_by' => $user->id,
-            'approved_at' => now()
+            'approved_at' => now(),
+            'purchase_order_items' => [
+                [
+                    'material_variation_id' => MaterialVariation::factory()->create()->id,
+                    'quantity' => rand(1, 10),
+                    'unit' => 'm',
+                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'currency' => 'NZD'
+                ],
+                [
+                    'material_variation_id' => MaterialVariation::factory()->create()->id,
+                    'quantity' => rand(1, 10),
+                    'unit' => 'm',
+                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'currency' => 'NZD'
+                ]
+            ]
         ]));
     }
 
@@ -69,7 +120,23 @@ class PurchaseOrderDtoTest extends TestCase
             'supplier_id' => null,
             'factory_id' => $factory->id,
             'approved_by' => $user->id,
-            'approved_at' => now()
+            'approved_at' => now(),
+            'purchase_order_items' => [
+                [
+                    'material_variation_id' => MaterialVariation::factory()->create()->id,
+                    'quantity' => rand(1, 10),
+                    'unit' => 'm',
+                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'currency' => 'NZD'
+                ],
+                [
+                    'material_variation_id' => MaterialVariation::factory()->create()->id,
+                    'quantity' => rand(1, 10),
+                    'unit' => 'm',
+                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'currency' => 'NZD'
+                ]
+            ]
         ]));
     }
 }
