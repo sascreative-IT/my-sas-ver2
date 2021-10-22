@@ -14,7 +14,6 @@ class CreatePurchaseOrderAction
         PurchaseOrderData $purchaseOrderData
     ): MaterialPurchaseOrder
     {
-        dd($purchaseOrderData->supplier);
         $materialPurchaseOrder = MaterialPurchaseOrder::create(
             [
                 'supplier_id' => $purchaseOrderData->supplier->id,

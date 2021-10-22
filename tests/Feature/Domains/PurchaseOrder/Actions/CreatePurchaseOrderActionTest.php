@@ -50,8 +50,6 @@ class CreatePurchaseOrderActionTest extends TestCase
             ]
         ]));
 
-        dd($dto->supplier);
-
         $purchaseOrder = (new CreatePurchaseOrderAction())->execute($dto);
         $this->assertInstanceOf(MaterialPurchaseOrder::class, $purchaseOrder);
     }
