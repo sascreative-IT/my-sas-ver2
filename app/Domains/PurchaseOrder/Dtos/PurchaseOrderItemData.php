@@ -5,8 +5,9 @@ namespace App\Domains\PurchaseOrder\Dtos;
 
 use App\Models\MaterialVariation;
 use Illuminate\Foundation\Http\FormRequest;
+use Spatie\DataTransferObject\DataTransferObject;
 
-class PurchaseOrderItemData
+class PurchaseOrderItemData extends DataTransferObject
 {
     public MaterialVariation $material_variation;
     public float $quantity;
@@ -21,7 +22,7 @@ class PurchaseOrderItemData
             'quantity' => $request->input('quantity'),
             'unit' => $request->input('unit'),
             'price' => $request->input('price'),
-            'currency' => $request->input('currency')
+            'currency' => $request->input('currency') ?: config("mysas.default_currency")
         ]);
     }
 }
