@@ -30,18 +30,25 @@
                             label="Operations"
                             width="220">
                             <template #default="scope">
-                                <inertia-link class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150" v-if="scope.row.approved_at != null" :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
+                                <inertia-link
+                                    class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                    v-if="scope.row.status === 'App\\Domains\\PurchaseOrder\\State\\Approved'"
+                                    :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
                                     Create Invoice
                                 </inertia-link>
 
-                                <template v-if="scope.row.approved_at === null">
-                                    <inertia-link class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150" :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
+                                <template v-if="scope.row.status === 'App\\Domains\\PurchaseOrder\\State\\Pending'">
+                                    <button
+                                        class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                        @click="approve(scope.row.id)">
                                         Approve
-                                    </inertia-link>
+                                    </button>
 
-                                    <inertia-link class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150" :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
+                                    <button
+                                        class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                        @click="disApprove(scope.row.id)">
                                         Disapprove
-                                    </inertia-link>
+                                    </button>
                                 </template>
 
                             </template>
@@ -67,6 +74,17 @@ export default {
         purchase_orders: {
             required: true,
             type: Object
+        }
+    },
+    methods: {
+        approve(id) {
+            this.$inertia.form({})
+                .post(route('purchase.orders.approve', {materialPurchaseOrder: id}));
+        },
+
+        disApprove(id) {
+            this.$inertia.form({})
+                .post(route('purchase.orders.disapprove', {materialPurchaseOrder: id}));
         }
     }
 }

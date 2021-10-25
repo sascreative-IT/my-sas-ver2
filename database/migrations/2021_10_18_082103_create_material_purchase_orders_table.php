@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use \App\Domains\PurchaseOrder\State\MaterialPurchaseOrderState;
 
 class CreateMaterialPurchaseOrdersTable extends Migration
 {
@@ -11,6 +12,8 @@ class CreateMaterialPurchaseOrdersTable extends Migration
     {
         Schema::create('material_purchase_orders', function (Blueprint $table) {
             $table->id();
+            $table->string('status')
+                ->default("App\\\Domains\\\PurchaseOrder\\\State\\\Pending");
             $table->foreignId('supplier_id')->constrained('suppliers');
             $table->foreignId('factory_id')->constrained('factories');
             $table->foreignId('approved_by_id')->nullable()->constrained('users');
