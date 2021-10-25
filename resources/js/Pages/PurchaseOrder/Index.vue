@@ -18,7 +18,7 @@
                     <app-table
                         :items="purchase_orders.data"
                         :headers="[
-                        {key: 'id', name: 'ID', width: '200px'},
+                        {key: 'id', name: 'ID', width: '80px'},
                         {key: 'supplier.name', name: 'Supplier'},
                         {key: 'factory.name', name: 'Factory'},
                         {key: 'user.name', name: 'Approved By'},
@@ -28,20 +28,28 @@
                         <el-table-column
                             fixed="right"
                             label="Operations"
-                            width="120">
+                            width="220">
                             <template #default="scope">
-                                <inertia-link
-                                    class="text-blue-400"
-                                    :href="route('invoices.create')"
-                                >
+                                <inertia-link class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150" v-if="scope.row.approved_at != null" :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
                                     Create Invoice
                                 </inertia-link>
+
+                                <template v-if="scope.row.approved_at === null">
+                                    <inertia-link class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150" :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
+                                        Approve
+                                    </inertia-link>
+
+                                    <inertia-link class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150" :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
+                                        Disapprove
+                                    </inertia-link>
+                                </template>
+
                             </template>
                         </el-table-column>
                     </app-table>
                 </div>
 
-                <pagination class="mt-6" :links="purchase_orders.links" />
+                <pagination class="mt-6" :links="purchase_orders.links"/>
             </div>
         </div>
     </app-layout>
@@ -51,6 +59,7 @@
 import AppSelect from "@/UIElements/AppSelect";
 import AppTable from "@/UIElements/AppTable";
 import Pagination from '@/Components/Pagination'
+
 export default {
     name: "Index",
     components: {AppTable, AppSelect, Pagination},

@@ -12,6 +12,7 @@ class MaterialPurchaseOrderItem extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $with = ['variation'];
 
     public function variation(): BelongsTo
     {
