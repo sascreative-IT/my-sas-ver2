@@ -10,7 +10,7 @@ use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrder;
 use Illuminate\Support\Facades\Redirect;
 use \Illuminate\Http\RedirectResponse;
 
-class DisApprovePurchaseOrderController extends Controller
+class RejectPurchaseOrderController extends Controller
 {
     public function __invoke(MaterialPurchaseOrder $materialPurchaseOrder): RedirectResponse
     {

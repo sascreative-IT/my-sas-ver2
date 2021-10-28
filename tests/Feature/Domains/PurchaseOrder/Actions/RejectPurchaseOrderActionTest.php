@@ -3,20 +3,19 @@
 
 namespace Tests\Feature\Domains\PurchaseOrder\Actions;
 
-
-use App\Domains\PurchaseOrder\Actions\ApprovePurchaseOrderAction;
+use App\Domains\PurchaseOrder\Actions\RejectPurchaseOrderAction;
 use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrder;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class ApprovePurchaseOrderActionTest extends TestCase
+class RejectPurchaseOrderActionTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
 
-    public function test_a_purchase_order_can_be_approved()
+    public function test_a_purchase_order_can_be_rejected()
     {
         $user = User::factory()->create();
         $this->actingAs($user);
@@ -33,13 +32,13 @@ class ApprovePurchaseOrderActionTest extends TestCase
             'evaluated_at' => null,
         ]);
 
-        (new ApprovePurchaseOrderAction())->execute($material_purchase_order);
+        (new RejectPurchaseOrderAction())->execute($material_purchase_order);
 
         $material_purchase_order = MaterialPurchaseOrder::find($material_purchase_order->id);
 
         $this->assertDatabaseHas('material_purchase_orders', [
             'id' => $material_purchase_order->id,
-            'evaluation_status' => 'Approved',
+            'evaluation_status' => 'Rejected',
             'evaluated_by' => $user->id,
         ]);
 

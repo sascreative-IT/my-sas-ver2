@@ -12,12 +12,11 @@ class CreateMaterialPurchaseOrdersTable extends Migration
     {
         Schema::create('material_purchase_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('status')
-                ->default("App\\\Domains\\\PurchaseOrder\\\State\\\Pending");
+            $table->enum('evaluation_status', ['Pending','Approved','Rejected'])->default("Pending");
             $table->foreignId('supplier_id')->constrained('suppliers');
             $table->foreignId('factory_id')->constrained('factories');
-            $table->foreignId('approved_by_id')->nullable()->constrained('users');
-            $table->timestamp('approved_at')->nullable();
+            $table->foreignId('evaluated_by')->nullable()->constrained('users');
+            $table->timestamp('evaluated_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

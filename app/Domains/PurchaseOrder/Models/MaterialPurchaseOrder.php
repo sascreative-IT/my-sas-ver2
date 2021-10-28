@@ -2,7 +2,6 @@
 
 namespace App\Domains\PurchaseOrder\Models;
 
-use App\Domains\PurchaseOrder\State\MaterialPurchaseOrderState;
 use App\Models\Factory;
 use App\Models\Supplier;
 use App\Models\User;
@@ -18,16 +17,15 @@ class MaterialPurchaseOrder extends Model
 
     protected $guarded = [];
 
-    protected $casts = [
-        'status' => MaterialPurchaseOrderState::class
-    ];
+    const EVALUATION_STATUS_APPROVED = 'Approved';
+    const EVALUATION_STATUS_REJECTED = 'Rejected';
 
     public function items(): HasMany
     {
         return $this->hasMany(MaterialPurchaseOrderItem::class);
     }
 
-    public function factory(): BelongsTo
+    public function assignedFactory(): BelongsTo
     {
         return $this->belongsTo(Factory::class, 'factory_id');
     }
@@ -39,11 +37,6 @@ class MaterialPurchaseOrder extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'approved_by_id');
-    }
-
-    public function getState(): MaterialPurchaseOrderState
-    {
-        return new $this->status($this);
+        return $this->belongsTo(User::class, 'evaluated_by');
     }
 }

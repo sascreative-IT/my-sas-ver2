@@ -20,9 +20,10 @@
                         :headers="[
                         {key: 'id', name: 'ID', width: '80px'},
                         {key: 'supplier.name', name: 'Supplier'},
-                        {key: 'factory.name', name: 'Factory'},
-                        {key: 'user.name', name: 'Approved By'},
-                        {key: 'approved_at', name: 'Approved At'},
+                        {key: 'assigned_factory.name', name: 'Factory'},
+                        {key: 'evaluation_status', name: 'Status'},
+                        {key: 'user.name', name: 'Evaluated By'},
+                        {key: 'evaluated_at', name: 'Evaluated On'},
                       ]"
                     >
                         <el-table-column
@@ -32,22 +33,22 @@
                             <template #default="scope">
                                 <inertia-link
                                     class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                                    v-if="scope.row.status === 'App\\Domains\\PurchaseOrder\\State\\Approved'"
+                                    v-if="scope.row.evaluation_status === 'Approved'"
                                     :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
                                     Create Invoice
                                 </inertia-link>
 
-                                <template v-if="scope.row.status === 'App\\Domains\\PurchaseOrder\\State\\Pending'">
+                                <template v-if="scope.row.evaluation_status === 'Pending'">
                                     <button
                                         class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                                        @click="approve(scope.row.id)">
+                                        @click="approvePurchaseOrder(scope.row.id)">
                                         Approve
                                     </button>
 
                                     <button
                                         class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                                        @click="disApprove(scope.row.id)">
-                                        Disapprove
+                                        @click="rejectPurchaseOrder(scope.row.id)">
+                                        Reject
                                     </button>
                                 </template>
 
@@ -77,14 +78,14 @@ export default {
         }
     },
     methods: {
-        approve(id) {
+        approvePurchaseOrder(id) {
             this.$inertia.form({})
                 .post(route('purchase.orders.approve', {materialPurchaseOrder: id}));
         },
 
-        disApprove(id) {
+        rejectPurchaseOrder(id) {
             this.$inertia.form({})
-                .post(route('purchase.orders.disapprove', {materialPurchaseOrder: id}));
+                .post(route('purchase.orders.reject', {materialPurchaseOrder: id}));
         }
     }
 }

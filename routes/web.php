@@ -148,6 +148,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/internal-styles', [InternalStylesController::class, 'store'])->name('style.internal.store');
 
     Route::resource('purchase-order', \App\Http\Controllers\PurchaseOrderController::class, ['names' => 'purchase.orders']);
-    Route::post('/purchase-order-approve/{materialPurchaseOrder}', \App\Http\Controllers\ApprovePurchaseOrderController::class)->name('purchase.orders.approve');
-    Route::post('/purchase-order-dis-approve/{materialPurchaseOrder}', \App\Http\Controllers\DisApprovePurchaseOrderController::class)->name('purchase.orders.disapprove');
+    Route::post('/approve-purchase-order/{materialPurchaseOrder}', \App\Http\Controllers\ApprovePurchaseOrderController::class)->name('purchase.orders.approve');
+    Route::post('/reject-purchase-order/{materialPurchaseOrder}', \App\Http\Controllers\RejectPurchaseOrderController::class)->name('purchase.orders.reject');
 });
