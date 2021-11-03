@@ -30,9 +30,7 @@ class PurchaseOrderData extends DataTransferObject
             'approved_by' => User::find($request->input('approved_by')),
             'approved_at' => Carbon::parse($request->input('approved_at')),
             'purchase_order_items' => array_map(
-                fn($item) => PurchaseOrderItemData::fromRequest(
-                    new StorePurchaseOrderItemRequest($item)
-                ),
+                fn($item) => PurchaseOrderItemData::fromRequest($item),
                 $request->input('purchase_order_items')
             )
         ]);

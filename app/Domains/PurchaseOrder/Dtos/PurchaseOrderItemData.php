@@ -15,14 +15,14 @@ class PurchaseOrderItemData extends DataTransferObject
     public float $price;
     public string $currency;
 
-    public static function fromRequest(FormRequest $request): PurchaseOrderItemData
+    public static function fromRequest(array $item): PurchaseOrderItemData
     {
         return new self([
-            'material_variation' => MaterialVariation::findOrFail($request->input('material_variation_id')),
-            'quantity' => $request->input('quantity'),
-            'unit' => $request->input('unit'),
-            'price' => $request->input('price'),
-            'currency' => $request->input('currency') ?: config("mysas.default_currency")
+            'material_variation' => MaterialVariation::findOrFail($item['material_variation_id']),
+            'quantity' => $item['quantity'],
+            'unit' => $item['unit'],
+            'price' => $item['price'],
+            'currency' => $item['currency'] ?: config("mysas.default_currency")
         ]);
     }
 }
