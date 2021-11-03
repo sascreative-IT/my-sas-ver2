@@ -5,7 +5,6 @@ namespace App\Domains\PurchaseOrder\Actions;
 
 
 use App\Domains\PurchaseOrder\Dtos\PurchaseOrderData;
-use App\Domains\PurchaseOrder\Dtos\PurchaseOrderItemData;
 use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrder;
 
 class CreatePurchaseOrderAction
@@ -19,7 +18,7 @@ class CreatePurchaseOrderAction
             ]
         );
 
-        (new CreatePurchaseOrderItemAction())
+        (new CreatePurchaseOrderItemsAction())
             ->execute($purchaseOrderData->purchase_order_items, $materialPurchaseOrder);
 
         return $materialPurchaseOrder;
