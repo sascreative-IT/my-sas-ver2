@@ -68,13 +68,12 @@ class PurchaseOrderController extends Controller
         );
     }
 
-    public function store(CreatePurchaseOrderAction $createPurchaseOrderAction, Request $request)
+    public function store(
+        CreatePurchaseOrderAction $createPurchaseOrderAction,
+        StorePurchaseOrderRequest $purchaseOrderRequest
+    )
     {
-        $purchaseOrderData = PurchaseOrderData::fromRequest(new StorePurchaseOrderRequest([
-            'supplier_id' => $request->input('supplier_id'),
-            'factory_id' => $request->input('factory_id'),
-            'purchase_order_items' => $request->input('items')
-        ]));
+        $purchaseOrderData = PurchaseOrderData::fromRequest($purchaseOrderRequest);
 
         $createPurchaseOrderAction->execute($purchaseOrderData);
         return Redirect::route('purchase.orders.index');

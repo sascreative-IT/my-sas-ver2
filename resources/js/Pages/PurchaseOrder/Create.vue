@@ -235,7 +235,8 @@ export default {
                 material_variation_id: null,
                 material_colour: '',
                 price: '',
-                quantity: ''
+                quantity: '',
+                currency: '',
             },
             purchaseOrderItems: [],
             resetSelectOptions: false,
@@ -282,7 +283,8 @@ export default {
                 unit: 'm',
                 unitValue: '',
                 price: '',
-                quantity: ''
+                quantity: '',
+                currency: '',
             };
             this.resetSelectOptions = true;
         },
