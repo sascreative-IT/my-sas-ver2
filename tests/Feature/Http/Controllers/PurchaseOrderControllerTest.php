@@ -8,6 +8,7 @@ use App\Models\Factory;
 use App\Models\MaterialVariation;
 use App\Models\Supplier;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
