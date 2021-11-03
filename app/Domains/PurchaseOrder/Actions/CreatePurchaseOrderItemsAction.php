@@ -10,7 +10,7 @@ use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrderItem;
 
 class CreatePurchaseOrderItemAction
 {
-    public function execute(array $purchaseOrderItemsData, MaterialPurchaseOrder $materialPurchaseOrder): bool
+    public function execute(array $purchaseOrderItemsData, MaterialPurchaseOrder $materialPurchaseOrder): void
     {
         if (count($purchaseOrderItemsData) > 0) {
             foreach ($purchaseOrderItemsData as $purchaseOrderItemData) {
@@ -24,6 +24,5 @@ class CreatePurchaseOrderItemAction
                 ]);
             }
         }
-        return true;
     }
 }
