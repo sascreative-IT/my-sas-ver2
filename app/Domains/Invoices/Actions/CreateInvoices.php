@@ -26,6 +26,7 @@ class CreateInvoices
                 $variation = MaterialVariation::firstOrCreate([
                     'material_id' => $item->material->id,
                     'colour_id' => $item->colour->id,
+                    // need to set the supplier
                 ]);
 
                 MaterialInvoiceItem::create([

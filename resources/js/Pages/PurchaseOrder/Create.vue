@@ -2,7 +2,7 @@
     <app-layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Create new Invoice
+                Create new Purchase Order
             </h2>
         </template>
         <div class="py-12 z-30">
@@ -13,79 +13,34 @@
                             <div class="w-2/4">
 
                                 <div class="mb-4 md:mb-4 md:flex items-center">
-                                    <label class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Invoice
-                                        No.</label>
-                                    <span class="mr-4 inline-block hidden md:block">:</span>
-                                    <div class="flex-1">
-                                        <input
-                                                v-model="invoice.number"
-                                                class="appearance-none w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                id="inline-full-name" type="text" placeholder="#INV-100001">
-                                    </div>
-                                </div>
-
-                                <div class="mb-4 md:mb-4 md:flex items-center">
-                                    <label class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Purchase
-                                        Order No.</label>
-                                    <span class="mr-4 inline-block hidden md:block">:</span>
-                                    <div class="flex-1">
-                                        <input
-                                                v-model="invoice.po_number"
-                                                class="appearance-none w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                id="inline-full-name" type="text" placeholder="#PO-100001">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="mb-4 md:mb-4 md:flex items-center">
-                                    <label class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Invoice
-                                        date</label>
-                                    <span class="mr-4 inline-block hidden md:block">:</span>
-                                    <div class="flex-1">
-                                        <vc-date-picker
-                                                color="white"
-                                                v-model='invoice.invoiced_date'
-                                        >
-                                            <template v-slot="{ inputValue, inputEvents }">
-                                                <input
-                                                        class="appearance-none border w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                        id="date"
-                                                        v-on="inputEvents"
-                                                        :value="inputValue"
-                                                />
-                                            </template>
-                                        </vc-date-picker>
-                                    </div>
-                                </div>
-                                <div class="mb-1 md:mb-1 md:flex items-center">
-                                    <label class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Factory</label>
-                                    <span class="mr-4 inline-block hidden md:block">:</span>
-                                    <div class="flex-1">
-<!--                                        <t-select-->
-<!--                                                placeholder="Select an option"-->
-<!--                                                :options="factoryNames"-->
-<!--                                                v-model="invoice.factory_id"-->
-<!--                                        ></t-select>-->
-
-                                        <select v-model="invoice.factory_id">
-                                            <option v-for="factory in factories" :value="factory.id"> {{factory.name}} </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="mb-4 md:mb-4 md:flex items-center">
                                     <div class="flex items-center mt-4">
                                         <label
-                                                class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Supplier</label>
+                                            class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Supplier</label>
                                         <span class="mr-4 inline-block hidden md:block">:</span>
                                     </div>
                                     <div class="flex-1 -mt-4">
                                         <search-and-select
-                                                :selection-options="suppliers"
-                                                @change="setsupplier_id"
+                                            :selection-options="suppliers"
+                                            @change="setSupplierId"
                                         ></search-and-select>
                                     </div>
                                 </div>
+
+
+                            </div>
+
+                            <div>
+
+                                <div class="mb-1 md:mb-1 md:flex items-center">
+                                    <label class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Factory</label>
+                                    <span class="mr-4 inline-block hidden md:block">:</span>
+                                    <div class="flex-1">
+                                        <select v-model="purchaseOrder.factory_id">
+                                            <option v-for="factory in factories" :value="factory.id"> {{factory.name}} </option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
 
                         </div>
@@ -93,7 +48,7 @@
                 </div>
                 <div class="mt-5 bg-white overflow-hidden shadow-xl sm:rounded-lg mt-5">
                     <div class="bg-gray-500 pl-5 pt-2 pb-2 text-white">
-                        <h4>Add invoice items</h4>
+                        <h4>Add Items</h4>
                     </div>
                     <div class="p-5 h-64 relative">
                         <form class="">
@@ -130,7 +85,7 @@
                                                     Price</label>
                                                 <div class="absolute">
                                                     <input
-                                                            v-model="invoiceItem.price"
+                                                            v-model="purchaseOrderItem.price"
                                                             class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                             id="price-value"
                                                             placeholder="NZD"
@@ -145,7 +100,7 @@
                                                     Quantity</label>
                                                 <div class="absolute">
                                                     <input
-                                                            v-model="invoiceItem.quantity"
+                                                            v-model="purchaseOrderItem.quantity"
                                                             class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                             id="quantity-value" type="text">
                                                 </div>
@@ -154,7 +109,7 @@
                                     </div>
                                 </div>
                                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                                    <form-button type="button" @handle-on-click="handleAddInvoiceItems">
+                                    <form-button type="button" @handle-on-click="handleAddPurchaseOrderItems">
                                         Add item
                                     </form-button>
                                 </div>
@@ -191,7 +146,7 @@
                             </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-for="(item, index) in invoice.items">
+                            <tr v-for="(item, index) in purchaseOrder.items">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
                                         {{ item.material_name }}
@@ -222,7 +177,7 @@
                         </table>
                     </div>
 
-                    <button class="mt-10 ml-5 mb-5 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150" @click="saveInvoice">Save</button>
+                    <button class="mt-10 ml-5 mb-5 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150" @click="savePurchaseOrder">Save</button>
                 </div>
             </div>
         </div>
@@ -236,7 +191,7 @@ import SelectOrCreateInput from "@/Pages/Suppliers/SelectOrCreateInput";
 import SearchAndSelect from "@/Pages/Suppliers/SearchAndSelect";
 
 export default {
-    name: "InvoiceAdd",
+    name: "Create",
     components: {
         DialogModal,
         FormButton,
@@ -263,37 +218,31 @@ export default {
         units: {
             required: true,
             type: Object
-        },
-        materialPurchaseOrder: {
-            required: false
         }
     },
     data() {
         return {
             factoryNames: [],
-            invoice: {
-                number: '',
-                po_number: '',
-                invoiced_date: '',
+            purchaseOrder: {
                 factory_id: '',
                 supplier_id: '',
                 items: [],
             },
-            invoiceItem: {
+            purchaseOrderItem: {
                 material_name_id: null,
+                unit : 'm',
                 material_name: '',
-                material_colour_id: null,
+                material_variation_id: null,
                 material_colour: '',
                 price: '',
                 quantity: ''
             },
-            invoiceItems: [],
+            purchaseOrderItems: [],
             resetSelectOptions: false,
         }
     },
     mounted() {
         this.extractFactoryName(this.factories);
-        this.copyMaterialPurchaseOrderToInvoice();
     },
     methods: {
         extractFactoryName(prop) {
@@ -302,84 +251,49 @@ export default {
                 this.factoryNames.push(val.name);
             })
         },
-        setsupplier_id(value) {
-            this.invoice.supplier_id = value;
+        setSupplierId(value) {
+            this.purchaseOrder.supplier_id = value;
         },
         setSelectedMaterial(value) {
-            this.invoiceItem.material_name_id = value.value;
-            this.invoiceItem.material_name = value.text;
+            this.purchaseOrderItem.material_name_id = value.value;
+            this.purchaseOrderItem.material_name = value.text;
         },
         setSelectedColour(value) {
-            this.invoiceItem.material_colour_id = value.value;
-            this.invoiceItem.material_colour = value.text;
+            this.purchaseOrderItem.material_variation_id = value.value;
+            this.purchaseOrderItem.material_colour = value.text;
         },
         setSelectedUnit(value) {
-            this.invoiceItem.unit_id = value.value;
-            this.invoiceItem.unitValue = value.text;
+            this.purchaseOrderItem.unit = 'm';
+            this.purchaseOrderItem.unitValue = value.text;
         },
-        resetinvoice() {
-            this.invoice = {
-                number: '',
-                po_number: '',
-                invoiced_date: '',
+        resetPurchaseOrder() {
+            this.purchaseOrder = {
                 factory_id: '',
                 supplier_id: '',
                 items: []
             }
         },
-        resetInvoiceItems() {
-            this.invoiceItem = {
+        resetPurchaseOrderItems() {
+            this.purchaseOrderItem = {
                 material_name_id: null,
                 material_name: '',
-                material_colour_id: null,
+                material_variation_id: null,
                 material_colour: '',
-                unit_id: null,
+                unit: 'm',
                 unitValue: '',
                 price: '',
                 quantity: ''
             };
             this.resetSelectOptions = true;
         },
-        handleAddInvoiceItems() {
-            this.invoice.items.push(this.invoiceItem);
-            this.resetInvoiceItems();
+        handleAddPurchaseOrderItems() {
+            this.purchaseOrder.items.push(this.purchaseOrderItem);
+            this.resetPurchaseOrderItems();
         },
-        saveInvoice() {
-            this.$inertia.post('/invoices', this.invoice)
-        },
-        getMaterialNameById(material_id) {
-            return this.materials.[material_id];
-        },
-        getMaterialColorNameById(color_id) {
-            return this.colours.[color_id];
-        },
-        copyMaterialPurchaseOrderToInvoice() {
-            if (this.materialPurchaseOrder != null) {
-
-                this.invoice.po_number = this.materialPurchaseOrder.id;
-                this.invoice = {
-                    po_number: this.materialPurchaseOrder.id,
-                    factory_id: this.materialPurchaseOrder.factory_id,
-                    supplier_id: this.materialPurchaseOrder.supplier_id,
-                    items: [],
-                }
-
-                if (typeof this.materialPurchaseOrder.items != 'undefined') {
-                    for(let item of this.materialPurchaseOrder.items) {
-                        this.invoice.items.push({
-                            material_name_id: item.variation.material_id,
-                            material_name: this.getMaterialNameById(item.variation.material_id),
-                            material_colour_id: item.variation.colour_id,
-                            material_colour: this.getMaterialColorNameById(item.variation.colour_id),
-                            unit_id: item.unit_id,
-                            unitValue: item.unit,
-                            price: item.price,
-                            quantity: item.quantity
-                        })
-                    }
-                }
-            }
+        savePurchaseOrder() {
+            this.$inertia.post(route('purchase.orders.store'), this.purchaseOrder)
         }
+
     }
 }
 </script>

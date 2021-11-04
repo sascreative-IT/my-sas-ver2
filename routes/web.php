@@ -91,7 +91,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UsersController::class, 'update'])->name('users.update');
     Route::put('/users/{user}/reset-password', [UsersController::class, 'resetPassword'])->name('users.reset-password');
-    Route::post('/users/deactivate', [UsersController::class,'deactivateUser'])->name('users.deactivate');
+    Route::post('/users/deactivate', [UsersController::class, 'deactivateUser'])->name('users.deactivate');
 
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers.index');
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customers.create');
@@ -101,7 +101,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::delete('/customer/{customer}', [CustomersController::class, 'delete'])->name('customers.delete');
 
     Route::post('/upload-logo', [FileUploadController::class, 'store'])->name('logo.create');
-    Route::get('/get-logo/{id}',[FileUploadController::class,'show'])->name('logo.show');
+    Route::get('/get-logo/{id}', [FileUploadController::class, 'show'])->name('logo.show');
 
     Route::get('/customers/contacts/{customer}', [CustomerContactsController::class, 'show'])->name('customers.contacts.show');
     Route::post('/customers/contacts', [CustomerContactsController::class, 'store'])->name('customers.contacts.store');
@@ -109,7 +109,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::delete('/customers/contacts/{customerContact}', [CustomerContactsController::class, 'delete'])->name('customers.contacts.delete');
 
     Route::post('/customers/addresses', [AddressController::class, 'store'])->name('customers.addresses.store');
-    Route::put('/customers/addresses/{address}',[AddressController::class, 'update'])->name('customers.addresses.update');
+    Route::put('/customers/addresses/{address}', [AddressController::class, 'update'])->name('customers.addresses.update');
     Route::delete('/customers/addresses/{address}', [AddressController::class, 'delete'])->name('customers.addresses.delete');
 
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
@@ -128,12 +128,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::delete('/suppliers/contacts/{supplierContact}', [SupplierContactsController::class, 'delete'])->name('suppliers.contacts.delete');
 
     Route::post('/suppliers/addresses', [SupplierAddressController::class, 'store'])->name('suppliers.addresses.store');
-    Route::put('/suppliers/addresses/{address}',[SupplierAddressController::class, 'update'])->name('suppliers.addresses.update');
+    Route::put('/suppliers/addresses/{address}', [SupplierAddressController::class, 'update'])->name('suppliers.addresses.update');
     Route::delete('/suppliers/addresses/{address}', [SupplierAddressController::class, 'delete'])->name('suppliers.addresses.delete');
 
-    Route::get('/invoices/create', [InvoicesController::class, 'create'])->name('invoices.create');
+    Route::get('/invoices/create/{materialPurchaseOrder?}', [InvoicesController::class, 'create'])->name('invoices.create');
     Route::post('/invoices', [InvoicesController::class, 'store'])->name('invoice.store');
-    Route::get('/invoices/{invoice}',[InvoicesController::class, 'show'])->name('invoices.show');
+    Route::get('/invoices/{invoice}', [InvoicesController::class, 'show'])->name('invoices.show');
 
     Route::post('/inventory/{inventory}/adjust', [InventoryAdjustmentController::class, 'store'])->name('inventory.adjust');
 
@@ -146,4 +146,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/internal-styles/edit/{style}', [InternalStylesController::class, 'edit'])->name('style.internal.edit');
     Route::get('/internal-styles', [InternalStylesController::class, 'index'])->name('style.internal.index');
     Route::post('/internal-styles', [InternalStylesController::class, 'store'])->name('style.internal.store');
+
+    Route::resource('purchase-order', \App\Http\Controllers\PurchaseOrderController::class, ['names' => 'purchase.orders']);
+    Route::post('/approve-purchase-order/{materialPurchaseOrder}', \App\Http\Controllers\ApprovePurchaseOrderController::class)->name('purchase.orders.approve');
+    Route::post('/reject-purchase-order/{materialPurchaseOrder}', \App\Http\Controllers\RejectPurchaseOrderController::class)->name('purchase.orders.reject');
 });
