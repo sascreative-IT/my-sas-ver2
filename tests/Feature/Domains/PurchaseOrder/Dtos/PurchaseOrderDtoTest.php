@@ -29,7 +29,7 @@ class PurchaseOrderDtoTest extends TestCase
             'factory_id' => $factory->id,
             'approved_by' => $user->id,
             'approved_at' => now(),
-            'purchase_order_items' => [
+            'items' => [
                 [
                     'material_variation_id' => MaterialVariation::factory()->create()->id,
                     'quantity' => rand(1, 10),
