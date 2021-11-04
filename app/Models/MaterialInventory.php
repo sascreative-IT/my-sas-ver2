@@ -22,4 +22,9 @@ class MaterialInventory extends Model
     {
         return $this->hasMany(InventoryIn::class);
     }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo( Supplier::class, 'supplier_id');
+    }
 }

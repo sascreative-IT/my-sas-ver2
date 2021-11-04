@@ -41,7 +41,7 @@
                             <div class="col-span-1 mt-4 float-right">
                                 <div>
                                     <form-button>
-                                        Save
+                                        Save & Go To Next
                                     </form-button>
                                 </div>
                             </div>
