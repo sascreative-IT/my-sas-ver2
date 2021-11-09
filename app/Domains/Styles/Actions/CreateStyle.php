@@ -14,10 +14,10 @@ class CreateStyle
     private AttachPanelToStyle $attachPanelToStyle;
 
     public function __construct(
-        AttachSizeToStyle $attachSizeToStyle,
-        AttachCategoryToStyle $attachCategoryToStyle,
+        AttachSizeToStyle      $attachSizeToStyle,
+        AttachCategoryToStyle  $attachCategoryToStyle,
         AttachFactoriesToStyle $attachFactoriesToStyle,
-        AttachPanelToStyle $attachPanelToStyle,
+        AttachPanelToStyle     $attachPanelToStyle,
     )
     {
         $this->attachSizeToStyle = $attachSizeToStyle;
