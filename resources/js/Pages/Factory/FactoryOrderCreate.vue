@@ -782,7 +782,6 @@ export default {
             this.$forceUpdate();
         },
         styleSelected() {
-            console.log('selected')
             this.$inertia.visit(this.$inertia.page.url, {
                 preserveState: true,
                 preserveScroll: true,

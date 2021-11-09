@@ -22,10 +22,10 @@ class StockOutData extends DataTransferObject
     public static function fromRequest(FormRequest $request): StockOutData
     {
         return new self([
-            'order' =>  Order::where('public_id', $request->input('order_public_id'))->firstOrFail(),
+            'order' => Order::where('public_id', $request->input('order_public_id'))->firstOrFail(),
             'factory' => Factory::findOrFail($request->input('factory_id')),
             'customer' => Customer::findOrFail($request->input('customer_id')),
-            'createdBy' => User::findOrFail($request->input('created_by_id')),
+            'createdBy' => User::findOrFail(auth()->id()),
             'items' => array_map(
                 fn($item) => StockOutItemData::fromRequest($item),
                 $request->input('items')
