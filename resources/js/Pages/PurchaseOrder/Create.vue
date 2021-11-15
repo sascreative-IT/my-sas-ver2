@@ -8,41 +8,36 @@
         <div class="py-12 z-30">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-5">
-                    <div class="p-5">
-                        <div class="flex mb-8 justify-between">
-                            <div class="w-2/4">
-
-                                <div class="mb-4 md:mb-4 md:flex items-center">
-                                    <div class="flex items-center mt-4">
-                                        <label
-                                            class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Supplier</label>
-                                        <span class="mr-4 inline-block hidden md:block">:</span>
-                                    </div>
-                                    <div class="flex-1 -mt-4">
-                                        <search-and-select
-                                            :selection-options="suppliers"
-                                            @change="setSupplierId"
-                                        ></search-and-select>
-                                    </div>
-                                </div>
-
-
-                            </div>
-
-                            <div>
-
-                                <div class="mb-1 md:mb-1 md:flex items-center">
-                                    <label class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Factory</label>
+                    <div class="p-5 grid grid-cols-2">
+                        <div>
+                            <div class="mb-4 md:mb-4 md:flex items-center">
+                                <div class="flex items-center mt-4">
+                                    <label
+                                        class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Supplier</label>
                                     <span class="mr-4 inline-block hidden md:block">:</span>
-                                    <div class="flex-1">
-                                        <select v-model="purchaseOrder.factory_id">
-                                            <option v-for="factory in factories" :value="factory.id"> {{factory.name}} </option>
-                                        </select>
-                                    </div>
                                 </div>
-
+                                <div class="flex-1 -mt-4">
+                                    <search-and-select
+                                        :selection-options="suppliers"
+                                        @change="setSupplierId"
+                                    ></search-and-select>
+                                </div>
                             </div>
-
+                        </div>
+                        <div>
+                            <div class="mb-1 md:mb-1 md:flex items-center">
+                                <div class="flex items-center mt-4">
+                                    <label
+                                        class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Factory</label>
+                                    <span class="mr-4 inline-block hidden md:block">:</span>
+                                </div>
+                                <div class="flex-1 -mt-4">
+                                    <search-and-select
+                                        :selection-options="factories"
+                                        @change="setFactoryId"
+                                    ></search-and-select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -254,6 +249,9 @@ export default {
         },
         setSupplierId(value) {
             this.purchaseOrder.supplier_id = value;
+        },
+        setFactoryId(value) {
+            this.purchaseOrder.factory_id = value;
         },
         setSelectedMaterial(value) {
             this.purchaseOrderItem.material_name_id = value.value;

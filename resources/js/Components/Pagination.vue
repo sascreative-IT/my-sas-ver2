@@ -1,6 +1,6 @@
 <template>
-    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-3">
-    <div v-if="links.length > 3">
+    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-3" v-if="links.length > 3">
+    <div>
         <div class="flex flex-wrap justify-center -mb-1">
             <div v-for="(link, k) in links" :key="k">
                 <div v-if="link.url === null"  class="mr-1 mb-1 px-4 py-1 text-sm leading-1 text-gray-400 border rounded" v-html="link.label" />

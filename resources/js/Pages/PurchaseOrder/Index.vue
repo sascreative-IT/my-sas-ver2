@@ -16,6 +16,7 @@
 
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-5">
                     <app-table
+                        emptyText="No purchase orders created"
                         :items="purchase_orders.data"
                         :headers="[
                         {key: 'id', name: 'ID', width: '80px'},

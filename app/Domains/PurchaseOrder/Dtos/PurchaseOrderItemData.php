@@ -12,7 +12,8 @@ class PurchaseOrderItemData extends DataTransferObject
     public MaterialVariation $material_variation;
     public float $quantity;
     public string $unit;
-    public float $price;
+    public float $unitPrice;
+    public float $subTotal;
     public string $currency;
 
     public static function fromRequest(array $item): PurchaseOrderItemData
@@ -21,7 +22,8 @@ class PurchaseOrderItemData extends DataTransferObject
             'material_variation' => MaterialVariation::findOrFail($item['material_variation_id']),
             'quantity' => $item['quantity'],
             'unit' => $item['unit'],
-            'price' => $item['price'],
+            'unitPrice' => $item['unit_price'],
+            'subTotal' => $item['sub_total'],
             'currency' => $item['currency'] ?: config("mysas.default_currency")
         ]);
     }

@@ -34,14 +34,16 @@ class PurchaseOrderDtoTest extends TestCase
                     'material_variation_id' => MaterialVariation::factory()->create()->id,
                     'quantity' => rand(1, 10),
                     'unit' => 'm',
-                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'unit_price' => $this->faker->randomFloat(2, 10, 300),
+                    'sub_total' => $this->faker->randomFloat(2, 10, 300),
                     'currency' => 'NZD'
                 ],
                 [
                     'material_variation_id' => MaterialVariation::factory()->create()->id,
                     'quantity' => rand(1, 10),
                     'unit' => 'm',
-                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'unit_price' => $this->faker->randomFloat(2, 10, 300),
+                    'sub_total' => $this->faker->randomFloat(2, 10, 300),
                     'currency' => 'NZD'
                 ]
             ]
@@ -58,19 +60,21 @@ class PurchaseOrderDtoTest extends TestCase
         $dto = PurchaseOrderData::fromRequest(new StorePurchaseOrderRequest([
             'supplier_id' => $supplier->id,
             'factory_id' => $factory->id,
-            'purchase_order_items' => [
+            'items' => [
                 [
                     'material_variation_id' => MaterialVariation::factory()->create()->id,
                     'quantity' => rand(1, 10),
                     'unit' => 'm',
-                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'unit_price' => $this->faker->randomFloat(2, 10, 300),
+                    'sub_total' => $this->faker->randomFloat(2, 10, 300),
                     'currency' => 'NZD'
                 ],
                 [
                     'material_variation_id' => MaterialVariation::factory()->create()->id,
                     'quantity' => rand(1, 10),
                     'unit' => 'm',
-                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'unit_price' => $this->faker->randomFloat(2, 10, 300),
+                    'sub_total' => $this->faker->randomFloat(2, 10, 300),
                     'currency' => 'NZD'
                 ]
             ]
@@ -95,14 +99,16 @@ class PurchaseOrderDtoTest extends TestCase
                     'material_variation_id' => MaterialVariation::factory()->create()->id,
                     'quantity' => rand(1, 10),
                     'unit' => 'm',
-                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'unit_price' => $this->faker->randomFloat(2, 10, 300),
+                    'sub_total' => $this->faker->randomFloat(2, 10, 300),
                     'currency' => 'NZD'
                 ],
                 [
                     'material_variation_id' => MaterialVariation::factory()->create()->id,
                     'quantity' => rand(1, 10),
                     'unit' => 'm',
-                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'unit_price' => $this->faker->randomFloat(2, 10, 300),
+                    'sub_total' => $this->faker->randomFloat(2, 10, 300),
                     'currency' => 'NZD'
                 ]
             ]
@@ -126,14 +132,16 @@ class PurchaseOrderDtoTest extends TestCase
                     'material_variation_id' => MaterialVariation::factory()->create()->id,
                     'quantity' => rand(1, 10),
                     'unit' => 'm',
-                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'unit_price' => $this->faker->randomFloat(2, 10, 300),
+                    'sub_total' => $this->faker->randomFloat(2, 10, 300),
                     'currency' => 'NZD'
                 ],
                 [
                     'material_variation_id' => MaterialVariation::factory()->create()->id,
                     'quantity' => rand(1, 10),
                     'unit' => 'm',
-                    'price' => $this->faker->randomFloat(2, 10, 300),
+                    'unit_price' => $this->faker->randomFloat(2, 10, 300),
+                    'sub_total' => $this->faker->randomFloat(2, 10, 300),
                     'currency' => 'NZD'
                 ]
             ]
