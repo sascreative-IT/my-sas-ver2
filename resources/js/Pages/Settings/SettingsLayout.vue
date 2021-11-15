@@ -23,6 +23,17 @@
                         <!--                      <div class="break" style="width:75%;"></div>-->
                     </div>
 
+                    <div class="mb-2 flex flex-col">
+                        <jet-nav-link
+                            class="font-semibold mb-1 text-gray-500 border-none text-base"
+                            :class="{'ml-1 text-black': route().current(route('settings.currencies.index'))}"
+                            :href="route('settings.currencies.index')"
+                            :active="route().current(route('settings.currencies.index'))"
+                        >
+                            Currencies
+                        </jet-nav-link>
+                    </div>
+
                 </div>
 
                 <div class="w-10/12">
