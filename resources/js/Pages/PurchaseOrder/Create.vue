@@ -75,16 +75,16 @@
                                         </div>
                                         <div class="w-48">
                                             <div class="">
-                                                <label for="price-value"
+                                                <label for="unit_price-value"
                                                        class="block text-sm font-medium text-gray-700">
-                                                    Price</label>
+                                                    Unit Price</label>
                                                 <div class="absolute">
                                                     <input
-                                                            v-model="purchaseOrderItem.price"
+                                                            v-model="purchaseOrderItem.unit_price"
                                                             class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                            id="price-value"
+                                                            id="unit_price-value"
                                                             placeholder="NZD"
-                                                            type="text">
+                                                            type="text" v-on:change="calculateSubTotal">
                                                 </div>
                                             </div>
                                         </div>
@@ -97,7 +97,22 @@
                                                     <input
                                                             v-model="purchaseOrderItem.quantity"
                                                             class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                            id="quantity-value" type="text">
+                                                            id="quantity-value" type="text" v-on:change="calculateSubTotal">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-48">
+                                            <div class="">
+                                                <label for="sub_total-value"
+                                                       class="block text-sm font-medium text-gray-700">
+                                                    Sub Total</label>
+                                                <div class="absolute">
+                                                    <input
+                                                        v-model="purchaseOrderItem.sub_total"
+                                                        class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        id="sub_total-value"
+                                                        placeholder="NZD"
+                                                        type="text">
                                                 </div>
                                             </div>
                                         </div>
@@ -125,11 +140,15 @@
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
+                                    Unit Price
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
                                     Quantity
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
-                                    Price
+                                    Sub Total
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
@@ -154,12 +173,17 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
+                                        {{ item.unit_price }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
                                         {{ item.quantity }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ item.price }}
+                                        {{ item.sub_total }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -229,7 +253,8 @@ export default {
                 material_name: '',
                 material_variation_id: null,
                 material_colour: '',
-                price: '',
+                unit_price: '',
+                sub_total: '',
                 quantity: '',
                 currency: '',
             },
@@ -280,7 +305,8 @@ export default {
                 material_colour: '',
                 unit: 'm',
                 unitValue: '',
-                price: '',
+                unit_price: '',
+                sub_total: '',
                 quantity: '',
                 currency: '',
             };
@@ -292,6 +318,9 @@ export default {
         },
         savePurchaseOrder() {
             this.$inertia.post(route('purchase.orders.store'), this.purchaseOrder)
+        },
+        calculateSubTotal() {
+            this.purchaseOrderItem.sub_total = this.purchaseOrderItem.unit_price * this.purchaseOrderItem.quantity;
         }
 
     }

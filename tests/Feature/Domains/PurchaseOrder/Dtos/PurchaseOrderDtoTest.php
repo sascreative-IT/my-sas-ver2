@@ -18,41 +18,8 @@ class PurchaseOrderDtoTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
+
     public function test_store_purchase_order_request()
-    {
-        $supplier = Supplier::factory()->create();
-        $factory = Factory::factory()->create();
-        $user = User::factory()->create();
-
-        $dto = PurchaseOrderData::fromRequest(new StorePurchaseOrderRequest([
-            'supplier_id' => $supplier->id,
-            'factory_id' => $factory->id,
-            'approved_by' => $user->id,
-            'approved_at' => now(),
-            'items' => [
-                [
-                    'material_variation_id' => MaterialVariation::factory()->create()->id,
-                    'quantity' => rand(1, 10),
-                    'unit' => 'm',
-                    'unit_price' => $this->faker->randomFloat(2, 10, 300),
-                    'sub_total' => $this->faker->randomFloat(2, 10, 300),
-                    'currency' => 'NZD'
-                ],
-                [
-                    'material_variation_id' => MaterialVariation::factory()->create()->id,
-                    'quantity' => rand(1, 10),
-                    'unit' => 'm',
-                    'unit_price' => $this->faker->randomFloat(2, 10, 300),
-                    'sub_total' => $this->faker->randomFloat(2, 10, 300),
-                    'currency' => 'NZD'
-                ]
-            ]
-        ]));
-
-        $this->assertInstanceOf(PurchaseOrderData::class, $dto);
-    }
-
-    public function test_store_purchase_order_request_without_approved_details()
     {
         $supplier = Supplier::factory()->create();
         $factory = Factory::factory()->create();
@@ -92,8 +59,6 @@ class PurchaseOrderDtoTest extends TestCase
 
         PurchaseOrderData::fromRequest(new StorePurchaseOrderRequest([
             'factory_id' => $factory->id,
-            'approved_by' => $user->id,
-            'approved_at' => now(),
             'purchase_order_items' => [
                 [
                     'material_variation_id' => MaterialVariation::factory()->create()->id,
@@ -125,8 +90,6 @@ class PurchaseOrderDtoTest extends TestCase
         PurchaseOrderData::fromRequest(new StorePurchaseOrderRequest([
             'supplier_id' => null,
             'factory_id' => $factory->id,
-            'approved_by' => $user->id,
-            'approved_at' => now(),
             'purchase_order_items' => [
                 [
                     'material_variation_id' => MaterialVariation::factory()->create()->id,
