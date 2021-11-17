@@ -38,6 +38,20 @@
                                     ></search-and-select>
                                 </div>
                             </div>
+
+                            <div class="mb-1 md:mb-1 md:flex items-center">
+                                <div class="flex items-center mt-4">
+                                    <label
+                                        class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Currency</label>
+                                    <span class="mr-4 inline-block hidden md:block">:</span>
+                                </div>
+                                <div class="flex-1 -mt-4">
+                                    <search-and-select
+                                        :selection-options="currencies"
+                                        @change="setSelectedCurrency"
+                                    ></search-and-select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -237,6 +251,10 @@ export default {
         units: {
             required: true,
             type: Object
+        },
+        currencies: {
+            required: true,
+            type: Object
         }
     },
     data() {
@@ -287,8 +305,10 @@ export default {
             this.purchaseOrderItem.material_colour = value.text;
         },
         setSelectedUnit(value) {
-            this.purchaseOrderItem.unit = 'm';
-            this.purchaseOrderItem.unitValue = value.text;
+            this.purchaseOrderItem.unit = value.text;
+        },
+        setSelectedCurrency(value) {
+
         },
         resetPurchaseOrder() {
             this.purchaseOrder = {

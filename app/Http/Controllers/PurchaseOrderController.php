@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\Currency\Models\Currency;
 use App\Domains\Invoices\Actions\CreateInvoices;
 use App\Domains\Invoices\Dtos\Invoice;
 use App\Domains\Invoices\Dtos\InvoiceItem;
@@ -61,6 +62,10 @@ class PurchaseOrderController extends Controller
         $factoryCollection = Factory::all();
         $factories = SelectOptions::selectOptionsObject($factoryCollection, 'id', 'name');
 
+        $currencyCollection = Currency::all();
+        $currencies = SelectOptions::selectOptionsObject($currencyCollection, 'id', 'name');
+
+
         return Inertia::render(
             'PurchaseOrder/Create',
             [
@@ -68,7 +73,8 @@ class PurchaseOrderController extends Controller
                 'materials' => $materials,
                 'colours' => $colours,
                 'suppliers' => $suppliers,
-                'units' => $units
+                'units' => $units,
+                'currencies' => $currencies,
             ]
         );
     }
