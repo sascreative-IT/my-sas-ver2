@@ -14,7 +14,7 @@ class CreateCurrencyExchangeRateActionTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
-    public function test_a_currency_can_be_created()
+    public function test_a_currency_exchange_rate_can_be_created()
     {
         $dto = new CurrencyExchangeRateData(
             name: 'LRK',

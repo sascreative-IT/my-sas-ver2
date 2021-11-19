@@ -6,7 +6,7 @@
             <div class="flex flex-row-reverse">
                 <inertia-link
                     class="bg-green-500 w-30 h-8 text-center pt-1.5 pl-3 pr-2 text-white rounded text-sm"
-                    :href="route('settings.currencies.create')"
+                    :href="route('settings.currency-exchange-rates.create')"
                 >
                     Add Currency
                 </inertia-link>
@@ -33,7 +33,7 @@
                     </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="(currency,index) in currencies">
+                    <tr v-for="(currency,index) in currencyExchangeRates">
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900">{{ currency.name }}</div>
                         </td>
@@ -46,7 +46,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <inertia-link
                                 class="text-indigo-600 hover:text-indigo-900"
-                                :href="route('settings.currencies.edit', currency.id)"
+                                :href="route('settings.currency-exchange-rates.edit', currency.id)"
                             >
                                 Edit
                             </inertia-link>
@@ -64,7 +64,7 @@
         <delete-confirmation-modal
             title="Delete Currency"
             :message='`Are you sure you want delete "${this.selectedCurrency.name}" currency ?`'
-            :delete-url="'/settings/currencies/' + this.selectedCurrency.id"
+            :delete-url="'/settings/currency-exchange-rates/' + this.selectedCurrency.id"
             :show="confirmingUserDeletion"
             @close="confirmingUserDeletion = false"
         ></delete-confirmation-modal>
@@ -77,10 +77,10 @@ import JetConfirmationModal from '@/Jetstream/ConfirmationModal'
 import DeleteConfirmationModal from "@/Pages/Common/DeleteConfirmationModal";
 
 export default {
-    name: "Currency",
+    name: "CurrencyExchangeRate",
     components: {DeleteConfirmationModal, SettingsLayout, JetConfirmationModal},
     props: {
-        currencies: {
+        currencyExchangeRates: {
             required: false,
             type: Array
         }
@@ -93,7 +93,7 @@ export default {
     },
     methods: {
         deleteConfirmation(index) {
-            this.selectedCurrency = this.currencies[index]
+            this.selectedCurrency = this.currencyExchangeRates[index]
             this.confirmingUserDeletion = true;
         },
     }

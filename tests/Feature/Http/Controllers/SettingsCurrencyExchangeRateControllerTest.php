@@ -18,7 +18,7 @@ class SettingsCurrencyExchangeRateControllerTest extends TestCase
         CurrencyExchangeRate::factory()->count(10)->create();
 
         $this->actingAs($user);
-        $this->get(route('settings.currencies.index'))
+        $this->get(route('settings.currency-exchange-rates.index'))
             ->assertSee(CurrencyExchangeRate::first()->name)
             ->assertStatus(200);
     }
@@ -34,9 +34,9 @@ class SettingsCurrencyExchangeRateControllerTest extends TestCase
             'currencyRateOn' => '2021-12-12',
             'currencyRate' => '12.2134'
         ];
-        $this->post(route('settings.currencies.store'),$data)
+        $this->post(route('settings.currency-exchange-rates.store'),$data)
             ->assertStatus(302)
-            ->assertRedirect(route('settings.currencies.index'));
+            ->assertRedirect(route('settings.currency-exchange-rates.index'));
 
         $this->assertDatabaseHas(CurrencyExchangeRate::class, [
             'name' => $data['name'],
@@ -52,11 +52,11 @@ class SettingsCurrencyExchangeRateControllerTest extends TestCase
 
         $currency = CurrencyExchangeRate::factory()->create();
 
-        $page = $this->get(route('settings.currencies.edit', [$currency]))
+        $page = $this->get(route('settings.currency-exchange-rates.edit', [$currency]))
             ->assertStatus(200)
             ->viewData('page');
 
-        $this->assertEquals('Settings/Currency/CurrencyUpdate', $page['component']);
+        $this->assertEquals('Settings/CurrencyExchangeRate/CurrencyExchangeRateUpdate', $page['component']);
         $this->assertArraysAreSimilar($currency->toArray(), $page['props']['currency']);
     }
 
@@ -72,9 +72,9 @@ class SettingsCurrencyExchangeRateControllerTest extends TestCase
             'currencyRate' => '12.2134'
         ];
 
-        $this->put(route('settings.currencies.update', $currency->id),$data)
+        $this->put(route('settings.currency-exchange-rates.update', $currency->id),$data)
             ->assertStatus(302)
-            ->assertRedirect(route('settings.currencies.index'));
+            ->assertRedirect(route('settings.currency-exchange-rates.index'));
 
         $this->assertDatabaseHas(CurrencyExchangeRate::class, [
             'name' => $data['name'],
@@ -89,9 +89,9 @@ class SettingsCurrencyExchangeRateControllerTest extends TestCase
         $this->actingAs($user);
         $currency = CurrencyExchangeRate::factory()->create();
 
-        $this->deleteJson(route('settings.currencies.delete', $currency))
+        $this->deleteJson(route('settings.currency-exchange-rates.delete', $currency))
             ->assertStatus(302)
-            ->assertRedirect(route('settings.currencies.index'));
+            ->assertRedirect(route('settings.currency-exchange-rates.index'));
 
         $this->assertDatabaseMissing(CurrencyExchangeRate::class, [
             'name' => $currency->name,

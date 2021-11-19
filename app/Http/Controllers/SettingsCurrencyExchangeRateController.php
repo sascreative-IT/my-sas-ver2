@@ -20,12 +20,12 @@ class SettingsCurrencyExchangeRateController extends Controller
 {
     public function index(): \Inertia\Response
     {
-        $currencies = CurrencyExchangeRate::query()->get();
+        $currencyExchangeRates = CurrencyExchangeRate::query()->get();
 
         return Inertia::render(
-            'Settings/Currency',
+            'Settings/CurrencyExchangeRate',
             [
-                'currencies' => $currencies
+                'currencyExchangeRates' => $currencyExchangeRates
             ]
         );
     }
@@ -33,7 +33,7 @@ class SettingsCurrencyExchangeRateController extends Controller
     public function create()
     {
         return Inertia::render(
-            'Settings/Currency/CurrencyAdd',
+            'Settings/CurrencyExchangeRate/CurrencyExchangeRateAdd',
         );
     }
 
@@ -42,31 +42,31 @@ class SettingsCurrencyExchangeRateController extends Controller
         $currencyData = new CurrencyExchangeRateData(...$request->validated());
         (new CreateCurrencyExchangeRateAction())->execute($currencyData);
 
-        return Redirect::route('settings.currencies.index');
+        return Redirect::route('settings.currency-exchange-rates.index');
     }
 
-    public function edit(CurrencyExchangeRate $currency)
+    public function edit(CurrencyExchangeRate $currencyExchangeRate)
     {
         return Inertia::render(
-            'Settings/Currency/CurrencyUpdate',
+            'Settings/CurrencyExchangeRate/CurrencyExchangeRateUpdate',
             [
-                'currency' => $currency
+                'currency' => $currencyExchangeRate
             ],
         );
     }
 
-    public function update(CurrencyExchangeRate $currency, StoreCurrencyRequest $request)
+    public function update(CurrencyExchangeRate $currencyExchangeRate, StoreCurrencyRequest $request)
     {
-        $currencyData = new CurrencyExchangeRateData(...$request->validated());
-        (new UpdateCurrencyExchangeRateAction())->execute($currencyData, $currency);
+        $currencyExchangeRateData = new CurrencyExchangeRateData(...$request->validated());
+        (new UpdateCurrencyExchangeRateAction())->execute($currencyExchangeRateData, $currencyExchangeRate);
 
-        return Redirect::route('settings.currencies.index');
+        return Redirect::route('settings.currency-exchange-rates.index');
     }
 
-    public function delete(CurrencyExchangeRate $currency)
+    public function delete(CurrencyExchangeRate $currencyExchangeRate)
     {
-        (new DeleteCurrencyExchangeRateAction())->execute($currency);
+        (new DeleteCurrencyExchangeRateAction())->execute($currencyExchangeRate);
 
-        return Redirect::route('settings.currencies.index');
+        return Redirect::route('settings.currency-exchange-rates.index');
     }
 }

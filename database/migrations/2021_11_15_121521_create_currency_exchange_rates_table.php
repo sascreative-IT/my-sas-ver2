@@ -29,6 +29,6 @@ class CreateCurrencyExchangeRatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('currencies');
+        Schema::dropIfExists('currency_exchange_rates');
     }
 }
