@@ -1,14 +1,14 @@
 <template>
     <settings-layout>
         <div class="">
-            <h3 class="text-lg">Exchange Rates</h3>
+            <h3 class="text-lg">Currencies</h3>
 
             <div class="flex flex-row-reverse">
                 <inertia-link
                     class="bg-green-500 w-30 h-8 text-center pt-1.5 pl-3 pr-2 text-white rounded text-sm"
-                    :href="route('settings.currency-exchange-rates.create')"
+                    :href="route('settings.currencies.create')"
                 >
-                    Add Exchange Rate
+                    Add Currency
                 </inertia-link>
             </div>
             <div class="mt-5">
@@ -21,11 +21,7 @@
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Rate (1 USD)
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Rate On
+                            Status
                         </th>
                         <th scope="col" class="relative px-6 py-3">
                             <span class="sr-only">Edit</span>
@@ -33,20 +29,18 @@
                     </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="(currency,index) in currencyExchangeRates">
+                    <tr v-for="(currency,index) in currencies">
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900">{{ currency.name }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ currency.rate }}</div>
+                            <div class="text-sm text-gray-900">{{ currency.status }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ currency.rate_on }}</div>
-                        </td>
+
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <inertia-link
                                 class="text-indigo-600 hover:text-indigo-900"
-                                :href="route('settings.currency-exchange-rates.edit', currency.id)"
+                                :href="route('settings.currencies.edit', currency.id)"
                             >
                                 Edit
                             </inertia-link>
@@ -63,8 +57,8 @@
 
         <delete-confirmation-modal
             title="Delete Currency"
-            :message='`Are you sure you want delete "${this.selectedExchangeRateData.name}" currency ?`'
-            :delete-url="'/settings/currency-exchange-rates/' + this.selectedExchangeRateData.id"
+            :message='`Are you sure you want delete "${this.selectedCurrency.name}" currency ?`'
+            :delete-url="'/settings/currencies/' + this.selectedCurrency.id"
             :show="confirmingUserDeletion"
             @close="confirmingUserDeletion = false"
         ></delete-confirmation-modal>
@@ -77,23 +71,23 @@ import JetConfirmationModal from '@/Jetstream/ConfirmationModal'
 import DeleteConfirmationModal from "@/Pages/Common/DeleteConfirmationModal";
 
 export default {
-    name: "CurrencyExchangeRate",
+    name: "Currency",
     components: {DeleteConfirmationModal, SettingsLayout, JetConfirmationModal},
     props: {
-        currencyExchangeRates: {
+        currencies: {
             required: false,
             type: Array
         }
     },
     data() {
         return {
-            selectedExchangeRateData: {},
+            selectedCurrency: {},
             confirmingUserDeletion: false
         }
     },
     methods: {
         deleteConfirmation(index) {
-            this.selectedExchangeRateData = this.currencyExchangeRates[index]
+            this.selectedCurrency = this.currencies[index]
             this.confirmingUserDeletion = true;
         },
     }
