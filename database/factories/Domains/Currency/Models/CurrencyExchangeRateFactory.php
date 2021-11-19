@@ -2,12 +2,12 @@
 
 namespace Database\Factories\Domains\Currency\Models;
 
-use App\Domains\Currency\Models\Currency;
+use App\Domains\Currency\Models\CurrencyExchangeRate;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class CurrencyFactory extends Factory
+class CurrencyExchangeRateFactory extends Factory
 {
-    protected $model = Currency::class;
+    protected $model = CurrencyExchangeRate::class;
 
     public function definition(): array
     {

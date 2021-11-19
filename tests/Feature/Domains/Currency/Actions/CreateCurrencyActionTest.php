@@ -4,7 +4,7 @@ namespace Tests\Feature\Domains\Currency\Actions;
 
 use App\Domains\Currency\Actions\CreateCurrencyAction;
 use App\Domains\Currency\Dtos\CurrencyData;
-use App\Domains\Currency\Models\Currency;
+use App\Domains\Currency\Models\CurrencyExchangeRate;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -24,9 +24,9 @@ class CreateCurrencyActionTest extends TestCase
 
         $currency = (new CreateCurrencyAction())->execute($dto);
 
-        $this->assertInstanceOf(Currency::class, $currency);
-        $this->assertDatabaseCount(Currency::class, 1);
-        $this->assertDatabaseHas(Currency::class, [
+        $this->assertInstanceOf(CurrencyExchangeRate::class, $currency);
+        $this->assertDatabaseCount(CurrencyExchangeRate::class, 1);
+        $this->assertDatabaseHas(CurrencyExchangeRate::class, [
             'name' => 'LRK',
             'rate' => 123.50,
         ]);

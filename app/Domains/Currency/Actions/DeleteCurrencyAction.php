@@ -3,11 +3,11 @@
 namespace App\Domains\Currency\Actions;
 
 use App\Domains\Currency\Dtos\CurrencyData;
-use App\Domains\Currency\Models\Currency;
+use App\Domains\Currency\Models\CurrencyExchangeRate;
 
 class DeleteCurrencyAction
 {
-    public function execute(Currency $currency): bool
+    public function execute(CurrencyExchangeRate $currency): bool
     {
         return $currency->delete();
     }

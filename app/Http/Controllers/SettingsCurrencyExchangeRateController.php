@@ -7,7 +7,7 @@ use App\Domains\Currency\Actions\CreateCurrencyAction;
 use App\Domains\Currency\Actions\DeleteCurrencyAction;
 use App\Domains\Currency\Actions\UpdateCurrencyAction;
 use App\Domains\Currency\Dtos\CurrencyData;
-use App\Domains\Currency\Models\Currency;
+use App\Domains\Currency\Models\CurrencyExchangeRate;
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Models\Country;
 use App\Models\Warehouse;
@@ -16,11 +16,11 @@ use Inertia\Inertia;
 use App\Http\Requests\StoreWarehouseRequest;
 use App\Http\Requests\UpdateWarehouseRequest;
 
-class SettingsCurrencyController extends Controller
+class SettingsCurrencyExchangeRateController extends Controller
 {
     public function index(): \Inertia\Response
     {
-        $currencies = Currency::query()->get();
+        $currencies = CurrencyExchangeRate::query()->get();
 
         return Inertia::render(
             'Settings/Currency',
@@ -45,7 +45,7 @@ class SettingsCurrencyController extends Controller
         return Redirect::route('settings.currencies.index');
     }
 
-    public function edit(Currency $currency)
+    public function edit(CurrencyExchangeRate $currency)
     {
         return Inertia::render(
             'Settings/Currency/CurrencyUpdate',
@@ -55,7 +55,7 @@ class SettingsCurrencyController extends Controller
         );
     }
 
-    public function update(Currency $currency, StoreCurrencyRequest $request)
+    public function update(CurrencyExchangeRate $currency, StoreCurrencyRequest $request)
     {
         $currencyData = new CurrencyData(...$request->validated());
         (new UpdateCurrencyAction())->execute($currencyData, $currency);
@@ -63,7 +63,7 @@ class SettingsCurrencyController extends Controller
         return Redirect::route('settings.currencies.index');
     }
 
-    public function delete(Currency $currency)
+    public function delete(CurrencyExchangeRate $currency)
     {
         (new DeleteCurrencyAction())->execute($currency);
 

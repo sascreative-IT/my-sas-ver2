@@ -13,7 +13,7 @@ class CreateCurrenciesTable extends Migration
      */
     public function up()
     {
-        Schema::create('currencies', function (Blueprint $table) {
+        Schema::create('currency_exchange_rates', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->decimal('rate', 9,4);
