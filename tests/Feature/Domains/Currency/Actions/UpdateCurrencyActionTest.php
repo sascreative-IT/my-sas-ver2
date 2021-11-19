@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Domains\Currency\Actions;
 
-use App\Domains\Currency\Actions\CreateCurrencyAction;
-use App\Domains\Currency\Actions\UpdateCurrencyAction;
-use App\Domains\Currency\Dtos\CurrencyData;
+use App\Domains\Currency\Actions\CreateCurrencyExchangeRateAction;
+use App\Domains\Currency\Actions\UpdateCurrencyExchangeRateAction;
+use App\Domains\Currency\Dtos\CurrencyExchangeRateData;
 use App\Domains\Currency\Models\CurrencyExchangeRate;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -19,13 +19,13 @@ class UpdateCurrencyActionTest extends TestCase
     {
         $currency = CurrencyExchangeRate::factory()->create();
 
-        $dto = new CurrencyData(
+        $dto = new CurrencyExchangeRateData(
             name: 'LRK',
             rate: 123.50,
             currencyRateOn: $this->faker->date
         );
 
-        $updated_currency = (new UpdateCurrencyAction())->execute($dto, $currency);
+        $updated_currency = (new UpdateCurrencyExchangeRateAction())->execute($dto, $currency);
 
         $this->assertInstanceOf(CurrencyExchangeRate::class, $updated_currency);
         $this->assertDatabaseCount(CurrencyExchangeRate::class, 1);

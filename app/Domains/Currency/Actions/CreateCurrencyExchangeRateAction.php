@@ -2,12 +2,12 @@
 
 namespace App\Domains\Currency\Actions;
 
-use App\Domains\Currency\Dtos\CurrencyData;
+use App\Domains\Currency\Dtos\CurrencyExchangeRateData;
 use App\Domains\Currency\Models\CurrencyExchangeRate;
 
-class CreateCurrencyAction
+class CreateCurrencyExchangeRateAction
 {
-    public function execute(CurrencyData $currencyData)
+    public function execute(CurrencyExchangeRateData $currencyData)
     {
         return CurrencyExchangeRate::create([
             'name' => $currencyData->name,

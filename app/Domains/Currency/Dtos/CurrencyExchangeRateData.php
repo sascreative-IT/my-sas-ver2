@@ -5,7 +5,7 @@ namespace App\Domains\Currency\Dtos;
 use Illuminate\Support\Carbon;
 use Spatie\DataTransferObject\DataTransferObject;
 
-class CurrencyData extends DataTransferObject
+class CurrencyExchangeRateData extends DataTransferObject
 {
     public Carbon $rateOn;
     public float $rate;
