@@ -50,7 +50,7 @@ class SettingsCurrencyExchangeRateController extends Controller
         return Inertia::render(
             'Settings/CurrencyExchangeRate/CurrencyExchangeRateUpdate',
             [
-                'currency' => $currencyExchangeRate
+                'currencyExchangeRate' => $currencyExchangeRate
             ],
         );
     }

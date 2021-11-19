@@ -1,14 +1,14 @@
 <template>
     <settings-layout>
         <div class="">
-            <h3 class="text-lg">Currencies</h3>
+            <h3 class="text-lg">Exchange Rates</h3>
 
             <div class="flex flex-row-reverse">
                 <inertia-link
                     class="bg-green-500 w-30 h-8 text-center pt-1.5 pl-3 pr-2 text-white rounded text-sm"
                     :href="route('settings.currency-exchange-rates.create')"
                 >
-                    Add Currency
+                    Add Exchange Rate
                 </inertia-link>
             </div>
             <div class="mt-5">

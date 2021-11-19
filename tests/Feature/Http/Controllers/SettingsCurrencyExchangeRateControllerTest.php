@@ -57,7 +57,7 @@ class SettingsCurrencyExchangeRateControllerTest extends TestCase
             ->viewData('page');
 
         $this->assertEquals('Settings/CurrencyExchangeRate/CurrencyExchangeRateUpdate', $page['component']);
-        $this->assertArraysAreSimilar($currency->toArray(), $page['props']['currency']);
+        $this->assertArraysAreSimilar($currency->toArray(), $page['props']['currencyExchangeRate']);
     }
 
     public function test_it_updates_properly()

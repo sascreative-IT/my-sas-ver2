@@ -3,26 +3,26 @@
         <div class="">
             <h3 class="text-lg">Add Currency</h3>
             <div class="mt-5">
-                <form @submit.prevent="addCurrency">
+                <form @submit.prevent="addCurrencyExchangeRate">
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <div class="grid grid-cols-3 gap-8">
                                 <div>
-                                    <label for="currency_name" class="block text-sm font-medium text-gray-700">Currency Name</label>
-                                    <input v-model="currency.name" type="text" name="full_name" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <label for="currencyExchangeRate_name" class="block text-sm font-medium text-gray-700">Currency Name</label>
+                                    <input v-model="currencyExchangeRate.name" type="text" name="full_name" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
                                 <div>
-                                    <label for="currency_rate" class="block text-sm font-medium text-gray-700">Currency Rate (1 USD)</label>
-                                    <input v-model="currency.currencyRate" type="text" name="rate" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <label for="currencyExchangeRate_rate" class="block text-sm font-medium text-gray-700">Currency Rate (1 USD)</label>
+                                    <input v-model="currencyExchangeRate.currencyRate" type="text" name="rate" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
                                 <div>
-                                    <label for="currencyRateOn" class="block text-sm font-medium text-gray-700">Rate On</label>
+                                    <label for="currencyExchangeRateRateOn" class="block text-sm font-medium text-gray-700">Rate On</label>
 
                                     <vc-date-picker
                                         color="white"
-                                        v-model='currency.currencyRateOn'
+                                        v-model='currencyExchangeRate.currencyRateOn'
                                         :model-config="modelConfig"
                                     >
                                         <template v-slot="{ inputValue, inputEvents }">
@@ -62,11 +62,11 @@
 import SettingsLayout from "@/Pages/Settings/SettingsLayout";
 
 export default {
-    name: "CurrencyAdd",
+    name: "CurrencyExchangeRateAdd",
     components: {SettingsLayout},
     data() {
         return {
-            currency: {
+            currencyExchangeRate: {
                 name: '',
                 currencyRate: null,
                 currencyRateOn: null
@@ -79,9 +79,9 @@ export default {
         }
     },
     methods: {
-        addCurrency() {
+        addCurrencyExchangeRate() {
             this.submitted = true;
-            this.$inertia.post(route('settings.currency-exchange-rates.store'), this.currency).then(function () {
+            this.$inertia.post(route('settings.currency-exchange-rates.store'), this.currencyExchangeRate).then(function () {
                 this.submitted = false;
             }).catch(error => {
                 this.submitted = false;
