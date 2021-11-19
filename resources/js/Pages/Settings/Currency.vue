@@ -34,7 +34,11 @@
                             <div class="text-sm text-gray-900">{{ currency.name }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ currency.status }}</div>
+                            <div class="text-sm text-gray-900">
+                                <span class="p-1" :class="currency.status === 'Disabled' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'">
+                                {{ currency.status }}
+                                </span>
+                            </div>
                         </td>
 
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
