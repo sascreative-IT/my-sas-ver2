@@ -14,6 +14,7 @@ class CurrencyFactory extends Factory
         return [
             'name' => $this->faker->currencyCode(),
             'rate' => $this->faker->randomNumber(2),
+            'rate_on' => $this->faker->date
         ];
     }
 }

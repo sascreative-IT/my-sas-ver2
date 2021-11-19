@@ -16,7 +16,8 @@ class CurrencyDataTest extends TestCase
     {
         $dto = new CurrencyData(
             name: $this->faker->currencyCode(),
-            rate: $this->faker->numberBetween(1,200)
+            currencyRate: $this->faker->numberBetween(1, 200),
+            currencyRateOn: $this->faker->date
         );
         $this->assertInstanceOf(CurrencyData::class, $dto);
     }

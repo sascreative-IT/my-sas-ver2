@@ -21,7 +21,8 @@ class UpdateCurrencyActionTest extends TestCase
 
         $dto = new CurrencyData(
             name: 'LRK',
-            rate: 123.50
+            rate: 123.50,
+            currencyRateOn: $this->faker->date
         );
 
         $updated_currency = (new UpdateCurrencyAction())->execute($dto, $currency);
