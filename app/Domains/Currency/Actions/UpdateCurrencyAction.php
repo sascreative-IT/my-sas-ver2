@@ -11,7 +11,7 @@ class UpdateCurrencyAction
     {
         $currency->update([
             'name' => $currencyData->name,
-            'rate' => $currencyData->rate,
+            'status' => $currencyData->status
         ]);
 
         return $currency;

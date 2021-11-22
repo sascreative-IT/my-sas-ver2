@@ -24,15 +24,9 @@ class StoreCurrencyRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|min:2|max:10'
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'name.required' => 'Name field is required!',
-            'country_id.required' => 'Country field is required!',
+            'name' => 'required|string|min:2|max:10',
+            'currencyRateOn' => 'required',
+            'currencyRate' => 'required'
         ];
     }
 }

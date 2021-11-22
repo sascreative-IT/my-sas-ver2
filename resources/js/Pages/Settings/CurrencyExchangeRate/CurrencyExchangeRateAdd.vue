@@ -1,35 +1,28 @@
 <template>
     <settings-layout>
         <div class="">
-            <h3 class="text-lg">Update Currency</h3>
+            <h3 class="text-lg">Add Currency</h3>
             <div class="mt-5">
-                <form @submit.prevent="UpdateCurrency">
+                <form @submit.prevent="addCurrencyExchangeRate">
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <div class="grid grid-cols-3 gap-8">
                                 <div>
-                                    <label for="currency_name" class="block text-sm font-medium text-gray-700">Currency
-                                        Name</label>
-                                    <input v-model="currencyData.name" type="text" name="full_name" id="full_name"
-                                           autocomplete="given-name"
-                                           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <label for="currencyExchangeRate_name" class="block text-sm font-medium text-gray-700">Currency Name</label>
+                                    <input v-model="currencyExchangeRate.name" type="text" name="full_name" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
                                 <div>
-                                    <label for="currency_rate" class="block text-sm font-medium text-gray-700">Currency
-                                        Rate (1 USD)</label>
-                                    <input v-model="currencyData.currencyRate" type="text" name="rate" id="full_name"
-                                           autocomplete="given-name"
-                                           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <label for="currencyExchangeRate_rate" class="block text-sm font-medium text-gray-700">Currency Rate (1 USD)</label>
+                                    <input v-model="currencyExchangeRate.currencyRate" type="text" name="rate" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
                                 <div>
-                                    <label for="currencyRateOn" class="block text-sm font-medium text-gray-700">Rate
-                                        On</label>
+                                    <label for="currencyExchangeRateRateOn" class="block text-sm font-medium text-gray-700">Rate On</label>
 
                                     <vc-date-picker
                                         color="white"
-                                        v-model='currencyData.currencyRateOn'
+                                        v-model='currencyExchangeRate.currencyRateOn'
                                         :model-config="modelConfig"
                                     >
                                         <template v-slot="{ inputValue, inputEvents }">
@@ -46,8 +39,7 @@
                             </div>
                         </div>
                         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                            <inertia-link :href="route('settings.currencies.index')"
-                                          class="inline-flex justify-center text-sm font-medium rounded-md text-gray-900 mr-5">
+                            <inertia-link :href="route('settings.currency-exchange-rates.index')" class="inline-flex justify-center text-sm font-medium rounded-md text-gray-900 mr-5">
                                 Cancel
                             </inertia-link>
 
@@ -56,7 +48,7 @@
                                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 :class="{'opacity-50': submitted}"
                             >
-                                Update
+                                Add
                             </button>
                         </div>
                     </div>
@@ -70,17 +62,11 @@
 import SettingsLayout from "@/Pages/Settings/SettingsLayout";
 
 export default {
-    name: "CurrencyUpdate",
+    name: "CurrencyExchangeRateAdd",
     components: {SettingsLayout},
-    props: {
-        currency: {
-            required: true,
-            type: Object
-        }
-    },
     data() {
         return {
-            currencyData: {
+            currencyExchangeRate: {
                 name: '',
                 currencyRate: null,
                 currencyRateOn: null
@@ -92,15 +78,10 @@ export default {
             submitted: false,
         }
     },
-    mounted() {
-        this.currencyData.name = this.currency.name;
-        this.currencyData.currencyRate = this.currency.rate;
-        this.currencyData.currencyRateOn = this.currency.rate_on;
-    },
     methods: {
-        UpdateCurrency() {
+        addCurrencyExchangeRate() {
             this.submitted = true;
-            this.$inertia.put(route('settings.currencies.update', this.currency.id), this.currencyData).then(function () {
+            this.$inertia.post(route('settings.currency-exchange-rates.store'), this.currencyExchangeRate).then(function () {
                 this.submitted = false;
             }).catch(error => {
                 this.submitted = false;

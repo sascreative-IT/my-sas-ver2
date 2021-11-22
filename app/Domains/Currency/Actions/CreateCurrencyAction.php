@@ -11,7 +11,7 @@ class CreateCurrencyAction
     {
         return Currency::create([
             'name' => $currencyData->name,
-            'rate' => $currencyData->rate,
+            'status' => $currencyData->status
         ]);
     }
 }

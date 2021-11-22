@@ -1,16 +1,16 @@
 <template>
     <settings-layout>
         <div class="">
-            <h3 class="text-lg">Update Currency</h3>
+            <h3 class="text-lg">Update Exchange Rate</h3>
             <div class="mt-5">
-                <form @submit.prevent="UpdateCurrency">
+                <form @submit.prevent="UpdateCurrencyExchangeRate">
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <div class="grid grid-cols-3 gap-8">
                                 <div>
                                     <label for="currency_name" class="block text-sm font-medium text-gray-700">Currency
                                         Name</label>
-                                    <input v-model="currencyData.name" type="text" name="full_name" id="full_name"
+                                    <input v-model="currencyExchangeRateData.name" type="text" name="full_name" id="full_name"
                                            autocomplete="given-name"
                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
@@ -18,7 +18,7 @@
                                 <div>
                                     <label for="currency_rate" class="block text-sm font-medium text-gray-700">Currency
                                         Rate (1 USD)</label>
-                                    <input v-model="currencyData.currencyRate" type="text" name="rate" id="full_name"
+                                    <input v-model="currencyExchangeRateData.currencyRate" type="text" name="rate" id="full_name"
                                            autocomplete="given-name"
                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
@@ -29,7 +29,7 @@
 
                                     <vc-date-picker
                                         color="white"
-                                        v-model='currencyData.currencyRateOn'
+                                        v-model='currencyExchangeRateData.currencyRateOn'
                                         :model-config="modelConfig"
                                     >
                                         <template v-slot="{ inputValue, inputEvents }">
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                            <inertia-link :href="route('settings.currencies.index')"
+                            <inertia-link :href="route('settings.currency-exchange-rates.index')"
                                           class="inline-flex justify-center text-sm font-medium rounded-md text-gray-900 mr-5">
                                 Cancel
                             </inertia-link>
@@ -73,14 +73,14 @@ export default {
     name: "CurrencyUpdate",
     components: {SettingsLayout},
     props: {
-        currency: {
+        currencyExchangeRate: {
             required: true,
             type: Object
         }
     },
     data() {
         return {
-            currencyData: {
+            currencyExchangeRateData: {
                 name: '',
                 currencyRate: null,
                 currencyRateOn: null
@@ -93,14 +93,14 @@ export default {
         }
     },
     mounted() {
-        this.currencyData.name = this.currency.name;
-        this.currencyData.currencyRate = this.currency.rate;
-        this.currencyData.currencyRateOn = this.currency.rate_on;
+        this.currencyExchangeRateData.name = this.currencyExchangeRate.name;
+        this.currencyExchangeRateData.currencyRate = this.currencyExchangeRate.rate;
+        this.currencyExchangeRateData.currencyRateOn = this.currencyExchangeRate.rate_on;
     },
     methods: {
-        UpdateCurrency() {
+        UpdateCurrencyExchangeRate() {
             this.submitted = true;
-            this.$inertia.put(route('settings.currencies.update', this.currency.id), this.currencyData).then(function () {
+            this.$inertia.put(route('settings.currency-exchange-rates.update', this.currencyExchangeRate.id), this.currencyExchangeRateData).then(function () {
                 this.submitted = false;
             }).catch(error => {
                 this.submitted = false;

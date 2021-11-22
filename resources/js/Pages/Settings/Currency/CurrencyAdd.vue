@@ -6,17 +6,35 @@
                 <form @submit.prevent="addCurrency">
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-6">
-                            <div class="grid grid-cols-6 gap-6">
-                                <div class="col-span-6 sm:col-span-3">
+                            <div class="grid grid-cols-3 gap-8">
+                                <div>
                                     <label for="currency_name" class="block text-sm font-medium text-gray-700">Currency Name</label>
                                     <input v-model="currency.name" type="text" name="full_name" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
-                                <div class="col-span-6 sm:col-span-3">
-                                    <label for="currency_rate" class="block text-sm font-medium text-gray-700">Currency Rate</label>
-                                    <input v-model="currency.rate" type="text" name="rate" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <div>
+                                    <label for="currency_rate" class="block text-sm font-medium text-gray-700">Currency Rate (1 USD)</label>
+                                    <input v-model="currency.currencyRate" type="text" name="rate" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
+                                <div>
+                                    <label for="currencyRateOn" class="block text-sm font-medium text-gray-700">Rate On</label>
+
+                                    <vc-date-picker
+                                        color="white"
+                                        v-model='currency.currencyRateOn'
+                                        :model-config="modelConfig"
+                                    >
+                                        <template v-slot="{ inputValue, inputEvents }">
+                                            <input
+                                                class="appearance-none border w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                id="date"
+                                                v-on="inputEvents"
+                                                :value="inputValue"
+                                            />
+                                        </template>
+                                    </vc-date-picker>
+                                </div>
 
                             </div>
                         </div>
@@ -50,7 +68,12 @@ export default {
         return {
             currency: {
                 name: '',
-                rate: null,
+                currencyRate: null,
+                currencyRateOn: null
+            },
+            modelConfig: {
+                type: 'string',
+                mask: 'YYYY-MM-DD',
             },
             submitted: false,
         }

@@ -10,7 +10,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\SettingsColourController;
 use App\Http\Controllers\SettingsController;
-use App\Http\Controllers\SettingsCurrencyController;
+use App\Http\Controllers\SettingsCurrencyExchangeRateController;
 use App\Http\Controllers\SettingsFactoryController;
 use App\Http\Controllers\SettingsMaterialController;
 use App\Http\Controllers\SettingsWarehouseController;
@@ -86,12 +86,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::put('/settings/colours/{colour}', [SettingsColourController::class, 'update'])->name('settings.colours.update');
     Route::delete('/settings/colours/{colour}', [SettingsColourController::class, 'delete'])->name('settings.colours.delete');
 
-    Route::get('/settings/currencies', [SettingsCurrencyController::class, 'index'])->name('settings.currencies.index');
-    Route::post('/settings/currencies', [SettingsCurrencyController::class, 'store'])->name('settings.currencies.store');
-    Route::get('/settings/currencies/create', [SettingsCurrencyController::class, 'create'])->name('settings.currencies.create');
-    Route::get('/settings/currencies/{currency}/edit', [SettingsCurrencyController::class, 'edit'])->name('settings.currencies.edit');
-    Route::put('/settings/currencies/{currency}', [SettingsCurrencyController::class, 'update'])->name('settings.currencies.update');
-    Route::delete('/settings/currencies/{currency}', [SettingsCurrencyController::class, 'delete'])->name('settings.currencies.delete');
+    Route::get('/settings/currency-exchange-rates', [SettingsCurrencyExchangeRateController::class, 'index'])->name('settings.currency-exchange-rates.index');
+    Route::post('/settings/currency-exchange-rates', [SettingsCurrencyExchangeRateController::class, 'store'])->name('settings.currency-exchange-rates.store');
+    Route::get('/settings/currency-exchange-rates/create', [SettingsCurrencyExchangeRateController::class, 'create'])->name('settings.currency-exchange-rates.create');
+    Route::get('/settings/currency-exchange-rates/{currencyExchangeRate}/edit', [SettingsCurrencyExchangeRateController::class, 'edit'])->name('settings.currency-exchange-rates.edit');
+    Route::put('/settings/currency-exchange-rates/{currencyExchangeRate}', [SettingsCurrencyExchangeRateController::class, 'update'])->name('settings.currency-exchange-rates.update');
+    Route::delete('/settings/currency-exchange-rates/{currencyExchangeRate}', [SettingsCurrencyExchangeRateController::class, 'delete'])->name('settings.currency-exchange-rates.delete');
 
     Route::get('/users', [UsersController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UsersController::class, 'create'])->name('users.create');
