@@ -1,47 +1,33 @@
 <template>
     <settings-layout>
         <div class="">
-            <h3 class="text-lg">Update Currency</h3>
+            <h3 class="text-lg">Add Currency</h3>
             <div class="mt-5">
-                <form @submit.prevent="UpdateCurrency">
+                <form @submit.prevent="updateCurrency">
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <div class="grid grid-cols-3 gap-8">
                                 <div>
                                     <label for="currency_name" class="block text-sm font-medium text-gray-700">Currency
                                         Name</label>
-                                    <input v-model="currencyData.name" type="text" name="full_name" id="full_name"
+                                    <input v-model="currency.name" type="text" name="full_name" id="full_name"
                                            autocomplete="given-name"
                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
                                 <div>
-                                    <label for="currency_rate" class="block text-sm font-medium text-gray-700">Currency
-                                        Rate (1 USD)</label>
-                                    <input v-model="currencyData.currencyRate" type="text" name="rate" id="full_name"
-                                           autocomplete="given-name"
-                                           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <label for="currency_status"
+                                           class="block text-sm font-medium text-gray-700">Status</label>
+                                    <select id="factory"
+                                            v-model="currency.status"
+                                            name="status"
+                                            autocomplete="status"
+                                            class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <option value="Enabled">Enabled</option>
+                                        <option value="Disabled">Disabled</option>
+                                    </select>
                                 </div>
 
-                                <div>
-                                    <label for="currencyRateOn" class="block text-sm font-medium text-gray-700">Rate
-                                        On</label>
-
-                                    <vc-date-picker
-                                        color="white"
-                                        v-model='currencyData.currencyRateOn'
-                                        :model-config="modelConfig"
-                                    >
-                                        <template v-slot="{ inputValue, inputEvents }">
-                                            <input
-                                                class="appearance-none border w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                id="date"
-                                                v-on="inputEvents"
-                                                :value="inputValue"
-                                            />
-                                        </template>
-                                    </vc-date-picker>
-                                </div>
 
                             </div>
                         </div>
@@ -56,7 +42,7 @@
                                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 :class="{'opacity-50': submitted}"
                             >
-                                Update
+                                Save
                             </button>
                         </div>
                     </div>
@@ -70,7 +56,7 @@
 import SettingsLayout from "@/Pages/Settings/SettingsLayout";
 
 export default {
-    name: "CurrencyUpdate",
+    name: "CurrencyAdd",
     components: {SettingsLayout},
     props: {
         currency: {
@@ -80,29 +66,17 @@ export default {
     },
     data() {
         return {
-            currencyData: {
-                name: '',
-                currencyRate: null,
-                currencyRateOn: null
-            },
-            modelConfig: {
-                type: 'string',
-                mask: 'YYYY-MM-DD',
-            },
             submitted: false,
         }
     },
-    mounted() {
-        this.currencyData.name = this.currency.name;
-        this.currencyData.currencyRate = this.currency.rate;
-        this.currencyData.currencyRateOn = this.currency.rate_on;
-    },
     methods: {
-        UpdateCurrency() {
+        updateCurrency() {
             this.submitted = true;
-            this.$inertia.put(route('settings.currencies.update', this.currency.id), this.currencyData).then(function () {
-                this.submitted = false;
-            }).catch(error => {
+            this.$inertia
+                .put(route('settings.currencies.update', this.currency.id), this.currency)
+                .then(function () {
+                    this.submitted = false;
+                }).catch(error => {
                 this.submitted = false;
             })
         }

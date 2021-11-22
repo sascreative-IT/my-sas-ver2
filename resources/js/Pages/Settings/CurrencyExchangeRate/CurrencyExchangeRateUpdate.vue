@@ -10,9 +10,16 @@
                                 <div>
                                     <label for="currency_name" class="block text-sm font-medium text-gray-700">Currency
                                         Name</label>
-                                    <input v-model="currencyExchangeRateData.name" type="text" name="full_name" id="full_name"
-                                           autocomplete="given-name"
-                                           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+
+                                    <select id="factory"
+                                            v-model="currencyExchangeRateData.name"
+                                            name="status"
+                                            autocomplete="status"
+                                            class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <option v-for="currency in currencies" :value="currency.name">
+                                            {{ currency.name }}
+                                        </option>
+                                    </select>
                                 </div>
 
                                 <div>
@@ -76,6 +83,9 @@ export default {
         currencyExchangeRate: {
             required: true,
             type: Object
+        },
+        currencies: {
+            required: true
         }
     },
     data() {
