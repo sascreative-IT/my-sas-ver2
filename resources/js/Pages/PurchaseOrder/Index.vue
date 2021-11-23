@@ -14,11 +14,14 @@
                     </inertia-link>
                 </div>
 
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-5">
-                    <app-table
-                        emptyText="No purchase orders created"
-                        :items="purchase_orders.data"
-                        :headers="[
+                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-5 pl-2 pr-2">
+                    <el-tabs @tab-click="handleClick">
+                        <el-tab-pane label="Pending" key="Pending">
+
+                            <app-table
+                                emptyText="No purchase orders created"
+                                :items="purchase_orders.data"
+                                :headers="[
                         {key: 'id', name: 'ID', width: '80px'},
                         {key: 'supplier.name', name: 'Supplier'},
                         {key: 'assigned_factory.name', name: 'Factory'},
@@ -26,39 +29,47 @@
                         {key: 'user.name', name: 'Evaluated By'},
                         {key: 'evaluated_at', name: 'Evaluated On'},
                       ]"
-                    >
-                        <el-table-column
-                            fixed="right"
-                            label="Operations"
-                            width="220">
-                            <template #default="scope">
-                                <inertia-link
-                                    class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                                    v-if="scope.row.evaluation_status === 'Approved'"
-                                    :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
-                                    Create Invoice
-                                </inertia-link>
+                            >
+                                <el-table-column
+                                    fixed="right"
+                                    label="Operations"
+                                    width="220">
+                                    <template #default="scope">
+                                        <inertia-link
+                                            class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                            v-if="scope.row.evaluation_status === 'Approved'"
+                                            :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
+                                            Create Invoice
+                                        </inertia-link>
 
-                                <template v-if="scope.row.evaluation_status === 'Pending'">
-                                    <button
-                                        class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                                        @click="approvePurchaseOrder(scope.row.id)">
-                                        Approve
-                                    </button>
+                                        <template v-if="scope.row.evaluation_status === 'Pending'">
+                                            <button
+                                                class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                                @click="approvePurchaseOrder(scope.row.id)">
+                                                Approve
+                                            </button>
 
-                                    <button
-                                        class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                                        @click="rejectPurchaseOrder(scope.row.id)">
-                                        Reject
-                                    </button>
-                                </template>
+                                            <button
+                                                class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                                @click="rejectPurchaseOrder(scope.row.id)">
+                                                Reject
+                                            </button>
+                                        </template>
 
-                            </template>
-                        </el-table-column>
-                    </app-table>
+                                    </template>
+                                </el-table-column>
+                            </app-table>
+
+                        </el-tab-pane>
+                        <el-tab-pane label="Approved" key="Approved">Approved</el-tab-pane>
+                        <el-tab-pane label="Rejected" key="Rejected">Rejected</el-tab-pane>
+                    </el-tabs>
+
                 </div>
 
-                <pagination class="mt-6" :links="purchase_orders.links"/>
+                <paginator class="mt-2"
+                    :pagination="purchase_orders"
+                ></paginator>
             </div>
         </div>
     </app-layout>
@@ -67,11 +78,11 @@
 <script>
 import AppSelect from "@/UIElements/AppSelect";
 import AppTable from "@/UIElements/AppTable";
-import Pagination from '@/Components/Pagination'
+import Paginator from "@/UIElements/Paginator";
 
 export default {
     name: "Index",
-    components: {AppTable, AppSelect, Pagination},
+    components: {AppTable, AppSelect, Paginator},
     props: {
         purchase_orders: {
             required: true,
@@ -87,7 +98,19 @@ export default {
         rejectPurchaseOrder(id) {
             this.$inertia.form({})
                 .post(route('purchase.orders.reject', {materialPurchaseOrder: id}));
-        }
+        },
+
+        handleClick(obj, e) {
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    status: obj.$vnode.key,
+                    page: 1
+                }
+            })
+        },
+
     }
 }
 </script>

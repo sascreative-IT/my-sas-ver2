@@ -28,11 +28,17 @@ class PurchaseOrderController extends Controller
     public function index(Request $request): \Inertia\Response
     {
         $factory = $request->get('factory');
+        $status = $request->get('status');
+
+        $factories = Factory::all()->toArray();
 
         $purchase_orders = MaterialPurchaseOrder::query()
             ->with(['supplier', 'assignedFactory', 'user'])
             ->when($factory, function ($query, $factory) {
                 return $query->where('factory_id', $factory);
+            })
+            ->when($status, function ($query, $status) {
+                return $query->where('evaluation_status', $status);
             })
             ->orderBy("created_at", "DESC")
             ->paginate();
