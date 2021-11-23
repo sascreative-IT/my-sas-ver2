@@ -41,12 +41,16 @@ class PurchaseOrderController extends Controller
                 return $query->where('evaluation_status', $status);
             })
             ->orderBy("created_at", "DESC")
-            ->paginate();
+            ->paginate()
+            ->appends($request->except(['page','_token']));
 
         return Inertia::render(
             'PurchaseOrder/Index',
             [
-                'purchase_orders' => $purchase_orders
+                'purchase_orders' => $purchase_orders,
+                'factories' => $factories,
+                'status' => $status,
+                'factory' => $factory
             ]
         );
     }
