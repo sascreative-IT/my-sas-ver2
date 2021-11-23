@@ -94,7 +94,11 @@
                                             <div class="">
                                                 <label for="unit_price-value"
                                                        class="block text-sm font-medium text-gray-700">
-                                                    Unit Price</label>
+                                                    Unit Price
+                                                    <template v-if="material">
+                                                        ({{material.unit.toUpperCase()}})
+                                                    </template>
+                                                </label>
                                                 <div class="absolute">
                                                     <div class="flex flex-wrap items-stretch w-full mb-4 relative">
                                                         <div class="flex -mr-px">
@@ -274,6 +278,9 @@ export default {
         currencies: {
             required: true,
             type: Object
+        },
+        material : {
+            required: false
         }
     },
     data() {
@@ -303,6 +310,7 @@ export default {
     },
     mounted() {
         this.extractFactoryName(this.factories);
+        this.selectedCurrency = this.currencies[Object.keys(this.currencies)[0]];
     },
     methods: {
         extractFactoryName(prop) {
@@ -322,6 +330,14 @@ export default {
         setSelectedMaterial(value) {
             this.purchaseOrderItem.material_name_id = value.value;
             this.purchaseOrderItem.material_name = value.text;
+
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    material_id: value.value
+                }
+            })
         },
         setSelectedColour(value) {
             this.purchaseOrderItem.material_variation_id = value.value;
@@ -357,6 +373,8 @@ export default {
         },
         handleAddPurchaseOrderItems() {
             this.purchaseOrderItem.currency = this.selectedCurrency;
+            this.purchaseOrderItem.unit = this.material.unit;
+
             this.purchaseOrder.items.push(this.purchaseOrderItem);
             this.resetPurchaseOrderItems();
             this.setItemsReadOnly();

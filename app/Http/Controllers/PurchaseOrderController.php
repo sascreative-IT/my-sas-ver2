@@ -45,7 +45,7 @@ class PurchaseOrderController extends Controller
         );
     }
 
-    public function create(): \Inertia\Response
+    public function create(Request $request): \Inertia\Response
     {
         $materialsCollection = Materials::all();
         $materials = SelectOptions::selectOptionsObject($materialsCollection, 'id', 'name');
@@ -65,6 +65,11 @@ class PurchaseOrderController extends Controller
         $currencyCollection = Currency::all();
         $currencies = SelectOptions::selectOptionsObject($currencyCollection, 'id', 'name');
 
+        $material = null;
+        if ($request->filled('material_id')) {
+            $material = Materials::find($request->get('material_id'));
+        }
+
 
         return Inertia::render(
             'PurchaseOrder/Create',
@@ -75,6 +80,7 @@ class PurchaseOrderController extends Controller
                 'suppliers' => $suppliers,
                 'units' => $units,
                 'currencies' => $currencies,
+                'material' => $material
             ]
         );
     }
