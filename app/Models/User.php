@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -64,5 +65,10 @@ class User extends Authenticatable
     public function erpUserDetails() : HasOne
     {
         return $this->hasOne(ErpUserDetail::class, 'user_id');
+    }
+
+    public function factories(): BelongsToMany
+    {
+        return $this->belongsToMany(Factory::class, 'user_factory');
     }
 }
