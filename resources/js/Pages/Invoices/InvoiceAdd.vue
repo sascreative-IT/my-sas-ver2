@@ -30,6 +30,7 @@
                                     <span class="mr-4 inline-block hidden md:block">:</span>
                                     <div class="flex-1">
                                         <input
+                                                :disabled="isItemReadOnly"
                                                 v-model="invoice.po_number"
                                                 class="appearance-none w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                 id="inline-full-name" type="text" placeholder="#PO-100001">
@@ -37,18 +38,24 @@
                                 </div>
 
 
-                                <div class="mb-2 md:mb-2 md:flex items-center">
+                                <div class="mb-2 md:mb-2 mt-10 md:flex items-center">
                                     <div class="flex items-center">
                                         <label
                                             class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Currency</label>
                                         <span class="mr-4 inline-block hidden md:block">:</span>
                                     </div>
                                     <div class="flex-1 -mt-4">
-                                        <search-and-select
+                                        <app-select
                                             :disabled="isItemReadOnly"
-                                            :selection-options="currencies"
-                                            @change="setSelectedCurrency"
-                                        ></search-and-select>
+                                            class="w-48"
+                                            placeholder="Select Currency"
+                                            option-label="name"
+                                            option-value="id"
+                                            :filterable="true"
+                                            :options="currencies"
+                                            v-model="defaultCurrency"
+                                            @input="setSelectedCurrency"
+                                        ></app-select>
                                     </div>
                                 </div>
                             </div>
@@ -81,11 +88,17 @@
                                     </label>
                                     <span class="mr-4 inline-block hidden md:block">:</span>
                                     <div class="flex-1">
-                                        <search-and-select
+                                        <app-select
                                             :disabled="isItemReadOnly"
-                                            :selection-options="factories"
-                                            @change="setFactoryId"
-                                        ></search-and-select>
+                                            class="w-48"
+                                            placeholder="Select Factory"
+                                            option-label="name"
+                                            option-value="id"
+                                            :filterable="true"
+                                            :options="factories"
+                                            v-model="invoice.factory"
+                                            @input="setFactoryId"
+                                        ></app-select>
                                     </div>
                                 </div>
 
@@ -95,10 +108,17 @@
                                     </label>
                                     <span class="mr-4 inline-block hidden md:block">:</span>
                                     <div class="flex-1">
-                                        <search-and-select
-                                            :selection-options="suppliers"
-                                            @change="setsupplier_id"
-                                        ></search-and-select>
+                                        <app-select
+                                            :disabled="isItemReadOnly"
+                                            class="w-48"
+                                            placeholder="Select Supplier"
+                                            option-label="name"
+                                            option-value="id"
+                                            :filterable="true"
+                                            :options="suppliers"
+                                            v-model="invoice.supplier"
+                                            @input="setSupplierId"
+                                        ></app-select>
                                     </div>
                                 </div>
 
@@ -303,6 +323,7 @@ import DialogModal from "@/Jetstream/DialogModal";
 import FormButton from "@/UIElements/FormButton";
 import SelectOrCreateInput from "@/Pages/Suppliers/SelectOrCreateInput";
 import SearchAndSelect from "@/Pages/Suppliers/SearchAndSelect";
+import AppSelect from "@/UIElements/AppSelect";
 
 export default {
     name: "InvoiceAdd",
@@ -310,12 +331,13 @@ export default {
         DialogModal,
         FormButton,
         SelectOrCreateInput,
-        SearchAndSelect
+        SearchAndSelect,
+        AppSelect,
     },
     props: {
         factories: {
             required: true,
-            type: Object
+            type: Array
         },
         materials: {
             required: true,
@@ -338,7 +360,7 @@ export default {
         },
         currencies: {
             required: true,
-            type: Object
+            type: Array
         },
         material : {
             required: false
@@ -348,11 +370,13 @@ export default {
         return {
             factoryNames: [],
             selectedCurrency: '',
+            defaultCurrency: {},
             invoice: {
                 number: '',
                 po_number: '',
                 invoiced_date: '',
                 factory_id: '',
+                factory: '',
                 supplier_id: '',
                 items: [],
             },
@@ -374,8 +398,12 @@ export default {
     },
     mounted() {
         this.extractFactoryName(this.factories);
+        this.selectedCurrency = this.currencies[Object.keys(this.currencies)[0]].name;
         this.copyMaterialPurchaseOrderToInvoice();
-        this.selectedCurrency = this.currencies[Object.keys(this.currencies)[0]];
+        this.invoice.invoiced_date = new Date();
+        if (this.materialPurchaseOrder) {
+            this.isItemReadOnly = true;
+        }
     },
     methods: {
         extractFactoryName(prop) {
@@ -386,7 +414,7 @@ export default {
                 })
             }
         },
-        setsupplier_id(value) {
+        setSupplierId(value) {
             this.invoice.supplier_id = value;
         },
         setSelectedMaterial(value) {
@@ -455,7 +483,9 @@ export default {
                 this.invoice = {
                     po_number: this.materialPurchaseOrder.id,
                     factory_id: this.materialPurchaseOrder.factory_id,
+                    factory: this.materialPurchaseOrder.assigned_factory,
                     supplier_id: this.materialPurchaseOrder.supplier_id,
+                    supplier: this.materialPurchaseOrder.supplier,
                     items: [],
                 }
 
@@ -471,16 +501,23 @@ export default {
                             quantity: item.quantity,
                             sub_total: item.sub_total,
                             currency: item.currency,
-                        })
+                        });
+                        this.selectedCurrency = item.currency;
+                    }
+                }
+
+                for (let currency of this.currencies) {
+                    if (currency.name == this.selectedCurrency) {
+                        this.defaultCurrency = currency;
                     }
                 }
             }
         },
         setFactoryId(value) {
-            this.invoice.factory_id = value;
+            this.invoice.factory_id = value.id;
         },
         setSelectedCurrency(value) {
-            this.selectedCurrency = this.currencies[value];
+            this.selectedCurrency = value.name;
         },
         calculateSubTotal() {
             this.invoiceItem.sub_total = (((this.invoiceItem.unit_price * this.invoiceItem.quantity) * 100)/100).toFixed(2);
