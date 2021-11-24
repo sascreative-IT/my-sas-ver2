@@ -44,8 +44,12 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    public const ROLE_ADMINISTRATOR = 'Administrator';
     public const ROLE_CUSTOMER_SERVICE_AGENT = 'Customer Service Agent';
     public const ROLE_SALES_AGENT = 'Sales Agent';
+    public const ROLE_PRODUCTION_MANAGER = 'Production Manager';
+    public const ROLE_PURCHASING_OFFICER = 'Purchasing Officer';
+
 
     public function setPasswordAttribute($value)
     {
