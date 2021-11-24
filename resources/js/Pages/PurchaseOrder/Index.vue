@@ -7,7 +7,7 @@
         </template>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex flex-row-reverse">
+                <div class="flex flex-row-reverse" v-if="hasAnyRole(['Purchasing Officer','Administrator'])">
                     <inertia-link
                         class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
                         :href="route('purchase.orders.create')">Add New Purchase Order
@@ -41,34 +41,40 @@
                         {key: 'evaluated_at', name: 'Evaluated On'},
                       ]"
                             >
-                                <el-table-column
-                                    fixed="right"
-                                    label="Operations"
-                                    width="220">
-                                    <template #default="scope">
-                                        <inertia-link
-                                            class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                                            v-if="scope.row.evaluation_status === 'Approved'"
-                                            :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
-                                            Create Invoice
-                                        </inertia-link>
+                                <template v-if="hasAnyRole(['Production Manager','Administrator','Purchasing Officer'])">
+                                    <el-table-column
+                                        fixed="right"
+                                        label="Operations"
+                                        width="220">
+                                        <template #default="scope">
+                                            <template v-if="hasAnyRole(['Purchasing Officer','Administrator'])">
+                                                <inertia-link
+                                                    class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                                    v-if="scope.row.evaluation_status === 'Approved'"
+                                                    :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
+                                                    Create Invoice
+                                                </inertia-link>
+                                            </template>
 
-                                        <template v-if="scope.row.evaluation_status === 'Pending'">
-                                            <button
-                                                class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                                                @click="approvePurchaseOrder(scope.row.id)">
-                                                Approve
-                                            </button>
+                                            <template v-if="hasAnyRole(['Production Manager','Administrator'])">
+                                                <template v-if="scope.row.evaluation_status === 'Pending'">
+                                                    <button
+                                                        class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                                        @click="approvePurchaseOrder(scope.row.id)">
+                                                        Approve
+                                                    </button>
 
-                                            <button
-                                                class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                                                @click="rejectPurchaseOrder(scope.row.id)">
-                                                Reject
-                                            </button>
+                                                    <button
+                                                        class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                                        @click="rejectPurchaseOrder(scope.row.id)">
+                                                        Reject
+                                                    </button>
+                                                </template>
+                                            </template>
+
                                         </template>
-
-                                    </template>
-                                </el-table-column>
+                                    </el-table-column>
+                                </template>
                             </app-table>
 
                         </el-tab-pane>

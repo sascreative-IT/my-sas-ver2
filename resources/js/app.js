@@ -170,7 +170,18 @@ Vue.component('jet-action-section', JetActionSection);
 Vue.component('jet-action-message', JetActionMessage);
 Vue.component('jet-danger-button', JetDangerButton);
 
-
+Vue.mixin({
+    methods: {
+        hasAnyRole: function (roles) {
+            let allRoles = this.$page.props.roles;
+            let hasRole = false;
+            roles.forEach(function(item){
+                if(allRoles.includes(item)) hasRole = true;
+            });
+            return hasRole;
+        },
+    },
+})
 
 
 const app = document.getElementById('app');
