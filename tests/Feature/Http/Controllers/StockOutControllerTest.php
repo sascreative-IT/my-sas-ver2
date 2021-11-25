@@ -1,30 +1,28 @@
 <?php
 
+namespace Tests\Feature\Http\Controllers;
 
-namespace Tests\Feature\Domains\Stock\Actions;
-
-
-use App\Domains\Stock\Actions\CreateStockOutAction;
-use App\Domains\Stock\Dtos\StockOutData;
+use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrder;
+use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrderItem;
 use App\Domains\Stock\Models\StockOut;
 use App\Domains\Stock\Models\StockOutItem;
-use App\Http\Requests\StockOut\StockOutRequest;
 use App\Models\Colour;
 use App\Models\Customer;
 use App\Models\Factory;
 use App\Models\Materials;
+use App\Models\MaterialVariation;
 use App\Models\Order;
 use App\Models\Style;
 use App\Models\StylePanel;
+use App\Models\Supplier;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class CreateStockOutActionTest extends TestCase
+class StockOutControllerTest extends TestCase
 {
     use RefreshDatabase;
-    use WithFaker;
 
     private function generateItems(): array
     {
@@ -48,11 +46,22 @@ class CreateStockOutActionTest extends TestCase
         ];
     }
 
-    public function test_a_stock_out_can_be_created()
+    public function test_it_shows_create_stock_out()
     {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $this->get(route('stock.out.create'))->assertStatus(200);
+    }
+
+    public function test_a_stock_out_can_be_created_successfully()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
         $items = $this->generateItems();
 
         $order = Order::factory()->create();
+
         $stock_data = [
             'order_public_id' => $order->public_id,
             'factory_id' => Factory::factory()->create()->id,
@@ -61,14 +70,17 @@ class CreateStockOutActionTest extends TestCase
             'items' => $items
         ];
 
-        $dto = StockOutData::fromRequest(new StockOutRequest($stock_data));
+        $this->post(
+            route('stock.out.store'),
+            $stock_data
+        )
+            ->assertStatus(302);
 
-        $stockOut = (new CreateStockOutAction())->execute($dto);
 
-        $this->assertInstanceOf(StockOut::class, $stockOut);
         $this->assertDatabaseCount(StockOut::class, 1);
         $this->assertDatabaseCount(StockOutItem::class, 2);
 
+        $stockOut = StockOut::orderByDesc('id')->first();
 
         $this->assertDatabaseHas('stock_outs', [
             'order_id' => $order->id,
@@ -87,4 +99,5 @@ class CreateStockOutActionTest extends TestCase
             'usage' => $items[0]['usage'],
         ]);
     }
+
 }
