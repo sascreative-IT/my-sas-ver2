@@ -37,6 +37,7 @@ class InventoryController extends Controller
                             'factory_id' => $inventory->factory_id,
                             'material_name' => $inventory->variation->material->name,
                             'color_name' => $inventory->variation->colour->name,
+                            'supplier_name' => $inventory->supplier->name,
                         ];
                     }),
             ]
