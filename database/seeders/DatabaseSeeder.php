@@ -322,6 +322,7 @@ class DatabaseSeeder extends Seeder
             'allocated_quantity' => 100,
             'usable_quantity' => 500,
             'factory_id' => Factory::find(1) ? Factory::find(1)->id : Factory::factory()->create()->id,
+            'supplier_id' => Supplier::find(1) ? Supplier::find(1)->id : Supplier::factory()->create()->id,
         ]);
 
         $lightDritechGreenInventory = MaterialInventory::factory()->create([
@@ -331,6 +332,7 @@ class DatabaseSeeder extends Seeder
             'allocated_quantity' => 0,
             'usable_quantity' => 1000,
             'factory_id' => Factory::find(1) ? Factory::find(1)->id : Factory::factory()->create()->id,
+            'supplier_id' => Supplier::find(1) ? Supplier::find(1)->id : Supplier::factory()->create()->id,
         ]);
 
         InventoryIn::create([
