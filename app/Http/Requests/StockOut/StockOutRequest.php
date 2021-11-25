@@ -14,7 +14,6 @@ class StockOutRequest extends FormRequest
             'order_public_id' => 'required',
             'factory_id' => 'required',
             'customer_id' => 'required',
-            'created_by_id' => 'required',
         ];
     }
 }
