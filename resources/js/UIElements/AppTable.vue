@@ -4,7 +4,7 @@
           :data="items"
           stripe
           style="width: 100%"
-          empty-text="No data to show"
+          :empty-text="emptyText"
         >
             <el-table-column
               v-for="header in headers"
@@ -30,6 +30,10 @@ export default {
         headers: {
             required: false,
             type: Array
+        },
+        emptyText: {
+            required: false,
+            type: String
         }
     },
     computed: {

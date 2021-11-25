@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\Currency\Models\Currency;
 use App\Domains\Invoices\Actions\CreateInvoices;
 use App\Domains\Invoices\Dtos\Invoice;
 use App\Domains\Invoices\Dtos\InvoiceItem;
@@ -24,9 +25,15 @@ use App\Services\Models\ModelToSelectOptionsFacade as SelectOptions;
 class PurchaseOrderController extends Controller
 {
 
-    public function index(): \Inertia\Response
+    public function index(Request $request): \Inertia\Response
     {
-        $purchase_orders = MaterialPurchaseOrder::query()->with(['supplier', 'assignedFactory', 'user'])
+        $factory = $request->get('factory');
+
+        $purchase_orders = MaterialPurchaseOrder::query()
+            ->with(['supplier', 'assignedFactory', 'user'])
+            ->when($factory, function ($query, $factory) {
+                return $query->where('factory_id', $factory);
+            })
             ->orderBy("created_at", "DESC")
             ->paginate();
 
@@ -38,12 +45,8 @@ class PurchaseOrderController extends Controller
         );
     }
 
-    public function create()
+    public function create(): \Inertia\Response
     {
-        $factories = Factory::query()
-            ->with('country')
-            ->get();
-
         $materialsCollection = Materials::all();
         $materials = SelectOptions::selectOptionsObject($materialsCollection, 'id', 'name');
 
@@ -56,6 +59,13 @@ class PurchaseOrderController extends Controller
         $unitCollection = Unit::all();
         $units = SelectOptions::selectOptionsObject($unitCollection, 'type', 'name');
 
+        $factoryCollection = Factory::all();
+        $factories = SelectOptions::selectOptionsObject($factoryCollection, 'id', 'name');
+
+        $currencyCollection = Currency::all();
+        $currencies = SelectOptions::selectOptionsObject($currencyCollection, 'id', 'name');
+
+
         return Inertia::render(
             'PurchaseOrder/Create',
             [
@@ -63,7 +73,8 @@ class PurchaseOrderController extends Controller
                 'materials' => $materials,
                 'colours' => $colours,
                 'suppliers' => $suppliers,
-                'units' => $units
+                'units' => $units,
+                'currencies' => $currencies,
             ]
         );
     }
@@ -71,8 +82,8 @@ class PurchaseOrderController extends Controller
     public function store(
         CreatePurchaseOrderAction $createPurchaseOrderAction,
         StorePurchaseOrderRequest $purchaseOrderRequest
-    )
-    {
+    ): \Illuminate\Http\RedirectResponse {
+
         $purchaseOrderData = PurchaseOrderData::fromRequest($purchaseOrderRequest);
 
         $createPurchaseOrderAction->execute($purchaseOrderData);

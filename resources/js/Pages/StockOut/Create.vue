@@ -166,8 +166,9 @@
                                                 </label>
                                                 <input
                                                     v-model="stockOutItem.usage"
-                                                    class="h-9 w-9/12 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                    type="text">
+                                                    class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    type="text"
+                                                    :placeholder="stockOutItem.usageMeasurement">
                                             </div>
                                         </div>
 
@@ -326,7 +327,8 @@ export default {
                 color: null,
                 colour_id: null,
                 pieces: '',
-                usage: ''
+                usage: '',
+                usageMeasurement: 'M'
             },
             stockOutItems: [],
             resetSelectOptions: false,
@@ -371,6 +373,14 @@ export default {
         },
         setSelectedMaterial() {
             this.stockOutItem.material_id = this.stockOutItem.material.id;
+            this.stockOutItem.usageMeasurement = this.stockOutItem.material.unit.toUpperCase();
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    material_id: this.stockOutItem.material_id
+                }
+            })
         },
         setSelectedColor() {
             this.stockOutItem.colour_id = this.stockOutItem.color.id;

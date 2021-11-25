@@ -17,6 +17,7 @@ use App\Models\Customer;
 use App\Models\Factory;
 use App\Models\MaterialInvoice;
 use App\Models\Materials;
+use App\Models\MaterialVariation;
 use App\Models\Order;
 use App\Models\Style;
 use App\Models\StylePanel;
@@ -42,7 +43,6 @@ class StockOutController extends Controller
     public function create(Request $request)
     {
         $factories = Factory::query()->get();
-        $materials = Materials::query()->get();
         $colours = Colour::query()->get();
         $customers = Customer::query()->get();
 
@@ -53,6 +53,24 @@ class StockOutController extends Controller
             $style_id = $request->get('style_id');
             $style_panels = StylePanel::where('style_id', $style_id)->get();
         }
+
+        $materials = [];
+        if ($request->filled('style_panel_id')) {
+            $style_panel_id = $request->get('style_panel_id');
+            $style_panel = StylePanel::find($style_panel_id);
+            $material_id = $style_panel->id;
+            $materials = Materials::where('id', $material_id)->get();
+        }
+
+        //$colours = [];
+        if ($request->filled('material_id')) {
+            $colorIds = MaterialVariation::where('material_id', $request->get('material_id'))
+                ->get()
+                ->pluck('colour_id')
+                ->toArray();
+            $colours = Colour::whereIn('id',$colorIds)->get();
+        }
+
 
         return Inertia::render('StockOut/Create', [
             'factories' => $factories,
@@ -66,9 +84,8 @@ class StockOutController extends Controller
 
     public function store(
         CreateStockOutAction $stockOutAction,
-        StockOutRequest      $stockOutRequest
-    )
-    {
+        StockOutRequest $stockOutRequest
+    ) {
         $stockOutData = StockOutData::fromRequest($stockOutRequest);
 
         $stockOutAction->execute($stockOutData);

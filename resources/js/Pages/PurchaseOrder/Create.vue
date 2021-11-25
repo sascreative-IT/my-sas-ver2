@@ -8,41 +8,50 @@
         <div class="py-12 z-30">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-5">
-                    <div class="p-5">
-                        <div class="flex mb-8 justify-between">
-                            <div class="w-2/4">
-
-                                <div class="mb-4 md:mb-4 md:flex items-center">
-                                    <div class="flex items-center mt-4">
-                                        <label
-                                            class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Supplier</label>
-                                        <span class="mr-4 inline-block hidden md:block">:</span>
-                                    </div>
-                                    <div class="flex-1 -mt-4">
-                                        <search-and-select
-                                            :selection-options="suppliers"
-                                            @change="setSupplierId"
-                                        ></search-and-select>
-                                    </div>
-                                </div>
-
-
-                            </div>
-
-                            <div>
-
-                                <div class="mb-1 md:mb-1 md:flex items-center">
-                                    <label class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Factory</label>
+                    <div class="p-5 grid grid-cols-2">
+                        <div>
+                            <div class="mb-4 md:mb-4 md:flex items-center">
+                                <div class="flex items-center mt-4">
+                                    <label
+                                        class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Supplier</label>
                                     <span class="mr-4 inline-block hidden md:block">:</span>
-                                    <div class="flex-1">
-                                        <select v-model="purchaseOrder.factory_id">
-                                            <option v-for="factory in factories" :value="factory.id"> {{factory.name}} </option>
-                                        </select>
-                                    </div>
                                 </div>
-
+                                <div class="flex-1 -mt-4">
+                                    <search-and-select
+                                        :selection-options="suppliers"
+                                        @change="setSupplierId"
+                                    ></search-and-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="mb-1 md:mb-1 md:flex items-center">
+                                <div class="flex items-center mt-4">
+                                    <label
+                                        class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Factory</label>
+                                    <span class="mr-4 inline-block hidden md:block">:</span>
+                                </div>
+                                <div class="flex-1 -mt-4">
+                                    <search-and-select
+                                        :selection-options="factories"
+                                        @change="setFactoryId"
+                                    ></search-and-select>
+                                </div>
                             </div>
 
+                            <div class="mb-1 md:mb-1 md:flex items-center">
+                                <div class="flex items-center mt-4">
+                                    <label
+                                        class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Currency</label>
+                                    <span class="mr-4 inline-block hidden md:block">:</span>
+                                </div>
+                                <div class="flex-1 -mt-4">
+                                    <search-and-select
+                                        :selection-options="currencies"
+                                        @change="setSelectedCurrency"
+                                    ></search-and-select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -80,16 +89,16 @@
                                         </div>
                                         <div class="w-48">
                                             <div class="">
-                                                <label for="price-value"
+                                                <label for="unit_price-value"
                                                        class="block text-sm font-medium text-gray-700">
-                                                    Price</label>
+                                                    Unit Price</label>
                                                 <div class="absolute">
                                                     <input
-                                                            v-model="purchaseOrderItem.price"
+                                                            v-model="purchaseOrderItem.unit_price"
                                                             class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                            id="price-value"
+                                                            id="unit_price-value"
                                                             placeholder="NZD"
-                                                            type="text">
+                                                            type="text" v-on:change="calculateSubTotal">
                                                 </div>
                                             </div>
                                         </div>
@@ -102,7 +111,22 @@
                                                     <input
                                                             v-model="purchaseOrderItem.quantity"
                                                             class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                            id="quantity-value" type="text">
+                                                            id="quantity-value" type="text" v-on:change="calculateSubTotal">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-48">
+                                            <div class="">
+                                                <label for="sub_total-value"
+                                                       class="block text-sm font-medium text-gray-700">
+                                                    Sub Total</label>
+                                                <div class="absolute">
+                                                    <input
+                                                        v-model="purchaseOrderItem.sub_total"
+                                                        class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        id="sub_total-value"
+                                                        placeholder="NZD"
+                                                        type="text">
                                                 </div>
                                             </div>
                                         </div>
@@ -130,11 +154,15 @@
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
+                                    Unit Price
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
                                     Quantity
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
-                                    Price
+                                    Sub Total
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
@@ -159,12 +187,17 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
+                                        {{ item.unit_price }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
                                         {{ item.quantity }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ item.price }}
+                                        {{ item.sub_total }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -218,6 +251,10 @@ export default {
         units: {
             required: true,
             type: Object
+        },
+        currencies: {
+            required: true,
+            type: Object
         }
     },
     data() {
@@ -234,7 +271,8 @@ export default {
                 material_name: '',
                 material_variation_id: null,
                 material_colour: '',
-                price: '',
+                unit_price: '',
+                sub_total: '',
                 quantity: '',
                 currency: '',
             },
@@ -255,6 +293,9 @@ export default {
         setSupplierId(value) {
             this.purchaseOrder.supplier_id = value;
         },
+        setFactoryId(value) {
+            this.purchaseOrder.factory_id = value;
+        },
         setSelectedMaterial(value) {
             this.purchaseOrderItem.material_name_id = value.value;
             this.purchaseOrderItem.material_name = value.text;
@@ -264,8 +305,10 @@ export default {
             this.purchaseOrderItem.material_colour = value.text;
         },
         setSelectedUnit(value) {
-            this.purchaseOrderItem.unit = 'm';
-            this.purchaseOrderItem.unitValue = value.text;
+            this.purchaseOrderItem.unit = value.text;
+        },
+        setSelectedCurrency(value) {
+
         },
         resetPurchaseOrder() {
             this.purchaseOrder = {
@@ -282,7 +325,8 @@ export default {
                 material_colour: '',
                 unit: 'm',
                 unitValue: '',
-                price: '',
+                unit_price: '',
+                sub_total: '',
                 quantity: '',
                 currency: '',
             };
@@ -294,6 +338,9 @@ export default {
         },
         savePurchaseOrder() {
             this.$inertia.post(route('purchase.orders.store'), this.purchaseOrder)
+        },
+        calculateSubTotal() {
+            this.purchaseOrderItem.sub_total = this.purchaseOrderItem.unit_price * this.purchaseOrderItem.quantity;
         }
 
     }
