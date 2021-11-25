@@ -246,6 +246,15 @@
                         </template>
                     </el-table-column>
 
+                    <el-table-column
+                        label="Action"
+                        width="180">
+                        <template slot-scope="scope">
+                            <form-button @handle-on-click="handleEditPanelRow(scope.row)">
+                                Edit
+                            </form-button>
+                        </template>
+                    </el-table-column>
 
                 </el-table>
             </div>
@@ -397,6 +406,7 @@ export default {
         resetFormField() {
         },
         addPanel() {
+            console.log(this.panel)
             this.form.panels.push(this.panel)
             this.panel = {
                 name: null,
@@ -404,6 +414,9 @@ export default {
                 default_fabric: {id: null},
                 consumption: []
             }
+        },
+        handleEditPanelRow(dataRow) {
+            this.panel = dataRow;
         }
     },
     computed: {

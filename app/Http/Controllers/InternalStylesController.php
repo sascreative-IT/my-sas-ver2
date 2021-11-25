@@ -36,17 +36,17 @@ class InternalStylesController extends Controller
         CustomerRepository $customerRepository,
         CategoryRepository $categoryRepository,
         ItemTypeRepository $itemTypeRepository,
-        SizeRepository $sizeRepository,
+        SizeRepository     $sizeRepository,
         MaterialRepository $materialRepository,
-        Request $request,
+        Request            $request,
     )
     {
-        $factories  = Factory::all();
-        $customers  = $customerRepository->getAll();
+        $factories = Factory::all();
+        $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
-        $itemTypes  = $itemTypeRepository->getAll();
-        $sizes      = $sizeRepository->getAll();
-        $materials  = $materialRepository->getAll();
+        $itemTypes = $itemTypeRepository->getAll();
+        $sizes = $sizeRepository->getAll();
+        $materials = $materialRepository->getAll();
 
 
         $style = new StyleDto([
@@ -74,20 +74,20 @@ class InternalStylesController extends Controller
     }
 
     public function edit(CustomerRepository $customerRepository,
-        CategoryRepository $categoryRepository,
-        ItemTypeRepository $itemTypeRepository,
-        SizeRepository $sizeRepository,
-        MaterialRepository $materialRepository,
-        Style $style,
-        Request $request
+                         CategoryRepository $categoryRepository,
+                         ItemTypeRepository $itemTypeRepository,
+                         SizeRepository     $sizeRepository,
+                         MaterialRepository $materialRepository,
+                         Style              $style,
+                         Request            $request
     )
     {
-        $factories  = Factory::all();
-        $customers  = $customerRepository->getAll();
+        $factories = Factory::all();
+        $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
-        $itemTypes  = $itemTypeRepository->getAll();
-        $sizes      = $sizeRepository->getAll();
-        $materials  = $materialRepository->getAll();
+        $itemTypes = $itemTypeRepository->getAll();
+        $sizes = $sizeRepository->getAll();
+        $materials = $materialRepository->getAll();
 
 
         $style->load(['type', 'categories', 'sizes', 'factories', 'panels.consumption']);
