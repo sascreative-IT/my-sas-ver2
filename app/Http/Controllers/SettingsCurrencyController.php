@@ -4,22 +4,14 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Domains\Currency\Actions\CreateCurrencyAction;
-use App\Domains\Currency\Actions\CreateCurrencyExchangeRateAction;
 use App\Domains\Currency\Actions\DeleteCurrencyAction;
-use App\Domains\Currency\Actions\DeleteCurrencyExchangeRateAction;
 use App\Domains\Currency\Actions\UpdateCurrencyAction;
-use App\Domains\Currency\Actions\UpdateCurrencyExchangeRateAction;
 use App\Domains\Currency\Dtos\CurrencyData;
-use App\Domains\Currency\Dtos\CurrencyExchangeRateData;
 use App\Domains\Currency\Models\Currency;
-use App\Domains\Currency\Models\CurrencyExchangeRate;
+use App\Http\Requests\StoreCurrencyExchangeRequest;
 use App\Http\Requests\StoreCurrencyRequest;
-use App\Models\Country;
-use App\Models\Warehouse;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use App\Http\Requests\StoreWarehouseRequest;
-use App\Http\Requests\UpdateWarehouseRequest;
 
 class SettingsCurrencyController extends Controller
 {

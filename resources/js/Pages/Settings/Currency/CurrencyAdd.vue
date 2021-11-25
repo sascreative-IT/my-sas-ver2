@@ -13,28 +13,18 @@
                                 </div>
 
                                 <div>
-                                    <label for="currency_rate" class="block text-sm font-medium text-gray-700">Currency Rate (1 USD)</label>
-                                    <input v-model="currency.currencyRate" type="text" name="rate" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <label for="currency_status" class="block text-sm font-medium text-gray-700">Status</label>
+                                    <select id="factory"
+                                            v-model="currency.status"
+                                            name="status"
+                                            autocomplete="status"
+                                            class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <option value="Enabled">Enabled</option>
+                                        <option value="Disabled">Disabled</option>
+                                    </select>
                                 </div>
 
-                                <div>
-                                    <label for="currencyRateOn" class="block text-sm font-medium text-gray-700">Rate On</label>
 
-                                    <vc-date-picker
-                                        color="white"
-                                        v-model='currency.currencyRateOn'
-                                        :model-config="modelConfig"
-                                    >
-                                        <template v-slot="{ inputValue, inputEvents }">
-                                            <input
-                                                class="appearance-none border w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                id="date"
-                                                v-on="inputEvents"
-                                                :value="inputValue"
-                                            />
-                                        </template>
-                                    </vc-date-picker>
-                                </div>
 
                             </div>
                         </div>
@@ -68,12 +58,7 @@ export default {
         return {
             currency: {
                 name: '',
-                currencyRate: null,
-                currencyRateOn: null
-            },
-            modelConfig: {
-                type: 'string',
-                mask: 'YYYY-MM-DD',
+                status: null
             },
             submitted: false,
         }

@@ -7,8 +7,9 @@ use App\Domains\Currency\Actions\CreateCurrencyExchangeRateAction;
 use App\Domains\Currency\Actions\DeleteCurrencyExchangeRateAction;
 use App\Domains\Currency\Actions\UpdateCurrencyExchangeRateAction;
 use App\Domains\Currency\Dtos\CurrencyExchangeRateData;
+use App\Domains\Currency\Models\Currency;
 use App\Domains\Currency\Models\CurrencyExchangeRate;
-use App\Http\Requests\StoreCurrencyRequest;
+use App\Http\Requests\StoreCurrencyExchangeRequest;
 use App\Models\Country;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Redirect;
@@ -32,12 +33,17 @@ class SettingsCurrencyExchangeRateController extends Controller
 
     public function create()
     {
+        $currencies = Currency::query()->get();
+
         return Inertia::render(
             'Settings/CurrencyExchangeRate/CurrencyExchangeRateAdd',
+            [
+                'currencies' => $currencies
+            ]
         );
     }
 
-    public function store(StoreCurrencyRequest $request): \Illuminate\Http\RedirectResponse
+    public function store(StoreCurrencyExchangeRequest $request): \Illuminate\Http\RedirectResponse
     {
         $currencyData = new CurrencyExchangeRateData(...$request->validated());
         (new CreateCurrencyExchangeRateAction())->execute($currencyData);
@@ -47,15 +53,18 @@ class SettingsCurrencyExchangeRateController extends Controller
 
     public function edit(CurrencyExchangeRate $currencyExchangeRate)
     {
+        $currencies = Currency::query()->get();
+
         return Inertia::render(
             'Settings/CurrencyExchangeRate/CurrencyExchangeRateUpdate',
             [
-                'currencyExchangeRate' => $currencyExchangeRate
+                'currencyExchangeRate' => $currencyExchangeRate,
+                'currencies' => $currencies
             ],
         );
     }
 
-    public function update(CurrencyExchangeRate $currencyExchangeRate, StoreCurrencyRequest $request)
+    public function update(CurrencyExchangeRate $currencyExchangeRate, StoreCurrencyExchangeRequest $request)
     {
         $currencyExchangeRateData = new CurrencyExchangeRateData(...$request->validated());
         (new UpdateCurrencyExchangeRateAction())->execute($currencyExchangeRateData, $currencyExchangeRate);
