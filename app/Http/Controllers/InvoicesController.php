@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\Currency\Models\Currency;
 use App\Domains\Invoices\Actions\CreateInvoices;
 use App\Domains\Invoices\Dtos\Invoice;
 use App\Domains\Invoices\Dtos\InvoiceItem;
@@ -20,12 +21,11 @@ use App\Services\Models\ModelToSelectOptionsFacade as SelectOptions;
 
 class InvoicesController extends Controller
 {
-    public function create(MaterialPurchaseOrder $materialPurchaseOrder)
+    public function create(Request $request, MaterialPurchaseOrder $materialPurchaseOrder)
     {
 
-        $factories = Factory::query()
-            ->with('country')
-            ->get();
+        $factoryCollection = Factory::all();
+        $factories = SelectOptions::selectOptionsObject($factoryCollection, 'id', 'name');
 
         $materialsCollection = Materials::all();
         $materials = SelectOptions::selectOptionsObject($materialsCollection, 'id', 'name');
@@ -41,6 +41,14 @@ class InvoicesController extends Controller
 
         $materialPurchaseOrder = MaterialPurchaseOrder::with('items')->find($materialPurchaseOrder->id);
 
+        $currencyCollection = Currency::all();
+        $currencies = SelectOptions::selectOptionsObject($currencyCollection, 'id', 'name');
+
+        $material = null;
+        if ($request->filled('material_id')) {
+            $material = Materials::find($request->get('material_id'));
+        }
+
         return Inertia::render(
             'Invoices/InvoiceAdd',
             [
@@ -49,6 +57,8 @@ class InvoicesController extends Controller
                 'colours' => $colours,
                 'suppliers' => $suppliers,
                 'units' => $units,
+                'currencies' => $currencies,
+                'material' => $material,
                 'materialPurchaseOrder' => $materialPurchaseOrder
             ]
         );
@@ -67,8 +77,10 @@ class InvoicesController extends Controller
             $item = new InvoiceItem();
             $item->material = Materials::find($inputItem['material_name_id']);
             $item->colour = Colour::find($inputItem['material_colour_id']);
-            $item->price = $inputItem['price'];
+            $item->unit_price = $inputItem['unit_price'];
             $item->quantity = $inputItem['quantity'];
+            $item->sub_total = $inputItem['sub_total'];
+            $item->currency = $inputItem['currency'];
 
             return $item;
         })->toArray();

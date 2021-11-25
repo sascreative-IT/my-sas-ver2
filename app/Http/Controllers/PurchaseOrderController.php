@@ -28,24 +28,34 @@ class PurchaseOrderController extends Controller
     public function index(Request $request): \Inertia\Response
     {
         $factory = $request->get('factory');
+        $status = $request->get('status');
+
+        $factories = Factory::all()->toArray();
 
         $purchase_orders = MaterialPurchaseOrder::query()
             ->with(['supplier', 'assignedFactory', 'user'])
             ->when($factory, function ($query, $factory) {
                 return $query->where('factory_id', $factory);
             })
+            ->when($status, function ($query, $status) {
+                return $query->where('evaluation_status', $status);
+            })
             ->orderBy("created_at", "DESC")
-            ->paginate();
+            ->paginate()
+            ->appends($request->except(['page','_token']));
 
         return Inertia::render(
             'PurchaseOrder/Index',
             [
-                'purchase_orders' => $purchase_orders
+                'purchase_orders' => $purchase_orders,
+                'factories' => $factories,
+                'status' => $status,
+                'factory' => $factory
             ]
         );
     }
 
-    public function create(): \Inertia\Response
+    public function create(Request $request): \Inertia\Response
     {
         $materialsCollection = Materials::all();
         $materials = SelectOptions::selectOptionsObject($materialsCollection, 'id', 'name');
@@ -65,6 +75,11 @@ class PurchaseOrderController extends Controller
         $currencyCollection = Currency::all();
         $currencies = SelectOptions::selectOptionsObject($currencyCollection, 'id', 'name');
 
+        $material = null;
+        if ($request->filled('material_id')) {
+            $material = Materials::find($request->get('material_id'));
+        }
+
 
         return Inertia::render(
             'PurchaseOrder/Create',
@@ -75,6 +90,7 @@ class PurchaseOrderController extends Controller
                 'suppliers' => $suppliers,
                 'units' => $units,
                 'currencies' => $currencies,
+                'material' => $material
             ]
         );
     }

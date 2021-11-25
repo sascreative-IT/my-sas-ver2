@@ -291,27 +291,30 @@ class DatabaseSeeder extends Seeder
         MaterialInvoiceItem::factory()->create([
             'material_invoice_id' => $invoice1->id,
             'material_variation_id' => $lightDritechBlack->id,
-            'quantity' => 100,
+            'quantity' => 2,
             'unit' => 'm',
-            'price' => 800,
+            'unit_price' => 800,
+            'sub_total' => 2 * 800,
             'currency' => 'nzd'
         ]);
 
         MaterialInvoiceItem::factory()->create([
             'material_invoice_id' => $invoice1->id,
             'material_variation_id' => $lightDritechBlack->id,
-            'quantity' => 500,
+            'quantity' => 5,
             'unit' => 'm',
-            'price' => 1900,
+            'unit_price' => 1900,
+            'sub_total' => 5 * 1900,
             'currency' => 'nzd'
         ]);
 
         MaterialInvoiceItem::factory()->create([
             'material_invoice_id' => $invoice1->id,
             'material_variation_id' => $lightDritechGreen->id,
-            'quantity' => 1000,
+            'quantity' => 10,
             'unit' => 'm',
-            'price' => 1900,
+            'unit_price' => 1900,
+            'sub_total' => 10 * 1900,
             'currency' => 'nzd'
         ]);
 
@@ -348,6 +351,11 @@ class DatabaseSeeder extends Seeder
             'quantity' => 10,
             'price' => 0
         ]);
+
+        \App\Domains\Currency\Models\Currency::factory()->count(5)->create();
+        \App\Domains\PurchaseOrder\Models\MaterialPurchaseOrder::factory()->withItems(3)->count(55)->create();
+
+
 
     }
 }

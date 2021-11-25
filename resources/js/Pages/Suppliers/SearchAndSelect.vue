@@ -1,5 +1,6 @@
 <template>
     <t-rich-select
+        :disabled="disabled"
         v-model="selected"
         :options="options"
         value-attribute="id"
@@ -16,6 +17,9 @@ export default {
         selectionOptions: {
             required: true,
             type: Object
+        },
+        disabled: {
+            required: false,
         }
     },
     mounted() {

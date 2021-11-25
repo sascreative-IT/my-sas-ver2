@@ -34,8 +34,9 @@ class CreateInvoices
                     'material_variation_id' => $variation->id,
                     'quantity' => $item->quantity,
                     'unit' => $item->material->unit,
-                    'price' => $item->price,
-                    'currency' => 'nzd'
+                    'unit_price' => $item->unit_price,
+                    'sub_total' => $item->sub_total,
+                    'currency' => $item->currency
                 ]);
         });
 

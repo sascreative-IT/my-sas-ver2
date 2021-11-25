@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 
 class MaterialPurchaseOrder extends Model
@@ -16,6 +17,9 @@ class MaterialPurchaseOrder extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d h:i:s'
+    ];
 
     const EVALUATION_STATUS_APPROVED = 'Approved';
     const EVALUATION_STATUS_REJECTED = 'Rejected';

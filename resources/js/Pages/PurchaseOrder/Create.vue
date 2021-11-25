@@ -18,6 +18,7 @@
                                 </div>
                                 <div class="flex-1 -mt-4">
                                     <search-and-select
+                                        :disabled="isItemReadOnly"
                                         :selection-options="suppliers"
                                         @change="setSupplierId"
                                     ></search-and-select>
@@ -33,6 +34,7 @@
                                 </div>
                                 <div class="flex-1 -mt-4">
                                     <search-and-select
+                                        :disabled="isItemReadOnly"
                                         :selection-options="factories"
                                         @change="setFactoryId"
                                     ></search-and-select>
@@ -47,6 +49,7 @@
                                 </div>
                                 <div class="flex-1 -mt-4">
                                     <search-and-select
+                                        :disabled="isItemReadOnly"
                                         :selection-options="currencies"
                                         @change="setSelectedCurrency"
                                     ></search-and-select>
@@ -91,14 +94,25 @@
                                             <div class="">
                                                 <label for="unit_price-value"
                                                        class="block text-sm font-medium text-gray-700">
-                                                    Unit Price</label>
+                                                    Unit Price
+                                                    <template v-if="material">
+                                                        ({{material.unit.toUpperCase()}})
+                                                    </template>
+                                                </label>
                                                 <div class="absolute">
-                                                    <input
-                                                            v-model="purchaseOrderItem.unit_price"
-                                                            class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                            id="unit_price-value"
-                                                            placeholder="NZD"
-                                                            type="text" v-on:change="calculateSubTotal">
+                                                    <div class="flex flex-wrap items-stretch w-full mb-4 relative">
+                                                        <div class="flex -mr-px">
+                                                            <span class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
+                                                                {{selectedCurrency}}
+                                                            </span>
+                                                        </div>
+                                                        <input type="text"
+                                                               class="flex-shrink flex-grow flex-auto leading-normal w-32 flex-1 h-10 border-gray-300 rounded-md rounded-l-none focus:ring-indigo-500 focus:border-indigo-500 px-3 relative"
+                                                               placeholder="0.00"
+                                                               id="sub_total-value"
+                                                               v-model="purchaseOrderItem.unit_price"
+                                                               v-on:change="fixUnitPrice">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -110,26 +124,36 @@
                                                 <div class="absolute">
                                                     <input
                                                             v-model="purchaseOrderItem.quantity"
-                                                            class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                            id="quantity-value" type="text" v-on:change="calculateSubTotal">
+                                                            class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md w-32"
+                                                            id="quantity-value"
+                                                            type="text"
+                                                            v-on:change="calculateSubTotal">
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="w-48">
                                             <div class="">
                                                 <label for="sub_total-value"
                                                        class="block text-sm font-medium text-gray-700">
                                                     Sub Total</label>
                                                 <div class="absolute">
-                                                    <input
-                                                        v-model="purchaseOrderItem.sub_total"
-                                                        class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                        id="sub_total-value"
-                                                        placeholder="NZD"
-                                                        type="text">
+                                                    <div class="flex flex-wrap items-stretch w-full mb-4 relative">
+                                                        <div class="flex -mr-px">
+                                                            <span class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
+                                                                {{selectedCurrency}}
+                                                            </span>
+                                                        </div>
+                                                        <input type="text"
+                                                               class="flex-shrink flex-grow flex-auto leading-normal w-32 flex-1 h-10 border-gray-300 rounded-md rounded-l-none focus:ring-indigo-500 focus:border-indigo-500 px-3 relative"
+                                                               placeholder="0.00"
+                                                               id="sub_total-value"
+                                                               v-model="purchaseOrderItem.sub_total">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -164,10 +188,7 @@
                                     class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
                                     Sub Total
                                 </th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
-                                    Currency
-                                </th>
+
                                 <th scope="col"
                                     class="px-1 w-20 text-center py-3 text-gray-800 uppercase tracking-wide text-xs font-bold">
                                 </th>
@@ -187,7 +208,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ item.unit_price }}
+                                        {{ item.currency }} {{ item.unit_price }} / {{ item.unit }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -197,14 +218,18 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ item.sub_total }}
+                                        {{ item.currency }} {{ item.sub_total }}
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        NZD
+
+                                <td class="px-6 py-4 whitespace-nowrap flex flex-row">
+                                    <div class="text-sm font-medium" v-on:click="deleteItemHandler(index)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
                                     </div>
                                 </td>
+
                             </tr>
                             </tbody>
                         </table>
@@ -234,7 +259,7 @@ export default {
     props: {
         factories: {
             required: true,
-            type: Array
+            type: Object
         },
         materials: {
             required: true,
@@ -255,11 +280,15 @@ export default {
         currencies: {
             required: true,
             type: Object
+        },
+        material : {
+            required: false
         }
     },
     data() {
         return {
             factoryNames: [],
+            selectedCurrency: '',
             purchaseOrder: {
                 factory_id: '',
                 supplier_id: '',
@@ -278,17 +307,21 @@ export default {
             },
             purchaseOrderItems: [],
             resetSelectOptions: false,
+            isItemReadOnly: false,
         }
     },
     mounted() {
         this.extractFactoryName(this.factories);
+        this.selectedCurrency = this.currencies[Object.keys(this.currencies)[0]];
     },
     methods: {
         extractFactoryName(prop) {
             this.factoryNames = [];
+            if (Array.isArray(prop)) {
             prop.forEach((val, index) => {
                 this.factoryNames.push(val.name);
             })
+            }
         },
         setSupplierId(value) {
             this.purchaseOrder.supplier_id = value;
@@ -299,6 +332,14 @@ export default {
         setSelectedMaterial(value) {
             this.purchaseOrderItem.material_name_id = value.value;
             this.purchaseOrderItem.material_name = value.text;
+
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    material_id: value.value
+                }
+            })
         },
         setSelectedColour(value) {
             this.purchaseOrderItem.material_variation_id = value.value;
@@ -308,7 +349,7 @@ export default {
             this.purchaseOrderItem.unit = value.text;
         },
         setSelectedCurrency(value) {
-
+            this.selectedCurrency = this.currencies[value];
         },
         resetPurchaseOrder() {
             this.purchaseOrder = {
@@ -328,19 +369,39 @@ export default {
                 unit_price: '',
                 sub_total: '',
                 quantity: '',
-                currency: '',
+                currency: this.selectedCurrency,
             };
             this.resetSelectOptions = true;
         },
         handleAddPurchaseOrderItems() {
+            this.purchaseOrderItem.currency = this.selectedCurrency;
+            this.purchaseOrderItem.unit = this.material.unit;
+
             this.purchaseOrder.items.push(this.purchaseOrderItem);
             this.resetPurchaseOrderItems();
+            this.setItemsReadOnly();
         },
         savePurchaseOrder() {
             this.$inertia.post(route('purchase.orders.store'), this.purchaseOrder)
         },
         calculateSubTotal() {
-            this.purchaseOrderItem.sub_total = this.purchaseOrderItem.unit_price * this.purchaseOrderItem.quantity;
+            this.purchaseOrderItem.sub_total = (((this.purchaseOrderItem.unit_price * this.purchaseOrderItem.quantity) * 100)/100).toFixed(2);
+        },
+        fixUnitPrice() {
+            this.purchaseOrderItem.unit_price = ((this.purchaseOrderItem.unit_price* 100)/100).toFixed(2);
+            this.calculateSubTotal();
+        },
+        deleteItemHandler(index) {
+            this.purchaseOrder.items.splice(index, 1);
+            if (this.purchaseOrder.items.length == 0) {
+                this.unSetItemsReadOnly();
+            }
+        },
+        setItemsReadOnly() {
+            this.isItemReadOnly = true;
+        },
+        unSetItemsReadOnly() {
+            this.isItemReadOnly = false;
         }
 
     }
