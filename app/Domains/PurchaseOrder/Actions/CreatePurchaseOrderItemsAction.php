@@ -8,7 +8,7 @@ use App\Domains\PurchaseOrder\Dtos\PurchaseOrderItemData;
 use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrder;
 use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrderItem;
 
-class CreatePurchaseOrderItemAction
+class CreatePurchaseOrderItemsAction
 {
     public function execute(array $purchaseOrderItemsData, MaterialPurchaseOrder $materialPurchaseOrder): void
     {

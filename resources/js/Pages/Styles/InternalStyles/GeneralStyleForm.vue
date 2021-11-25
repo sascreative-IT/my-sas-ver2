@@ -44,6 +44,19 @@
                             </div>
                         </div>
 
+                        <div class="mt-5">
+                            <div>
+                                <label for="style_description_general_style"
+                                       class="block text-sm font-medium text-gray-700">
+                                    Description</label>
+                                <textarea name="style_description_general_style"
+                                          v-model="form.description"
+                                          id="style_description_general_style"
+                                          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
+                            </div>
+                        </div>
+
+
                         <div class="mt-5 grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-1 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">
