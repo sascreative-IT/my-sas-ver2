@@ -23,7 +23,6 @@ class PurchaseOrderData extends DataTransferObject
 
     public static function fromRequest(FormRequest $request): PurchaseOrderData
     {
-
         return new self([
             'factory' => Factory::findOrFail($request->input('factory_id')),
             'supplier' => Supplier::findOrFail($request->input('supplier_id')),
@@ -31,7 +30,7 @@ class PurchaseOrderData extends DataTransferObject
             'approved_at' => Carbon::parse($request->input('approved_at')),
             'purchase_order_items' => array_map(
                 fn($item) => PurchaseOrderItemData::fromRequest($item),
-                $request->input('purchase_order_items')
+                $request->input('items')
             )
         ]);
     }

@@ -64,6 +64,10 @@
                                             <jet-dropdown-link :href="route('factory.orders.index')">
                                                 Orders
                                             </jet-dropdown-link>
+
+                                            <jet-dropdown-link :href="route('purchase.orders.index')">
+                                                Purchase Orders
+                                            </jet-dropdown-link>
                                         </template>
                                     </menu-dropdown>
                                 </div>
