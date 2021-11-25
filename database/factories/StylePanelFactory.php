@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Materials;
+use App\Models\Style;
 use App\Models\StylePanel;
+use App\Models\StylePanelFabric;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class StylePanelFactory extends Factory
@@ -23,8 +26,8 @@ class StylePanelFactory extends Factory
     {
         return [
             'name' => $this->faker->name,
-            'style_id' => 1,
-            'default_fabric_id' => 1,
+            'style_id' => Style::factory()->create(),
+            'default_fabric_id' => Materials::factory()->create(),
         ];
     }
 }
