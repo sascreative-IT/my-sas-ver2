@@ -34,6 +34,17 @@
                         </jet-nav-link>
                     </div>
 
+                    <div class="mb-2 flex flex-col">
+                        <jet-nav-link
+                            class="font-semibold mb-1 text-gray-500 border-none text-base"
+                            :class="{'ml-1 text-black': route().current(route('settings.currency-exchange-rates.index'))}"
+                            :href="route('settings.currency-exchange-rates.index')"
+                            :active="route().current(route('settings.currency-exchange-rates.index'))"
+                        >
+                            Exchange Rates
+                        </jet-nav-link>
+                    </div>
+
                 </div>
 
                 <div class="w-10/12">

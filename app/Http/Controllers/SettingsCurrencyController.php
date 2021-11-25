@@ -8,13 +8,10 @@ use App\Domains\Currency\Actions\DeleteCurrencyAction;
 use App\Domains\Currency\Actions\UpdateCurrencyAction;
 use App\Domains\Currency\Dtos\CurrencyData;
 use App\Domains\Currency\Models\Currency;
+use App\Http\Requests\StoreCurrencyExchangeRequest;
 use App\Http\Requests\StoreCurrencyRequest;
-use App\Models\Country;
-use App\Models\Warehouse;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use App\Http\Requests\StoreWarehouseRequest;
-use App\Http\Requests\UpdateWarehouseRequest;
 
 class SettingsCurrencyController extends Controller
 {
@@ -30,7 +27,7 @@ class SettingsCurrencyController extends Controller
         );
     }
 
-    public function create()
+    public function create(): \Inertia\Response
     {
         return Inertia::render(
             'Settings/Currency/CurrencyAdd',

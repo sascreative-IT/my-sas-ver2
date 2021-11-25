@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -43,8 +44,12 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    public const ROLE_ADMINISTRATOR = 'Administrator';
     public const ROLE_CUSTOMER_SERVICE_AGENT = 'Customer Service Agent';
     public const ROLE_SALES_AGENT = 'Sales Agent';
+    public const ROLE_PRODUCTION_MANAGER = 'Production Manager';
+    public const ROLE_PURCHASING_OFFICER = 'Purchasing Officer';
+
 
     public function setPasswordAttribute($value)
     {
@@ -64,5 +69,10 @@ class User extends Authenticatable
     public function erpUserDetails() : HasOne
     {
         return $this->hasOne(ErpUserDetail::class, 'user_id');
+    }
+
+    public function factories(): BelongsToMany
+    {
+        return $this->belongsToMany(Factory::class, 'user_factory');
     }
 }

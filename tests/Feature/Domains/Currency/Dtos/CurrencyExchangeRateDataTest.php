@@ -2,22 +2,23 @@
 
 namespace Tests\Feature\Domains\Currency\Dtos;
 
-use App\Domains\Currency\Dtos\CurrencyData;
+use App\Domains\Currency\Dtos\CurrencyExchangeRateData;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class CurrencyDataTest extends TestCase
+class CurrencyExchangeRateDataTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
 
     public function test_currency_data_is_valid()
     {
-        $dto = new CurrencyData(
+        $dto = new CurrencyExchangeRateData(
             name: $this->faker->currencyCode(),
-            status: $this->faker->randomElement(['Enabled', 'Disable'])
+            currencyRate: $this->faker->numberBetween(1, 200),
+            currencyRateOn: $this->faker->date
         );
-        $this->assertInstanceOf(CurrencyData::class, $dto);
+        $this->assertInstanceOf(CurrencyExchangeRateData::class, $dto);
     }
 }

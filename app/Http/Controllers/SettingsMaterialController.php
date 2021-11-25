@@ -12,14 +12,24 @@ use Inertia\Inertia;
 
 class SettingsMaterialController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $materials = Materials::all();
+        $q = $request->get('q');
+
+        $materials = Materials::query()
+            ->when($q, function ($query, $q) {
+                return $query
+                    ->where('name','like', "%{$q}%")
+                    ->orWhere('type','like', "%{$q}%");
+            })
+            ->paginate()
+            ->withQueryString();
 
         return Inertia::render(
             'Settings/Materials/MaterialsIndex',
             [
-                'materials' => $materials
+                'materials' => $materials,
+                'q' => $q
             ]
         );
     }

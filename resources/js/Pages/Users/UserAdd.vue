@@ -29,17 +29,23 @@
                                     </div>
 
                                     <div class="col-span-6 sm:col-span-3">
-                                        <label for="factory"
-                                               class="block text-sm font-medium text-gray-700">Factory</label>
-                                        <select id="factory"
+                                        <label for="default_factory"
+                                               class="block text-sm font-medium text-gray-700">Default Factory</label>
+                                        <select id="default_factory"
                                                 v-model="user.selected_factory_id"
-                                                name="factory"
-                                                autocomplete="factory"
+                                                name="default_factory"
+                                                autocomplete="default_factory"
                                                 class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                             <option v-for="factory in factories" :value="factory.id">
                                                 {{ factory.name }}
                                             </option>
                                         </select>
+                                    </div>
+
+                                    <div class="col-span-6 sm:col-span-3">
+                                        <label for="factories"
+                                               class="block text-sm font-medium text-gray-700">Assign Factories</label>
+                                        <v-select multiple class="style-chooser" v-model="user.selected_factories" label="name" :options="factoriesArr" :reduce="name => name.id" />
                                     </div>
 
                                     <div class="col-span-6 sm:col-span-3">
@@ -102,6 +108,13 @@ export default {
         for (const [key, value] of Object.entries(this.roles)) {
             this.rolesArr.push(value.name);
         }
+
+        for (const [key, value] of Object.entries(this.factories)) {
+            this.factoriesArr.push({
+                id: value.id,
+                name: value.name
+            });
+        }
     },
     methods: {
         saveUser(e) {
@@ -112,13 +125,15 @@ export default {
     data() {
         return {
             rolesArr: [],
+            factoriesArr: [],
             user: {
                 name: '',
                 email: '',
                 password:'',
                 contact_number: '',
                 selected_factory_id: '',
-                selected_roles: []
+                selected_roles: [],
+                selected_factories: []
             }
         }
     }

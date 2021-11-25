@@ -6,16 +6,24 @@
                 <form @submit.prevent="addCurrency">
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-6">
-                            <div class="grid grid-cols-6 gap-6">
-                                <div class="col-span-6 sm:col-span-3">
+                            <div class="grid grid-cols-3 gap-8">
+                                <div>
                                     <label for="currency_name" class="block text-sm font-medium text-gray-700">Currency Name</label>
                                     <input v-model="currency.name" type="text" name="full_name" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
-                                <div class="col-span-6 sm:col-span-3">
-                                    <label for="currency_rate" class="block text-sm font-medium text-gray-700">Currency Rate</label>
-                                    <input v-model="currency.rate" type="text" name="rate" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <div>
+                                    <label for="currency_status" class="block text-sm font-medium text-gray-700">Status</label>
+                                    <select id="factory"
+                                            v-model="currency.status"
+                                            name="status"
+                                            autocomplete="status"
+                                            class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <option value="Enabled">Enabled</option>
+                                        <option value="Disabled">Disabled</option>
+                                    </select>
                                 </div>
+
 
 
                             </div>
@@ -50,7 +58,7 @@ export default {
         return {
             currency: {
                 name: '',
-                rate: null,
+                status: null
             },
             submitted: false,
         }
