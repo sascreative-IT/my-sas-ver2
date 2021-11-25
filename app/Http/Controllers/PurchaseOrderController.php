@@ -26,7 +26,7 @@ class PurchaseOrderController extends Controller
 
     public function index(): \Inertia\Response
     {
-        $purchase_orders = MaterialPurchaseOrder::query()->with(['supplier', 'factory', 'user'])
+        $purchase_orders = MaterialPurchaseOrder::query()->with(['supplier', 'assignedFactory', 'user'])
             ->orderBy("created_at", "DESC")
             ->paginate();
 
