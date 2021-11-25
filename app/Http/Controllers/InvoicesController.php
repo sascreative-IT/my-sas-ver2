@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Domains\Invoices\Actions\CreateInvoices;
 use App\Domains\Invoices\Dtos\Invoice;
 use App\Domains\Invoices\Dtos\InvoiceItem;
+use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrder;
 use App\Models\Colour;
 use App\Models\Factory;
 use App\Models\MaterialInvoice;
@@ -19,8 +20,9 @@ use App\Services\Models\ModelToSelectOptionsFacade as SelectOptions;
 
 class InvoicesController extends Controller
 {
-    public function create()
+    public function create(MaterialPurchaseOrder $materialPurchaseOrder)
     {
+
         $factories = Factory::query()
             ->with('country')
             ->get();
@@ -37,6 +39,8 @@ class InvoicesController extends Controller
         $unitCollection = Unit::all();
         $units = SelectOptions::selectOptionsObject($unitCollection, 'type', 'name');
 
+        $materialPurchaseOrder = MaterialPurchaseOrder::with('items')->find($materialPurchaseOrder->id);
+
         return Inertia::render(
             'Invoices/InvoiceAdd',
             [
@@ -44,7 +48,8 @@ class InvoicesController extends Controller
                 'materials' => $materials,
                 'colours' => $colours,
                 'suppliers' => $suppliers,
-                'units' => $units
+                'units' => $units,
+                'materialPurchaseOrder' => $materialPurchaseOrder
             ]
         );
     }

@@ -263,6 +263,9 @@ export default {
         units: {
             required: true,
             type: Object
+        },
+        materialPurchaseOrder: {
+            required: false
         }
     },
     data() {
@@ -290,6 +293,7 @@ export default {
     },
     mounted() {
         this.extractFactoryName(this.factories);
+        this.copyMaterialPurchaseOrderToInvoice();
     },
     methods: {
         extractFactoryName(prop) {
@@ -342,8 +346,40 @@ export default {
         },
         saveInvoice() {
             this.$inertia.post('/invoices', this.invoice)
-        }
+        },
+        getMaterialNameById(material_id) {
+            return this.materials.[material_id];
+        },
+        getMaterialColorNameById(color_id) {
+            return this.colours.[color_id];
+        },
+        copyMaterialPurchaseOrderToInvoice() {
+            if (this.materialPurchaseOrder != null) {
 
+                this.invoice.po_number = this.materialPurchaseOrder.id;
+                this.invoice = {
+                    po_number: this.materialPurchaseOrder.id,
+                    factory_id: this.materialPurchaseOrder.factory_id,
+                    supplier_id: this.materialPurchaseOrder.supplier_id,
+                    items: [],
+                }
+
+                if (typeof this.materialPurchaseOrder.items != 'undefined') {
+                    for(let item of this.materialPurchaseOrder.items) {
+                        this.invoice.items.push({
+                            material_name_id: item.variation.material_id,
+                            material_name: this.getMaterialNameById(item.variation.material_id),
+                            material_colour_id: item.variation.colour_id,
+                            material_colour: this.getMaterialColorNameById(item.variation.colour_id),
+                            unit_id: item.unit_id,
+                            unitValue: item.unit,
+                            price: item.price,
+                            quantity: item.quantity
+                        })
+                    }
+                }
+            }
+        }
     }
 }
 </script>

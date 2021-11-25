@@ -131,7 +131,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::put('/suppliers/addresses/{address}',[SupplierAddressController::class, 'update'])->name('suppliers.addresses.update');
     Route::delete('/suppliers/addresses/{address}', [SupplierAddressController::class, 'delete'])->name('suppliers.addresses.delete');
 
-    Route::get('/invoices/create', [InvoicesController::class, 'create'])->name('invoices.create');
+    Route::get('/invoices/create/{materialPurchaseOrder?}', [InvoicesController::class, 'create'])->name('invoices.create');
     Route::post('/invoices', [InvoicesController::class, 'store'])->name('invoice.store');
     Route::get('/invoices/{invoice}',[InvoicesController::class, 'show'])->name('invoices.show');
 
