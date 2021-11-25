@@ -13,8 +13,8 @@ class CreateMaterialPurchaseOrdersTable extends Migration
             $table->id();
             $table->foreignId('supplier_id')->constrained('suppliers');
             $table->foreignId('factory_id')->constrained('factories');
-            $table->foreignId('approved_by_id')->constrained('users');
-            $table->timestamp('approved_at');
+            $table->foreignId('approved_by_id')->nullable()->constrained('users');
+            $table->timestamp('approved_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
