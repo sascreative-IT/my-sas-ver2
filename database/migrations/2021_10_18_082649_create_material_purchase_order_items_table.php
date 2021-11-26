@@ -14,7 +14,8 @@ class CreateMaterialPurchaseOrderItemsTable extends Migration
             $table->foreignId('material_variation_id')->constrained('material_variations');
             $table->float('quantity');
             $table->string('unit');
-            $table->float('price');
+            $table->float('unit_price');
+            $table->float('sub_total');
             $table->string('currency');
             $table->timestamps();
         });

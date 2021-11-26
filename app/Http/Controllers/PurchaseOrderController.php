@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\Currency\Models\Currency;
 use App\Domains\Invoices\Actions\CreateInvoices;
 use App\Domains\Invoices\Dtos\Invoice;
 use App\Domains\Invoices\Dtos\InvoiceItem;
@@ -24,26 +25,38 @@ use App\Services\Models\ModelToSelectOptionsFacade as SelectOptions;
 class PurchaseOrderController extends Controller
 {
 
-    public function index(): \Inertia\Response
+    public function index(Request $request): \Inertia\Response
     {
-        $purchase_orders = MaterialPurchaseOrder::query()->with(['supplier', 'factory', 'user'])
+        $factory = $request->get('factory');
+        $status = $request->get('status');
+
+        $factories = Factory::all()->toArray();
+
+        $purchase_orders = MaterialPurchaseOrder::query()
+            ->with(['supplier', 'assignedFactory', 'user'])
+            ->when($factory, function ($query, $factory) {
+                return $query->where('factory_id', $factory);
+            })
+            ->when($status, function ($query, $status) {
+                return $query->where('evaluation_status', $status);
+            })
             ->orderBy("created_at", "DESC")
-            ->paginate();
+            ->paginate()
+            ->appends($request->except(['page','_token']));
 
         return Inertia::render(
             'PurchaseOrder/Index',
             [
-                'purchase_orders' => $purchase_orders
+                'purchase_orders' => $purchase_orders,
+                'factories' => $factories,
+                'status' => $status,
+                'factory' => $factory
             ]
         );
     }
 
-    public function create()
+    public function create(Request $request): \Inertia\Response
     {
-        $factories = Factory::query()
-            ->with('country')
-            ->get();
-
         $materialsCollection = Materials::all();
         $materials = SelectOptions::selectOptionsObject($materialsCollection, 'id', 'name');
 
@@ -56,6 +69,18 @@ class PurchaseOrderController extends Controller
         $unitCollection = Unit::all();
         $units = SelectOptions::selectOptionsObject($unitCollection, 'type', 'name');
 
+        $factoryCollection = Factory::all();
+        $factories = SelectOptions::selectOptionsObject($factoryCollection, 'id', 'name');
+
+        $currencyCollection = Currency::all();
+        $currencies = SelectOptions::selectOptionsObject($currencyCollection, 'id', 'name');
+
+        $material = null;
+        if ($request->filled('material_id')) {
+            $material = Materials::find($request->get('material_id'));
+        }
+
+
         return Inertia::render(
             'PurchaseOrder/Create',
             [
@@ -63,7 +88,9 @@ class PurchaseOrderController extends Controller
                 'materials' => $materials,
                 'colours' => $colours,
                 'suppliers' => $suppliers,
-                'units' => $units
+                'units' => $units,
+                'currencies' => $currencies,
+                'material' => $material
             ]
         );
     }
@@ -71,8 +98,8 @@ class PurchaseOrderController extends Controller
     public function store(
         CreatePurchaseOrderAction $createPurchaseOrderAction,
         StorePurchaseOrderRequest $purchaseOrderRequest
-    )
-    {
+    ): \Illuminate\Http\RedirectResponse {
+
         $purchaseOrderData = PurchaseOrderData::fromRequest($purchaseOrderRequest);
 
         $createPurchaseOrderAction->execute($purchaseOrderData);

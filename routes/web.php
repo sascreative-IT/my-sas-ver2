@@ -10,6 +10,8 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\SettingsColourController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SettingsCurrencyController;
+use App\Http\Controllers\SettingsCurrencyExchangeRateController;
 use App\Http\Controllers\SettingsFactoryController;
 use App\Http\Controllers\SettingsMaterialController;
 use App\Http\Controllers\SettingsWarehouseController;
@@ -85,13 +87,27 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::put('/settings/colours/{colour}', [SettingsColourController::class, 'update'])->name('settings.colours.update');
     Route::delete('/settings/colours/{colour}', [SettingsColourController::class, 'delete'])->name('settings.colours.delete');
 
+    Route::get('/settings/currency-exchange-rates', [SettingsCurrencyExchangeRateController::class, 'index'])->name('settings.currency-exchange-rates.index');
+    Route::post('/settings/currency-exchange-rates', [SettingsCurrencyExchangeRateController::class, 'store'])->name('settings.currency-exchange-rates.store');
+    Route::get('/settings/currency-exchange-rates/create', [SettingsCurrencyExchangeRateController::class, 'create'])->name('settings.currency-exchange-rates.create');
+    Route::get('/settings/currency-exchange-rates/{currencyExchangeRate}/edit', [SettingsCurrencyExchangeRateController::class, 'edit'])->name('settings.currency-exchange-rates.edit');
+    Route::put('/settings/currency-exchange-rates/{currencyExchangeRate}', [SettingsCurrencyExchangeRateController::class, 'update'])->name('settings.currency-exchange-rates.update');
+    Route::delete('/settings/currency-exchange-rates/{currencyExchangeRate}', [SettingsCurrencyExchangeRateController::class, 'delete'])->name('settings.currency-exchange-rates.delete');
+
+    Route::get('/settings/currencies', [SettingsCurrencyController::class, 'index'])->name('settings.currencies.index');
+    Route::post('/settings/currencies', [SettingsCurrencyController::class, 'store'])->name('settings.currencies.store');
+    Route::get('/settings/currencies/create', [SettingsCurrencyController::class, 'create'])->name('settings.currencies.create');
+    Route::get('/settings/currencies/{currency}/edit', [SettingsCurrencyController::class, 'edit'])->name('settings.currencies.edit');
+    Route::put('/settings/currencies/{currency}', [SettingsCurrencyController::class, 'update'])->name('settings.currencies.update');
+    Route::delete('/settings/currencies/{currency}', [SettingsCurrencyController::class, 'delete'])->name('settings.currencies.delete');
+
     Route::get('/users', [UsersController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UsersController::class, 'create'])->name('users.create');
     Route::post('/users', [UsersController::class, 'store'])->name('users.store');
     Route::get('/users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UsersController::class, 'update'])->name('users.update');
     Route::put('/users/{user}/reset-password', [UsersController::class, 'resetPassword'])->name('users.reset-password');
-    Route::post('/users/deactivate', [UsersController::class,'deactivateUser'])->name('users.deactivate');
+    Route::post('/users/deactivate', [UsersController::class, 'deactivateUser'])->name('users.deactivate');
 
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers.index');
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customers.create');
@@ -101,7 +117,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::delete('/customer/{customer}', [CustomersController::class, 'delete'])->name('customers.delete');
 
     Route::post('/upload-logo', [FileUploadController::class, 'store'])->name('logo.create');
-    Route::get('/get-logo/{id}',[FileUploadController::class,'show'])->name('logo.show');
+    Route::get('/get-logo/{id}', [FileUploadController::class, 'show'])->name('logo.show');
 
     Route::get('/customers/contacts/{customer}', [CustomerContactsController::class, 'show'])->name('customers.contacts.show');
     Route::post('/customers/contacts', [CustomerContactsController::class, 'store'])->name('customers.contacts.store');
@@ -109,7 +125,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::delete('/customers/contacts/{customerContact}', [CustomerContactsController::class, 'delete'])->name('customers.contacts.delete');
 
     Route::post('/customers/addresses', [AddressController::class, 'store'])->name('customers.addresses.store');
-    Route::put('/customers/addresses/{address}',[AddressController::class, 'update'])->name('customers.addresses.update');
+    Route::put('/customers/addresses/{address}', [AddressController::class, 'update'])->name('customers.addresses.update');
     Route::delete('/customers/addresses/{address}', [AddressController::class, 'delete'])->name('customers.addresses.delete');
 
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
@@ -128,12 +144,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::delete('/suppliers/contacts/{supplierContact}', [SupplierContactsController::class, 'delete'])->name('suppliers.contacts.delete');
 
     Route::post('/suppliers/addresses', [SupplierAddressController::class, 'store'])->name('suppliers.addresses.store');
-    Route::put('/suppliers/addresses/{address}',[SupplierAddressController::class, 'update'])->name('suppliers.addresses.update');
+    Route::put('/suppliers/addresses/{address}', [SupplierAddressController::class, 'update'])->name('suppliers.addresses.update');
     Route::delete('/suppliers/addresses/{address}', [SupplierAddressController::class, 'delete'])->name('suppliers.addresses.delete');
 
     Route::get('/invoices/create/{materialPurchaseOrder?}', [InvoicesController::class, 'create'])->name('invoices.create');
     Route::post('/invoices', [InvoicesController::class, 'store'])->name('invoice.store');
-    Route::get('/invoices/{invoice}',[InvoicesController::class, 'show'])->name('invoices.show');
+    Route::get('/invoices/{invoice}', [InvoicesController::class, 'show'])->name('invoices.show');
 
     Route::post('/inventory/{inventory}/adjust', [InventoryAdjustmentController::class, 'store'])->name('inventory.adjust');
 
@@ -148,4 +164,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/internal-styles', [InternalStylesController::class, 'store'])->name('style.internal.store');
 
     Route::resource('purchase-order', \App\Http\Controllers\PurchaseOrderController::class, ['names' => 'purchase.orders']);
+    Route::post('/approve-purchase-order/{materialPurchaseOrder}', \App\Http\Controllers\ApprovePurchaseOrderController::class)->name('purchase.orders.approve');
+    Route::post('/reject-purchase-order/{materialPurchaseOrder}', \App\Http\Controllers\RejectPurchaseOrderController::class)->name('purchase.orders.reject');
+    Route::resource('stock-out', \App\Http\Controllers\StockOutController::class, ['names' => 'stock.out']);
 });

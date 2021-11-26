@@ -18,7 +18,8 @@ class CreatePurchaseOrderItemsAction
                 'material_variation_id' => $purchaseOrderItemData->material_variation->id,
                 'quantity' => $purchaseOrderItemData->quantity,
                 'unit' => $purchaseOrderItemData->unit,
-                'price' => $purchaseOrderItemData->price,
+                'unit_price' => $purchaseOrderItemData->unitPrice,
+                'sub_total' => $purchaseOrderItemData->subTotal,
                 'currency' => $purchaseOrderItemData->currency
             ]);
         }

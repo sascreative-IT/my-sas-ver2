@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class StylePanel extends Model
 {
     use HasFactory;
+    protected $with = ['fabrics','consumption','defaultFabric'];
     public $timestamps = true;
 
     protected $fillable = [

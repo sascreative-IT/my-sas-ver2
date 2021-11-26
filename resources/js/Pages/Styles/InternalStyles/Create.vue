@@ -10,10 +10,10 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="mb-5">
                     <el-alert
-                      v-if="errors.length > 0"
-                      title="Failed to create style"
-                      type="error"
-                      show-icon
+                        v-if="errors.length > 0"
+                        title="Failed to create style"
+                        type="error"
+                        show-icon
                     >
                         <ul>
                             <li v-for="error in errors">
@@ -70,18 +70,19 @@
                                         </label>
 
                                         <v-select
-                                                id="customer_name"
-                                                v-model="styleForm.customer_id"
-                                                label="name"
-                                                item-id="id"
-                                                :options="customers"
-                                                :reduce="customer => customer.id"
+                                            id="customer_name"
+                                            v-model="styleForm.customer_id"
+                                            label="name"
+                                            item-id="id"
+                                            :options="customers"
+                                            :reduce="customer => customer.id"
                                         ></v-select>
                                     </div>
                                     <div class="pt-2 pb-4">
                                         <div class="pt-2 pb-4">
 
-                                            <label for="extending_style_code" class="block text-base font-medium text-gray-700">
+                                            <label for="extending_style_code"
+                                                   class="block text-base font-medium text-gray-700">
                                                 Extending Style code
                                             </label>
 
@@ -117,19 +118,19 @@
                                 :errors="errors"
                             ></general-style-form>
                         </div>
-<!--                        <div v-show="show_customized_form && is_customized">-->
-<!--                            <custom-style-form-->
-<!--                                :chosen-style-code="payload.select_style_code"-->
-<!--                                @custom-style-data="save"-->
-<!--                                :reset-form="reset_forms"-->
-<!--                            ></custom-style-form>-->
-<!--                        </div>-->
-<!--                        <div v-show="show_new_customized_form && is_customized">-->
-<!--                            <new-custom-style-form-->
-<!--                                @new-style-data="save"-->
-<!--                                :reset-form="reset_forms"-->
-<!--                            ></new-custom-style-form>-->
-<!--                        </div>-->
+                        <!--                        <div v-show="show_customized_form && is_customized">-->
+                        <!--                            <custom-style-form-->
+                        <!--                                :chosen-style-code="payload.select_style_code"-->
+                        <!--                                @custom-style-data="save"-->
+                        <!--                                :reset-form="reset_forms"-->
+                        <!--                            ></custom-style-form>-->
+                        <!--                        </div>-->
+                        <!--                        <div v-show="show_new_customized_form && is_customized">-->
+                        <!--                            <new-custom-style-form-->
+                        <!--                                @new-style-data="save"-->
+                        <!--                                :reset-form="reset_forms"-->
+                        <!--                            ></new-custom-style-form>-->
+                        <!--                        </div>-->
                     </div>
                 </div>
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -200,10 +201,10 @@ export default {
             is_customized: false,
             show_new_customized_form: false,
             show_customized_fields: false,
-            show_customized_form:false,
+            show_customized_form: false,
             payload: {
-                select_style_code:'',
-                select_customer:2,
+                select_style_code: '',
+                select_customer: 2,
                 style_information: {}
             },
             reset_forms: false,

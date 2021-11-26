@@ -25,7 +25,8 @@ class PurchaseOrderItemDtoTest extends TestCase
             'material_variation_id' => $materialVariation->id,
             'quantity' => rand(1, 10),
             'unit' => 'm',
-            'price' => $this->faker->randomFloat(2, 10, 300),
+            'unit_price' => $this->faker->randomFloat(2, 10, 300),
+            'sub_total' => $this->faker->randomFloat(2, 10, 300),
             'currency' => 'NZD'
         ]);
 
@@ -39,7 +40,8 @@ class PurchaseOrderItemDtoTest extends TestCase
         PurchaseOrderItemData::fromRequest([
             'quantity' => rand(1, 10),
             'unit' => 'm',
-            'price' => $this->faker->randomFloat(2, 10, 300),
+            'unit_price' => $this->faker->randomFloat(2, 10, 300),
+            'sub_total' => $this->faker->randomFloat(2, 10, 300),
             'currency' => 'NZD'
         ]);
     }
@@ -52,7 +54,8 @@ class PurchaseOrderItemDtoTest extends TestCase
             'material_variation_id' => 1000000000,
             'quantity' => rand(1, 10),
             'unit' => 'm',
-            'price' => $this->faker->randomFloat(2, 10, 300),
+            'unit_price' => $this->faker->randomFloat(2, 10, 300),
+            'sub_total' => $this->faker->randomFloat(2, 10, 300),
             'currency' => 'NZD'
         ]);
     }

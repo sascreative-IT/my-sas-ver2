@@ -1,6 +1,7 @@
 <template>
     <div>
         <el-select
+            :disabled="disabled"
             class="w-full"
             @input="input"
             :value="preparedValue"
@@ -67,6 +68,11 @@ export default {
             default: 'name',
             type: String,
         },
+        disabled: {
+            required: false,
+            default: false,
+            type: Boolean,
+        }
     },
     data() {
         return {

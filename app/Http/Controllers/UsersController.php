@@ -41,6 +41,7 @@ class UsersController extends Controller
         ]);
 
         $user->assignRole($request->input('selected_roles'));
+        $user->factories()->sync($request->input('selected_factories'));
 
         ErpUserDetail::create([
             'user_id' => $user->id,
@@ -58,7 +59,7 @@ class UsersController extends Controller
             [
                 'factories' => Factory::all()->toArray(),
                 'roles' => \Spatie\Permission\Models\Role::select('name')->get(),
-                'initUser' => $user->loadMissing(['roles', 'erpUserDetails.factory'])->toArray()
+                'initUser' => $user->loadMissing(['roles', 'erpUserDetails.factory','factories'])->toArray()
             ],
         );
     }
@@ -73,7 +74,7 @@ class UsersController extends Controller
             'contact_number' => $request->input('contact_number'),
         ]);
         $user->syncRoles($request->input('selected_roles'));
-
+        $user->factories()->sync($request->input('selected_factories'));
         return redirect()->route('users.index');
     }
 

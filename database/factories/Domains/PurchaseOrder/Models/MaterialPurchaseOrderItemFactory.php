@@ -14,12 +14,15 @@ class MaterialPurchaseOrderItemFactory extends Factory
 
     public function definition(): array
     {
+        $quantity = rand(1,10);
+        $unit_price = $this->faker->randomDigit();
         return [
             'material_purchase_order_id' => MaterialPurchaseOrder::factory(),
             'material_variation_id' => MaterialVariation::factory(),
-            'quantity' => rand(1,10),
+            'quantity' => $quantity,
             'unit' => 'm',
-            'price' => $this->faker->randomDigit(),
+            'unit_price' => $unit_price,
+            'sub_total' => $unit_price * $quantity,
             'currency' => 'NZD'
 
         ];
