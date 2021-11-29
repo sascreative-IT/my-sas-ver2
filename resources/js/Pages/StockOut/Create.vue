@@ -53,11 +53,16 @@
                                     </label>
                                     <span class="mr-4 inline-block hidden md:block">:</span>
                                     <div class="flex-1">
-                                        <select v-model="stockOut.factory_id">
-                                            <option v-for="factory in factories" :value="factory.id">
-                                                {{ factory.name }}
-                                            </option>
-                                        </select>
+                                        <app-select
+                                            class="w-48"
+                                            placeholder="Select Factory"
+                                            option-label="name"
+                                            option-value="id"
+                                            :filterable="true"
+                                            :options="factories"
+                                            v-model="stockOut.factory"
+                                            @input="setFactoryId"
+                                        ></app-select>
                                     </div>
                                 </div>
 
@@ -150,7 +155,7 @@
                                         <div class="w-1/6 pr-5">
                                             <div class="">
                                                 <label class="text-base font-medium text-gray-700">
-                                                    Pieces
+                                                    No of pieces
                                                 </label>
                                                 <input
                                                     v-model="stockOutItem.pieces"
@@ -160,15 +165,28 @@
                                         </div>
 
                                         <div class="w-1/6">
-                                            <div class="">
-                                                <label class="text-base font-medium text-gray-700">
-                                                    Usage
-                                                </label>
-                                                <input
-                                                    v-model="stockOutItem.usage"
-                                                    class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                    type="text"
-                                                    :placeholder="stockOutItem.usageMeasurement">
+                                            <label class="text-base font-medium text-gray-700">
+                                                Usage
+                                            </label>
+                                            <div>
+                                                <div class="flex flex-wrap items-stretch w-full mb-4 relative">
+                                                    <div class="flex -mr-px">
+                                                            <span
+                                                                class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
+                                                                <template v-if="selectedMaterial">
+                                                                    {{ selectedMaterial.unit }}
+                                                                </template>
+                                                                <template v-else>
+                                                                   m
+                                                                </template>
+                                                            </span>
+                                                    </div>
+                                                    <input type="text"
+                                                           class="flex-shrink flex-grow flex-auto leading-normal w-32 flex-1 h-10 border-gray-300 rounded-md rounded-l-none focus:ring-indigo-500 focus:border-indigo-500 px-3 relative"
+                                                           placeholder="0.00"
+                                                           id="sub_total-value"
+                                                           v-model="stockOutItem.usage">
+                                                </div>
                                             </div>
                                         </div>
 
@@ -298,6 +316,9 @@ export default {
         customers: {
             required: true,
             type: Array
+        },
+        selectedMaterial: {
+            type: Object
         }
     },
     components: {
@@ -311,6 +332,7 @@ export default {
         return {
             stockOut: {
                 order_public_id: null,
+                factory: null,
                 factory_id: null,
                 customer_id: null,
                 created_by_id: null,
@@ -328,11 +350,14 @@ export default {
                 colour_id: null,
                 pieces: '',
                 usage: '',
-                usageMeasurement: 'M'
+                usageMeasurement: ''
             },
             stockOutItems: [],
             resetSelectOptions: false,
         }
+    },
+    mounted() {
+        this.stockOutItem.usageMeasurement = this.stockOutItem.material.unit;
     },
     methods: {
         handleAddStockItems() {
@@ -373,7 +398,7 @@ export default {
         },
         setSelectedMaterial() {
             this.stockOutItem.material_id = this.stockOutItem.material.id;
-            this.stockOutItem.usageMeasurement = this.stockOutItem.material.unit.toUpperCase();
+            this.stockOutItem.usageMeasurement = this.stockOutItem.material.unit;
             this.$inertia.visit(this.$inertia.page.url, {
                 preserveState: true,
                 preserveScroll: true,
@@ -387,6 +412,10 @@ export default {
         },
         setSelectedCustomer() {
             this.stockOut.customer_id = this.stockOut.customer.id;
+        },
+        setFactoryId(value) {
+            this.stockOut.factory = value;
+            this.stockOut.factory_id = value.id;
         },
         resetStockOutItem() {
             this.stockOutItem = {

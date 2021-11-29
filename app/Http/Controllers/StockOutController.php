@@ -42,7 +42,7 @@ class StockOutController extends Controller
 
     public function create(Request $request)
     {
-        $factories = Factory::query()->get();
+        $factories = Factory::all();
         $colours = Colour::query()->get();
         $customers = Customer::query()->get();
 
@@ -63,8 +63,10 @@ class StockOutController extends Controller
         }
 
         //$colours = [];
-        if ($request->filled('material_id')) {
-            $colorIds = MaterialVariation::where('material_id', $request->get('material_id'))
+        $selectedMaterial = null;
+        if ($materialId = $request->filled('material_id')) {
+            $selectedMaterial = Materials::find($materialId);
+            $colorIds = MaterialVariation::where('material_id', $materialId)
                 ->get()
                 ->pluck('colour_id')
                 ->toArray();
@@ -78,7 +80,8 @@ class StockOutController extends Controller
             'style_panels' => $style_panels,
             'materials' => $materials,
             'colours' => $colours,
-            'customers' => $customers
+            'customers' => $customers,
+            'selectedMaterial' => $selectedMaterial
         ]);
     }
 
