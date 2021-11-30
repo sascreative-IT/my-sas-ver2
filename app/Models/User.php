@@ -13,8 +13,9 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements Auditable
 {
     use HasApiTokens;
     use HasFactory;
@@ -22,6 +23,7 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasRoles;
+    use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
         'name',
@@ -43,6 +45,11 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    protected $auditExclude = [
+        'password',
+    ];
+
 
     public const ROLE_ADMINISTRATOR = 'Administrator';
     public const ROLE_CUSTOMER_SERVICE_AGENT = 'Customer Service Agent';

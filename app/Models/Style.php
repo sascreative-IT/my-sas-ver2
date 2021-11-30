@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * @property Collection categories
@@ -18,13 +19,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @method Builder internal()
  */
-class Style extends Model
+class Style extends Model implements Auditable
 {
     const INTERNAL = 'internal';
     const EXTERNAL = 'external';
 
 
     use HasFactory, SoftDeletes;
+    use \OwenIt\Auditing\Auditable;
+
     protected $guarded = [];
 
     public function categories(): BelongsToMany
