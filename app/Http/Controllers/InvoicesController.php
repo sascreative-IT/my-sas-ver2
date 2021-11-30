@@ -25,14 +25,8 @@ class InvoicesController extends Controller
     {
 
         $factories = Factory::all();
-        //$factories = SelectOptions::selectOptionsObject($factoryCollection, 'id', 'name');
-
-        $materialsCollection = Materials::all();
-        $materials = SelectOptions::selectOptionsObject($materialsCollection, 'id', 'name');
-
-        $coloursCollection = Colour::all();
-        $colours = SelectOptions::selectOptionsObject($coloursCollection, 'id', 'name');
-
+        $materials = Materials::all();
+        $colours = Colour::all();
         $suppliers = Supplier::all();
 
         $unitCollection = Unit::all();

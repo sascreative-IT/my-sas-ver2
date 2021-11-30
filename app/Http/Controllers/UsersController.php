@@ -49,7 +49,8 @@ class UsersController extends Controller
             'factory_id' => $request->input('selected_factory_id'),
         ]);
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')
+            ->with(['message' => 'user account created successfully.']);
     }
 
     public function edit(User $user)
@@ -75,7 +76,8 @@ class UsersController extends Controller
         ]);
         $user->syncRoles($request->input('selected_roles'));
         $user->factories()->sync($request->input('selected_factories'));
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')
+            ->with(['message' => 'user account created successfully.']);
     }
 
     public function resetPassword(ResetPasswordRequest $request, User $user)

@@ -120,6 +120,23 @@
                                         <div class="w-1/6 pr-5">
                                             <div class="">
                                                 <label class="text-base font-medium text-gray-700">
+                                                    Supplier
+                                                </label>
+                                                <app-select
+                                                    placeholder="Select Supplier"
+                                                    option-label="name"
+                                                    option-value="id"
+                                                    :filterable="true"
+                                                    :options="suppliers"
+                                                    v-model="stockOutItem.supplier"
+                                                    @input="setSelectedSupplier"
+                                                ></app-select>
+                                            </div>
+                                        </div>
+
+                                        <div class="w-1/6 pr-5">
+                                            <div class="">
+                                                <label class="text-base font-medium text-gray-700">
                                                     Material
                                                 </label>
                                                 <app-select
@@ -151,7 +168,6 @@
                                             </div>
                                         </div>
 
-
                                         <div class="w-1/6 pr-5">
                                             <div class="">
                                                 <label class="text-base font-medium text-gray-700">
@@ -159,7 +175,7 @@
                                                 </label>
                                                 <input
                                                     v-model="stockOutItem.pieces"
-                                                    class="h-9 w-9/12 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    class="h-9 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md w-20"
                                                     type="text">
                                             </div>
                                         </div>
@@ -167,6 +183,9 @@
                                         <div class="w-1/6">
                                             <label class="text-base font-medium text-gray-700">
                                                 Usage
+                                                <template v-if="materialInventory">
+                                                (Avail. {{materialInventory.available_quantity}})
+                                            </template>
                                             </label>
                                             <div>
                                                 <div class="flex flex-wrap items-stretch w-full mb-4 relative">
@@ -182,7 +201,7 @@
                                                             </span>
                                                     </div>
                                                     <input type="text"
-                                                           class="flex-shrink flex-grow flex-auto leading-normal w-32 flex-1 h-10 border-gray-300 rounded-md rounded-l-none focus:ring-indigo-500 focus:border-indigo-500 px-3 relative"
+                                                           class="flex-shrink flex-grow flex-auto leading-normal w-20 flex-1 h-10 border-gray-300 rounded-md rounded-l-none focus:ring-indigo-500 focus:border-indigo-500 px-3 relative"
                                                            placeholder="0.00"
                                                            id="sub_total-value"
                                                            v-model="stockOutItem.usage">
@@ -212,6 +231,10 @@
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
                                     Panel
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
+                                    Supplier
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
@@ -246,6 +269,13 @@
                                         {{ item.style_panel.name }}
                                     </div>
                                 </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ item.supplier.name }}
+                                    </div>
+                                </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
                                         {{ item.material.name }}
@@ -265,7 +295,7 @@
 
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ item.usage }}
+                                        {{ item.usage }} {{item.material.unit}}
                                     </div>
                                 </td>
 
@@ -317,7 +347,14 @@ export default {
             required: true,
             type: Array
         },
+        suppliers: {
+            required: true,
+            type: Array
+        },
         selectedMaterial: {
+            type: Object
+        },
+        materialInventory: {
             type: Object
         }
     },
@@ -348,6 +385,8 @@ export default {
                 material_id: '',
                 color: null,
                 colour_id: null,
+                supplier: null,
+                supplier_id: null,
                 pieces: '',
                 usage: '',
                 usageMeasurement: ''
@@ -407,8 +446,16 @@ export default {
                 }
             })
         },
-        setSelectedColor() {
-            this.stockOutItem.colour_id = this.stockOutItem.color.id;
+        setSelectedColor(value) {
+            this.stockOutItem.colour_id = value.id;
+            this.stockOutItem.colour = value;
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    colour_id: value.id
+                }
+            })
         },
         setSelectedCustomer() {
             this.stockOut.customer_id = this.stockOut.customer.id;
@@ -416,6 +463,24 @@ export default {
         setFactoryId(value) {
             this.stockOut.factory = value;
             this.stockOut.factory_id = value.id;
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    factory_id: value.id
+                }
+            })
+        },
+        setSelectedSupplier(value) {
+            this.stockOut.supplier = value;
+            this.stockOut.supplier_id = value.id;
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    supplier_id: this.stockOut.supplier_id
+                }
+            })
         },
         resetStockOutItem() {
             this.stockOutItem = {
@@ -425,6 +490,8 @@ export default {
                 style_panel_id: null,
                 material: '',
                 material_id: '',
+                supplier: null,
+                supplier_id: null,
                 color: null,
                 colour_id: null,
                 pieces: '',

@@ -57,23 +57,16 @@ class PurchaseOrderController extends Controller
 
     public function create(Request $request): \Inertia\Response
     {
-        $materialsCollection = Materials::all();
-        $materials = SelectOptions::selectOptionsObject($materialsCollection, 'id', 'name');
-
-        $coloursCollection = Colour::all();
-        $colours = SelectOptions::selectOptionsObject($coloursCollection, 'id', 'name');
-
-        $supplierCollection = Supplier::all();
-        $suppliers = SelectOptions::selectOptionsObject($supplierCollection, 'id', 'name');
+        $materials = Materials::all();
+        $colours = Colour::all();
+        $suppliers = Supplier::all();
 
         $unitCollection = Unit::all();
         $units = SelectOptions::selectOptionsObject($unitCollection, 'type', 'name');
 
-        $factoryCollection = Factory::all();
-        $factories = SelectOptions::selectOptionsObject($factoryCollection, 'id', 'name');
+        $factories = Factory::all();
 
-        $currencyCollection = Currency::all();
-        $currencies = SelectOptions::selectOptionsObject($currencyCollection, 'id', 'name');
+        $currencies = Currency::all();
 
         $material = null;
         if ($request->filled('material_id')) {
