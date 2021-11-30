@@ -143,22 +143,32 @@
                                                 <label for="material_name"
                                                        class="block text-sm font-medium text-gray-700">
                                                     Material Name</label>
-                                                <select-or-create-input
-                                                        :selection-options="materials"
-                                                        @change="setSelectedMaterial"
-                                                        :reset="resetSelectOptions"
-                                                ></select-or-create-input>
+
+                                                <app-select
+                                                    class="w-48"
+                                                    placeholder="Select Material"
+                                                    option-label="name"
+                                                    option-value="id"
+                                                    :filterable="true"
+                                                    :options="materials"
+                                                    v-model="material"
+                                                    @input="setSelectedMaterial"
+                                                ></app-select>
                                             </div>
                                         </div>
                                         <div class="w-48">
                                             <div class="">
                                                 <label for="colour" class="block text-sm font-medium text-gray-700">
                                                     Colour</label>
-                                                <select-or-create-input
-                                                        :selection-options="colours"
-                                                        @change="setSelectedColour"
-                                                        :reset="resetSelectOptions"
-                                                ></select-or-create-input>
+                                                <app-select
+                                                    placeholder="Select Colour"
+                                                    option-label="name"
+                                                    option-value="id"
+                                                    :filterable="true"
+                                                    :options="colours"
+                                                    v-model="invoiceItem.color"
+                                                    @input="setSelectedColour"
+                                                ></app-select>
                                             </div>
                                         </div>
                                         <div class="w-48">
@@ -341,15 +351,15 @@ export default {
         },
         materials: {
             required: true,
-            type: Object
+            type: Array
         },
         colours: {
             required: true,
-            type: Object
+            type: Array
         },
         suppliers: {
             required: true,
-            type: Object
+            type: Array
         },
         units: {
             required: true,
@@ -361,9 +371,6 @@ export default {
         currencies: {
             required: true,
             type: Array
-        },
-        material : {
-            required: false
         }
     },
     data() {
@@ -371,6 +378,7 @@ export default {
             factoryNames: [],
             selectedCurrency: '',
             defaultCurrency: {},
+            material: '',
             invoice: {
                 number: '',
                 po_number: '',
@@ -390,6 +398,7 @@ export default {
                 sub_total: '',
                 quantity: '',
                 currency: '',
+                colour: ''
             },
             invoiceItems: [],
             resetSelectOptions: false,
@@ -415,23 +424,25 @@ export default {
             }
         },
         setSupplierId(value) {
-            this.invoice.supplier_id = value;
+            this.invoice.supplier_id = value.id;
         },
         setSelectedMaterial(value) {
-            this.invoiceItem.material_name_id = value.value;
-            this.invoiceItem.material_name = value.text;
+            this.material = value;
+            this.invoiceItem.material_name_id = this.material.id;
+            this.invoiceItem.material_name = this.material.name;
 
             this.$inertia.visit(this.$inertia.page.url, {
                 preserveState: true,
                 preserveScroll: true,
                 data: {
-                    material_id: value.value
+                    material_id: this.material.id
                 }
             })
         },
         setSelectedColour(value) {
-            this.invoiceItem.material_colour_id = value.value;
-            this.invoiceItem.material_colour = value.text;
+            this.invoiceItem.colour = value;
+            this.invoiceItem.material_colour_id = value.id;
+            this.invoiceItem.material_colour = value.name;
         },
         setSelectedUnit(value) {
             this.invoiceItem.unit_id = value.value;
@@ -459,6 +470,7 @@ export default {
                 currency: '',
             };
             this.resetSelectOptions = true;
+            this.material = '';
         },
         handleAddInvoiceItems() {
             this.invoiceItem.currency = this.selectedCurrency;
@@ -471,10 +483,10 @@ export default {
             this.$inertia.post('/invoices', this.invoice)
         },
         getMaterialNameById(material_id) {
-            return this.materials.[material_id];
+            return this.materials.[material_id].name;
         },
         getMaterialColorNameById(color_id) {
-            return this.colours.[color_id];
+            return this.colours.[color_id].name;
         },
         copyMaterialPurchaseOrderToInvoice() {
             if (this.materialPurchaseOrder != null) {

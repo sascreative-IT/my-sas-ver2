@@ -1,5 +1,6 @@
 <template>
     <app-layout>
+        <Notify :flash="$page.props.flash"></Notify>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Users
