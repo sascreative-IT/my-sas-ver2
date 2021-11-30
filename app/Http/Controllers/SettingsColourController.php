@@ -7,16 +7,24 @@ use App\Http\Requests\StoreColourRequest;
 use App\Http\Requests\UpdateColourRequest;
 use App\Models\Colour;
 use App\Models\MaterialType;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class SettingsColourController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $q = $request->get('q');
+
         $colours = Colour::query()
             ->with('type')
-            ->get();
+            ->when($q, function ($query, $q) {
+                return $query
+                    ->where('name','like', "%{$q}%");
+            })
+            ->paginate()
+            ->withQueryString();
 
         return Inertia::render(
             'Settings/Colours/ColoursIndex',
