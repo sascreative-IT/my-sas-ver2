@@ -36,10 +36,6 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/mail', function () {
-    $user = \App\Models\User::find(1);
-    return new \App\Mail\UserCreatedMail($user, '1212112');
-});
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
