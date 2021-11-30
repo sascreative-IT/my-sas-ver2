@@ -14,6 +14,10 @@ class CreateMaterialsTable extends Migration
             $table->string('fiber_content')->nullable();
             $table->string('type');
             $table->string('unit');
+            $table
+                ->timestamp('marked_as_not_in_use')
+                ->nullable()
+                ->default(null);
             $table->timestamps();
 
             $table->foreign('unit')

@@ -19,7 +19,9 @@ class Materials extends Model implements Auditable
     protected $fillable = [
         'name',
         'type',
-        'unit'
+        'unit',
+        'fiber_content',
+        'marked_as_not_in_use'
     ];
 
     public function stylePanels(): BelongsToMany

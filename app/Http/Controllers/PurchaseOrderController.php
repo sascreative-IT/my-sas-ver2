@@ -57,7 +57,7 @@ class PurchaseOrderController extends Controller
 
     public function create(Request $request): \Inertia\Response
     {
-        $materials = Materials::all();
+        $materials = Materials::query()->whereNull('marked_as_not_in_use')->get();
         $colours = Colour::all();
         $suppliers = Supplier::all();
 

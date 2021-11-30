@@ -79,6 +79,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/settings/materials', [SettingsMaterialController::class, 'index'])->name('settings.materials.index');
     Route::get('/settings/material/create', [SettingsMaterialController::class, 'create'])->name('settings.materials.create');
     Route::post('/settings/materials', [SettingsMaterialController::class, 'store'])->name('settings.materials.store');
+    Route::get('/settings/material/{materials}/edit', [SettingsMaterialController::class, 'edit'])->name('settings.materials.edit');
+    Route::put('/settings/material/{materials}', [SettingsMaterialController::class, 'update'])->name('settings.materials.update');
+    Route::delete('/settings/material/{materials}', [SettingsMaterialController::class, 'delete'])->name('settings.materials.delete');
 
     Route::get('/settings/colours', [SettingsColourController::class, 'index'])->name('settings.colours.index');
     Route::get('/settings/colours/create', [SettingsColourController::class, 'create'])->name('settings.colours.create');

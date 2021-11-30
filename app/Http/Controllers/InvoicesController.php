@@ -23,9 +23,8 @@ class InvoicesController extends Controller
 {
     public function create(Request $request, MaterialPurchaseOrder $materialPurchaseOrder)
     {
-
         $factories = Factory::all();
-        $materials = Materials::all();
+        $materials = Materials::query()->whereNull('marked_as_not_in_use')->get();
         $colours = Colour::all();
         $suppliers = Supplier::all();
 
