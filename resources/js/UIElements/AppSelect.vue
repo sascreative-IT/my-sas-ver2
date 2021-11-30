@@ -27,7 +27,7 @@ export default {
     props: {
         value: {
             required: false,
-            type: [Array, Object]
+            type: [Array, Object, String]
         },
         options: {
             required: true,

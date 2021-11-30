@@ -4,9 +4,12 @@ namespace App\Domains\Currency\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class CurrencyExchangeRate extends Model
+class CurrencyExchangeRate extends Model implements Auditable
 {
     use HasFactory;
+    use \OwenIt\Auditing\Auditable;
+
     protected $guarded = [];
 }

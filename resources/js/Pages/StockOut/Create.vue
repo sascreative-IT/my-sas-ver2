@@ -53,11 +53,16 @@
                                     </label>
                                     <span class="mr-4 inline-block hidden md:block">:</span>
                                     <div class="flex-1">
-                                        <select v-model="stockOut.factory_id">
-                                            <option v-for="factory in factories" :value="factory.id">
-                                                {{ factory.name }}
-                                            </option>
-                                        </select>
+                                        <app-select
+                                            class="w-48"
+                                            placeholder="Select Factory"
+                                            option-label="name"
+                                            option-value="id"
+                                            :filterable="true"
+                                            :options="factories"
+                                            v-model="stockOut.factory"
+                                            @input="setFactoryId"
+                                        ></app-select>
                                     </div>
                                 </div>
 
@@ -115,6 +120,23 @@
                                         <div class="w-1/6 pr-5">
                                             <div class="">
                                                 <label class="text-base font-medium text-gray-700">
+                                                    Supplier
+                                                </label>
+                                                <app-select
+                                                    placeholder="Select Supplier"
+                                                    option-label="name"
+                                                    option-value="id"
+                                                    :filterable="true"
+                                                    :options="suppliers"
+                                                    v-model="stockOutItem.supplier"
+                                                    @input="setSelectedSupplier"
+                                                ></app-select>
+                                            </div>
+                                        </div>
+
+                                        <div class="w-1/6 pr-5">
+                                            <div class="">
+                                                <label class="text-base font-medium text-gray-700">
                                                     Material
                                                 </label>
                                                 <app-select
@@ -146,29 +168,44 @@
                                             </div>
                                         </div>
 
-
                                         <div class="w-1/6 pr-5">
                                             <div class="">
                                                 <label class="text-base font-medium text-gray-700">
-                                                    Pieces
+                                                    No of pieces
                                                 </label>
                                                 <input
                                                     v-model="stockOutItem.pieces"
-                                                    class="h-9 w-9/12 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    class="h-9 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md w-20"
                                                     type="text">
                                             </div>
                                         </div>
 
                                         <div class="w-1/6">
-                                            <div class="">
-                                                <label class="text-base font-medium text-gray-700">
-                                                    Usage
-                                                </label>
-                                                <input
-                                                    v-model="stockOutItem.usage"
-                                                    class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                    type="text"
-                                                    :placeholder="stockOutItem.usageMeasurement">
+                                            <label class="text-base font-medium text-gray-700">
+                                                Usage
+                                                <template v-if="materialInventory">
+                                                (Avail. {{materialInventory.available_quantity}})
+                                            </template>
+                                            </label>
+                                            <div>
+                                                <div class="flex flex-wrap items-stretch w-full mb-4 relative">
+                                                    <div class="flex -mr-px">
+                                                            <span
+                                                                class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
+                                                                <template v-if="selectedMaterial">
+                                                                    {{ selectedMaterial.unit }}
+                                                                </template>
+                                                                <template v-else>
+                                                                   m
+                                                                </template>
+                                                            </span>
+                                                    </div>
+                                                    <input type="text"
+                                                           class="flex-shrink flex-grow flex-auto leading-normal w-20 flex-1 h-10 border-gray-300 rounded-md rounded-l-none focus:ring-indigo-500 focus:border-indigo-500 px-3 relative"
+                                                           placeholder="0.00"
+                                                           id="sub_total-value"
+                                                           v-model="stockOutItem.usage">
+                                                </div>
                                             </div>
                                         </div>
 
@@ -194,6 +231,10 @@
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
                                     Panel
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
+                                    Supplier
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-gray-800 uppercase tracking-wide text-xs font-bold">
@@ -228,6 +269,13 @@
                                         {{ item.style_panel.name }}
                                     </div>
                                 </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ item.supplier.name }}
+                                    </div>
+                                </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
                                         {{ item.material.name }}
@@ -247,7 +295,7 @@
 
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ item.usage }}
+                                        {{ item.usage }} {{item.material.unit}}
                                     </div>
                                 </td>
 
@@ -298,6 +346,16 @@ export default {
         customers: {
             required: true,
             type: Array
+        },
+        suppliers: {
+            required: true,
+            type: Array
+        },
+        selectedMaterial: {
+            type: Object
+        },
+        materialInventory: {
+            type: Object
         }
     },
     components: {
@@ -311,6 +369,7 @@ export default {
         return {
             stockOut: {
                 order_public_id: null,
+                factory: null,
                 factory_id: null,
                 customer_id: null,
                 created_by_id: null,
@@ -326,13 +385,18 @@ export default {
                 material_id: '',
                 color: null,
                 colour_id: null,
+                supplier: null,
+                supplier_id: null,
                 pieces: '',
                 usage: '',
-                usageMeasurement: 'M'
+                usageMeasurement: ''
             },
             stockOutItems: [],
             resetSelectOptions: false,
         }
+    },
+    mounted() {
+        this.stockOutItem.usageMeasurement = this.stockOutItem.material.unit;
     },
     methods: {
         handleAddStockItems() {
@@ -373,7 +437,7 @@ export default {
         },
         setSelectedMaterial() {
             this.stockOutItem.material_id = this.stockOutItem.material.id;
-            this.stockOutItem.usageMeasurement = this.stockOutItem.material.unit.toUpperCase();
+            this.stockOutItem.usageMeasurement = this.stockOutItem.material.unit;
             this.$inertia.visit(this.$inertia.page.url, {
                 preserveState: true,
                 preserveScroll: true,
@@ -382,11 +446,41 @@ export default {
                 }
             })
         },
-        setSelectedColor() {
-            this.stockOutItem.colour_id = this.stockOutItem.color.id;
+        setSelectedColor(value) {
+            this.stockOutItem.colour_id = value.id;
+            this.stockOutItem.colour = value;
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    colour_id: value.id
+                }
+            })
         },
         setSelectedCustomer() {
             this.stockOut.customer_id = this.stockOut.customer.id;
+        },
+        setFactoryId(value) {
+            this.stockOut.factory = value;
+            this.stockOut.factory_id = value.id;
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    factory_id: value.id
+                }
+            })
+        },
+        setSelectedSupplier(value) {
+            this.stockOut.supplier = value;
+            this.stockOut.supplier_id = value.id;
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    supplier_id: this.stockOut.supplier_id
+                }
+            })
         },
         resetStockOutItem() {
             this.stockOutItem = {
@@ -396,6 +490,8 @@ export default {
                 style_panel_id: null,
                 material: '',
                 material_id: '',
+                supplier: null,
+                supplier_id: null,
                 color: null,
                 colour_id: null,
                 pieces: '',

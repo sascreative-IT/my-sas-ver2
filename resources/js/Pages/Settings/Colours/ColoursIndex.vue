@@ -11,6 +11,18 @@
                     Add Colours
                 </inertia-link>
             </div>
+
+            <div class="flex flex-row-reverse mt-2">
+                <div class="relative text-gray-600 focus-within:text-gray-400">
+      <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+        <button type="submit" class="p-1 focus:outline-none focus:shadow-outline">
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-6 h-6"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </button>
+      </span>
+                    <input type="search" v-model="query" class="py-2 text-sm text-white rounded-md pl-10 focus:outline-none focus:bg-white focus:text-gray-900" placeholder="Search..." autocomplete="off" @input="searchColors">
+                </div>
+            </div>
+
             <div class="mt-5">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -30,7 +42,7 @@
                     </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="(colour,index) in colours">
+                    <tr v-for="(colour,index) in colours.data">
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900">{{ colour.name }}</div>
                         </td>
@@ -55,6 +67,9 @@
                     </tr>
                     </tbody>
                 </table>
+                <paginator
+                    :pagination="colours"
+                ></paginator>
             </div>
         </div>
 
@@ -72,24 +87,31 @@
 import SettingsLayout from "@/Pages/Settings/SettingsLayout";
 import JetConfirmationModal from '@/Jetstream/ConfirmationModal'
 import DeleteConfirmationModal from "@/Pages/Common/DeleteConfirmationModal";
+import Paginator from "@/UIElements/Paginator";
 
 export default {
     name: "ColoursIndex",
     components: {
         DeleteConfirmationModal,
         SettingsLayout,
-        JetConfirmationModal
+        JetConfirmationModal,
+        Paginator
     },
     props: {
         colours: {
             required: false,
             type: Array
+        },
+        q: {
+            required: false,
+            type: String
         }
     },
     data() {
         return {
             selectedColour: {},
-            confirmingUserDeletion: false
+            confirmingUserDeletion: false,
+            query: ''
         }
     },
     methods: {
@@ -102,6 +124,15 @@ export default {
             this.selectedColour = this.colours[index]
             this.confirmingUserDeletion = true;
         },
+        searchColors() {
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    q: this.query
+                }
+            })
+        }
     }
 }
 </script>

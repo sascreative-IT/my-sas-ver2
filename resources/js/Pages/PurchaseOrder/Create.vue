@@ -17,11 +17,17 @@
                                     <span class="mr-4 inline-block hidden md:block">:</span>
                                 </div>
                                 <div class="flex-1 -mt-4">
-                                    <search-and-select
+                                    <app-select
                                         :disabled="isItemReadOnly"
-                                        :selection-options="suppliers"
-                                        @change="setSupplierId"
-                                    ></search-and-select>
+                                        class="w-48"
+                                        placeholder="Select Supplier"
+                                        option-label="name"
+                                        option-value="id"
+                                        :filterable="true"
+                                        :options="suppliers"
+                                        v-model="purchaseOrder.supplier"
+                                        @input="setSupplierId"
+                                    ></app-select>
                                 </div>
                             </div>
                         </div>
@@ -33,11 +39,17 @@
                                     <span class="mr-4 inline-block hidden md:block">:</span>
                                 </div>
                                 <div class="flex-1 -mt-4">
-                                    <search-and-select
+                                    <app-select
                                         :disabled="isItemReadOnly"
-                                        :selection-options="factories"
-                                        @change="setFactoryId"
-                                    ></search-and-select>
+                                        class="w-48"
+                                        placeholder="Select Factory"
+                                        option-label="name"
+                                        option-value="id"
+                                        :filterable="true"
+                                        :options="factories"
+                                        v-model="purchaseOrder.factory"
+                                        @input="setFactoryId"
+                                    ></app-select>
                                 </div>
                             </div>
 
@@ -48,11 +60,17 @@
                                     <span class="mr-4 inline-block hidden md:block">:</span>
                                 </div>
                                 <div class="flex-1 -mt-4">
-                                    <search-and-select
+                                    <app-select
                                         :disabled="isItemReadOnly"
-                                        :selection-options="currencies"
-                                        @change="setSelectedCurrency"
-                                    ></search-and-select>
+                                        class="w-48"
+                                        placeholder="Select Currency"
+                                        option-label="name"
+                                        option-value="id"
+                                        :filterable="true"
+                                        :options="currencies"
+                                        v-model="selectedCurrency"
+                                        @input="setSelectedCurrency"
+                                    ></app-select>
                                 </div>
                             </div>
                         </div>
@@ -72,22 +90,30 @@
                                                 <label for="material_name"
                                                        class="block text-sm font-medium text-gray-700">
                                                     Material Name</label>
-                                                <select-or-create-input
-                                                        :selection-options="materials"
-                                                        @change="setSelectedMaterial"
-                                                        :reset="resetSelectOptions"
-                                                ></select-or-create-input>
+                                                <app-select
+                                                    placeholder="Select Material"
+                                                    option-label="name"
+                                                    option-value="id"
+                                                    :filterable="true"
+                                                    :options="materials"
+                                                    v-model="material"
+                                                    @input="setSelectedMaterial"
+                                                ></app-select>
                                             </div>
                                         </div>
                                         <div class="w-48">
                                             <div class="">
                                                 <label for="colour" class="block text-sm font-medium text-gray-700">
                                                     Colour</label>
-                                                <select-or-create-input
-                                                        :selection-options="colours"
-                                                        @change="setSelectedColour"
-                                                        :reset="resetSelectOptions"
-                                                ></select-or-create-input>
+                                                <app-select
+                                                    placeholder="Select Colour"
+                                                    option-label="name"
+                                                    option-value="id"
+                                                    :filterable="true"
+                                                    :options="colours"
+                                                    v-model="purchaseOrderItem.color"
+                                                    @input="setSelectedColour"
+                                                ></app-select>
                                             </div>
                                         </div>
                                         <div class="w-48">
@@ -103,7 +129,7 @@
                                                     <div class="flex flex-wrap items-stretch w-full mb-4 relative">
                                                         <div class="flex -mr-px">
                                                             <span class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
-                                                                {{selectedCurrency}}
+                                                                {{selectedCurrency.name}}
                                                             </span>
                                                         </div>
                                                         <input type="text"
@@ -141,7 +167,7 @@
                                                     <div class="flex flex-wrap items-stretch w-full mb-4 relative">
                                                         <div class="flex -mr-px">
                                                             <span class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
-                                                                {{selectedCurrency}}
+                                                                {{selectedCurrency.name}}
                                                             </span>
                                                         </div>
                                                         <input type="text"
@@ -247,6 +273,7 @@ import DialogModal from "@/Jetstream/DialogModal";
 import FormButton from "@/UIElements/FormButton";
 import SelectOrCreateInput from "@/Pages/Suppliers/SelectOrCreateInput";
 import SearchAndSelect from "@/Pages/Suppliers/SearchAndSelect";
+import AppSelect from "@/UIElements/AppSelect";
 
 export default {
     name: "Create",
@@ -254,24 +281,25 @@ export default {
         DialogModal,
         FormButton,
         SelectOrCreateInput,
-        SearchAndSelect
+        SearchAndSelect,
+        AppSelect,
     },
     props: {
         factories: {
             required: true,
-            type: Object
+            type: Array
         },
         materials: {
             required: true,
-            type: Object
+            type: Array
         },
         colours: {
             required: true,
-            type: Object
+            type: Array
         },
         suppliers: {
             required: true,
-            type: Object
+            type: Array
         },
         units: {
             required: true,
@@ -279,19 +307,19 @@ export default {
         },
         currencies: {
             required: true,
-            type: Object
-        },
-        material : {
-            required: false
+            type: Array
         }
     },
     data() {
         return {
             factoryNames: [],
             selectedCurrency: '',
+            material: '',
             purchaseOrder: {
                 factory_id: '',
+                factory: '',
                 supplier_id: '',
+                supplier: '',
                 items: [],
             },
             purchaseOrderItem: {
@@ -300,6 +328,7 @@ export default {
                 material_name: '',
                 material_variation_id: null,
                 material_colour: '',
+                color: '',
                 unit_price: '',
                 sub_total: '',
                 quantity: '',
@@ -324,57 +353,66 @@ export default {
             }
         },
         setSupplierId(value) {
-            this.purchaseOrder.supplier_id = value;
+            this.purchaseOrder.supplier = value;
+            this.purchaseOrder.supplier_id = value.id;
         },
         setFactoryId(value) {
-            this.purchaseOrder.factory_id = value;
+            this.purchaseOrder.factory = value;
+            this.purchaseOrder.factory_id = value.id;
         },
         setSelectedMaterial(value) {
+            this.material = value;
             this.purchaseOrderItem.material_name_id = value.value;
-            this.purchaseOrderItem.material_name = value.text;
+            this.purchaseOrderItem.material_name = this.material.name;
 
             this.$inertia.visit(this.$inertia.page.url, {
                 preserveState: true,
                 preserveScroll: true,
                 data: {
-                    material_id: value.value
+                    material_id: value.id
                 }
             })
         },
         setSelectedColour(value) {
-            this.purchaseOrderItem.material_variation_id = value.value;
-            this.purchaseOrderItem.material_colour = value.text;
+            this.purchaseOrderItem.color = value;
+            this.purchaseOrderItem.material_variation_id = this.purchaseOrderItem.color.id;
+            this.purchaseOrderItem.material_colour = this.purchaseOrderItem.color.name;
+
         },
         setSelectedUnit(value) {
             this.purchaseOrderItem.unit = value.text;
         },
         setSelectedCurrency(value) {
-            this.selectedCurrency = this.currencies[value];
+            this.selectedCurrency = value;
         },
         resetPurchaseOrder() {
             this.purchaseOrder = {
                 factory_id: '',
                 supplier_id: '',
+                supplier: '',
                 items: []
             }
         },
         resetPurchaseOrderItems() {
             this.purchaseOrderItem = {
                 material_name_id: null,
+                material: '',
                 material_name: '',
                 material_variation_id: null,
                 material_colour: '',
+                color: '',
                 unit: 'm',
                 unitValue: '',
                 unit_price: '',
                 sub_total: '',
                 quantity: '',
-                currency: this.selectedCurrency,
+                currency: this.selectedCurrency.name,
             };
             this.resetSelectOptions = true;
+            this.material = '';
         },
         handleAddPurchaseOrderItems() {
-            this.purchaseOrderItem.currency = this.selectedCurrency;
+            this.purchaseOrderItem.currency = this.selectedCurrency.name;
             this.purchaseOrderItem.unit = this.material.unit;
 
             this.purchaseOrder.items.push(this.purchaseOrderItem);
