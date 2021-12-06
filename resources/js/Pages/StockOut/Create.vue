@@ -185,7 +185,10 @@
                                                 Usage
                                                 <template v-if="materialInventory">
                                                 (Avail. {{materialInventory.available_quantity}})
-                                            </template>
+                                                </template>
+                                                <template v-else>
+                                                    (Avail. 0)
+                                                </template>
                                             </label>
                                             <div>
                                                 <div class="flex flex-wrap items-stretch w-full mb-4 relative">
