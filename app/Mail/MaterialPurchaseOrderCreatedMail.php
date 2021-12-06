@@ -15,10 +15,16 @@ class MaterialPurchaseOrderCreatedMail extends Mailable
     protected User $user;
     protected MaterialPurchaseOrder $materialPurchaseOrder;
 
+    public function __construct(User $user, MaterialPurchaseOrder $materialPurchaseOrder)
+    {
+        $this->user = $user;
+        $this->materialPurchaseOrder = $materialPurchaseOrder;
+    }
+
     public function build(): MaterialPurchaseOrderCreatedMail
     {
         return $this
-            ->subject("A new purchase order created, ID - " + $this->materialPurchaseOrder->id)
+            ->subject("A new purchase order created, ID - ". $this->materialPurchaseOrder->id)
             ->markdown('emails.purchase-order-created', [
                 'user' => $this->user,
                 'purchaseOrder' => $this->materialPurchaseOrder

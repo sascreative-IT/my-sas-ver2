@@ -35,7 +35,7 @@ class NotifyUsersWhenMaterialPurchaseOrderCreated implements ShouldQueue
         foreach ($users as $user) {
             Mail::to($user)
                 ->queue(
-                    new MaterialPurchaseOrderCreatedMail()
+                    new MaterialPurchaseOrderCreatedMail($user, $this->materialPurchaseOrder)
                 );
         }
     }

@@ -6,6 +6,7 @@ namespace App\Domains\PurchaseOrder\Actions;
 use App\Domains\PurchaseOrder\Events\MaterialPurchaseOrderApproved;
 use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrder;
 use App\Domains\PurchaseOrder\State\Approved;
+use App\Jobs\NotifyUsersWhenMaterialPurchaseOrderApproved;
 use Illuminate\Support\Carbon;
 
 class ApprovePurchaseOrderAction
@@ -18,6 +19,6 @@ class ApprovePurchaseOrderAction
             'evaluated_at' => Carbon::now(),
         ]);
 
-        event(new MaterialPurchaseOrderApproved($materialPurchaseOrder));
+        dispatch(new NotifyUsersWhenMaterialPurchaseOrderApproved($materialPurchaseOrder));
     }
 }

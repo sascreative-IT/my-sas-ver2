@@ -46,7 +46,7 @@ class PurchaseOrderController extends Controller
             })
             ->orderBy("created_at", "DESC")
             ->paginate()
-            ->appends($request->except(['page','_token']));
+            ->appends($request->except(['page', '_token']));
 
         return Inertia::render(
             'PurchaseOrder/Index',
@@ -98,8 +98,8 @@ class PurchaseOrderController extends Controller
     ): \Illuminate\Http\RedirectResponse {
 
         $purchaseOrderData = PurchaseOrderData::fromRequest($purchaseOrderRequest);
-
         $createPurchaseOrderAction->execute($purchaseOrderData);
+
         return Redirect::route('purchase.orders.index');
     }
 }
