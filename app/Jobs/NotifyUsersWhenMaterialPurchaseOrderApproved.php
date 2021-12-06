@@ -35,9 +35,10 @@ class NotifyUsersWhenMaterialPurchaseOrderApproved implements ShouldQueue
             ->get();
 
         foreach ($users as $user) {
-            Mail::to($user)->queue(
-                new MaterialPurchaseOrderApprovedMail()
-            );
+            Mail::to($user)
+                ->queue(
+                    new MaterialPurchaseOrderApprovedMail()
+                );
         }
     }
 }
