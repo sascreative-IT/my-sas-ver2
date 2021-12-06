@@ -30,6 +30,10 @@ class PurchaseOrderController extends Controller
         $factory = $request->get('factory');
         $status = $request->get('status');
 
+        if (!$status) {
+            $status = 'Pending';
+        }
+
         $factories = Factory::all()->toArray();
 
         $purchase_orders = MaterialPurchaseOrder::query()
