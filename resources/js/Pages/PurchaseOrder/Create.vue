@@ -271,6 +271,27 @@
                                 </td>
 
                             </tr>
+
+                            <tr>
+                                <td class="px-6 py-4 font-bold whitespace-nowrap" colspan="3">
+                                    Total
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                     {{total_qty}}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{selectedCurrency.name}} {{total_amount}}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap flex flex-row">
+
+                                </td>
+
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -284,6 +305,8 @@
                             class="mt-10 ml-5 mb-5 inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-500 active:bg-gray-500 focus:outline-none focus:border-gray-500 focus:shadow-outline-gray transition ease-in-out duration-150">
                         Please wait...
                     </button>
+
+
                 </div>
             </div>
         </div>
@@ -360,7 +383,9 @@ export default {
             purchaseOrderItems: [],
             resetSelectOptions: false,
             isItemReadOnly: false,
-            isSaving: false
+            isSaving: false,
+            total_amount: 0,
+            total_qty: 0
         }
     },
     mounted() {
@@ -441,6 +466,7 @@ export default {
                 this.purchaseOrderItem.unit = this.material.unit;
                 this.purchaseOrderItem.material = this.material;
                 this.purchaseOrder.items.push(this.purchaseOrderItem);
+                this.calculateTotal();
                 this.resetPurchaseOrderItems();
                 this.setItemsReadOnly();
             }
@@ -462,6 +488,7 @@ export default {
             this.purchaseOrder.items.splice(index, 1);
             if (this.purchaseOrder.items.length == 0) {
                 this.unSetItemsReadOnly();
+                this.calculateTotal();
             }
         },
 
@@ -478,6 +505,7 @@ export default {
 
 
             this.purchaseOrder.items.splice(index, 1);
+            this.calculateTotal();
         },
 
         setItemsReadOnly() {
@@ -545,6 +573,14 @@ export default {
                 return false;
             }
             return true;
+        },
+        calculateTotal() {
+            this.total_amount = 0;
+            this.total_qty = 0;
+            for(let item of this.purchaseOrder.items) {
+                this.total_amount = (((parseFloat(this.total_amount) + parseFloat(item.sub_total)) * 100) / 100).toFixed(2);
+                this.total_qty = parseFloat(this.total_qty) + parseFloat(item.quantity);
+            }
         }
 
     }
