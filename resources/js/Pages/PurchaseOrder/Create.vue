@@ -272,7 +272,7 @@
 
                             </tr>
 
-                            <tr>
+                            <tr v-if="this.purchaseOrder.items.length > 0">
                                 <td class="px-6 py-4 font-bold whitespace-nowrap" colspan="3">
                                     Total
                                 </td>
