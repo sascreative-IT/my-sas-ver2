@@ -37,31 +37,31 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                         <tr v-for="(supplier,index) in suppliers.data">
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-6 py-3 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">
                                     {{ supplier.name }}
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-6 py-3 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">
                                     {{ supplier.email }}
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-6 py-3 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">
                                     {{ supplier.currency.toUpperCase() }}
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <td class="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
                                 <inertia-link
-                                    class="inline-flex items-center px-4 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                    class="inline-flex items-center px-4 py-1 border-gray-600 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
                                     :href="'/suppliers/' + supplier.id +'/edit'"
                                 >
                                     Edit
                                 </inertia-link>
-                                <delete-button @handle-on-click="deleteContact(supplier)">
+                                <button class="inline-flex items-center px-4 border-red-800 border hover:bg-red-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-red-800 uppercase tracking-widest active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-gray transition ease-in-out duration-150 inline-flex items-center px-4 py-1 border-red-600 border hover:bg-red-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-red-700 uppercase tracking-widest active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-red transition ease-in-out duration-150" @handle-on-click="deleteContact(supplier)">
                                     Delete
-                                </delete-button>
+                                </button>
                             </td>
                         </tr>
                         </tbody>

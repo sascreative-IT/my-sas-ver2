@@ -8,72 +8,74 @@
         <div class="py-12 z-30">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-5">
-                    <div class="p-5 grid grid-cols-2">
-                        <div>
-                            <div class="mb-4 md:mb-4 md:flex items-center">
-                                <div class="flex items-center mt-4">
-                                    <label
-                                        class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Supplier</label>
-                                    <span class="mr-4 inline-block hidden md:block">:</span>
-                                </div>
-                                <div class="flex-1 -mt-4">
-                                    <app-select
-                                        :disabled="isItemReadOnly"
-                                        class="w-48"
-                                        placeholder="Select Supplier"
-                                        option-label="name"
-                                        option-value="id"
-                                        :filterable="true"
-                                        :options="suppliers"
-                                        v-model="purchaseOrder.supplier"
-                                        @input="setSupplierId"
-                                    ></app-select>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="mb-1 md:mb-1 md:flex items-center">
-                                <div class="flex items-center mt-4">
-                                    <label
-                                        class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Factory</label>
-                                    <span class="mr-4 inline-block hidden md:block">:</span>
-                                </div>
-                                <div class="flex-1 -mt-4">
-                                    <app-select
-                                        :disabled="isItemReadOnly"
-                                        class="w-48"
-                                        placeholder="Select Factory"
-                                        option-label="name"
-                                        option-value="id"
-                                        :filterable="true"
-                                        :options="factories"
-                                        v-model="purchaseOrder.factory"
-                                        @input="setFactoryId"
-                                    ></app-select>
+                    <div class="p-5">
+                        <div class="flex mb-8 justify-between">
+                            <div>
+                                <div class="mb-4 md:mb-4 md:flex items-center">
+                                    <div class="mb-4 md:mb-4 md:flex items-center">
+                                        <label
+                                            class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Supplier</label>
+                                        <span class="mr-4 inline-block hidden md:block">:</span>
+                                    </div>
+                                    <div class="flex-1 -mt-4">
+                                        <app-select
+                                            :disabled="isItemReadOnly"
+                                            class="w-48"
+                                            placeholder="Select Supplier"
+                                            option-label="name"
+                                            option-value="id"
+                                            :filterable="true"
+                                            :options="suppliers"
+                                            v-model="purchaseOrder.supplier"
+                                            @input="setSupplierId"
+                                        ></app-select>
+                                    </div>
                                 </div>
                             </div>
+                            <div>
+                                <div class="mb-4 md:mb-4 md:flex items-center">
+                                    <div class="mb-4 md:mb-4 md:flex items-center">
+                                        <label
+                                            class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Factory</label>
+                                        <span class="mr-4 inline-block hidden md:block">:</span>
+                                    </div>
+                                    <div class="flex-1 -mt-4">
+                                        <app-select
+                                            :disabled="isItemReadOnly"
+                                            class="w-48"
+                                            placeholder="Select Factory"
+                                            option-label="name"
+                                            option-value="id"
+                                            :filterable="true"
+                                            :options="factories"
+                                            v-model="purchaseOrder.factory"
+                                            @input="setFactoryId"
+                                        ></app-select>
+                                    </div>
+                                </div>
 
-                            <div class="mb-1 md:mb-1 md:flex items-center">
-                                <div class="flex items-center mt-4">
-                                    <label
-                                        class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Currency</label>
-                                    <span class="mr-4 inline-block hidden md:block">:</span>
-                                </div>
-                                <div class="flex-1 -mt-4">
-                                    <app-select
-                                        :disabled="isItemReadOnly"
-                                        class="w-48"
-                                        placeholder="Select Currency"
-                                        option-label="name"
-                                        option-value="id"
-                                        :filterable="true"
-                                        :options="currencies"
-                                        v-model="selectedCurrency"
-                                        @input="setSelectedCurrency"
-                                    ></app-select>
+                                <div class="md:flex items-center">
+                                    <div class="mb-4 md:mb-4 md:flex items-center">
+                                        <label
+                                            class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">Currency</label>
+                                        <span class="mr-4 inline-block hidden md:block">:</span>
+                                    </div>
+                                    <div class="flex-1 -mt-4">
+                                        <app-select
+                                            :disabled="isItemReadOnly"
+                                            class="w-48"
+                                            placeholder="Select Currency"
+                                            option-label="name"
+                                            option-value="id"
+                                            :filterable="true"
+                                            :options="currencies"
+                                            v-model="selectedCurrency"
+                                            @input="setSelectedCurrency"
+                                        ></app-select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>    
                     </div>
                 </div>
                 <div class="mt-5 bg-white overflow-hidden shadow-xl sm:rounded-lg mt-5">

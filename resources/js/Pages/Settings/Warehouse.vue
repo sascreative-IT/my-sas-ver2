@@ -1,16 +1,14 @@
 <template>
   <settings-layout>
-    <div class="">
+    <div class="flex justify-between">
       <h3 class="text-lg">Warehouses</h3>
-
       <div class="flex flex-row-reverse">
         <inertia-link
-            class="bg-green-500 w-30 h-8 text-center pt-1.5 pl-3 pr-2 text-white rounded text-sm"
-            href="/settings/warehouses/create"
-        >
-          Add Warehouse
-        </inertia-link>
+          class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+          href="/settings/warehouses/create">Add Warehouse</inertia-link>
       </div>
+    </div>
+    <div class="">  
       <div class="mt-5">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
@@ -25,18 +23,18 @@
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
           <tr v-for="(warehouse,index) in warehouses">
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="px-6 py-3 whitespace-nowrap">
               <div class="text-sm text-gray-900">{{ warehouse.name }}</div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <td class="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
               <inertia-link
-                  class="text-indigo-600 hover:text-indigo-900"
+                  class="inline-flex items-center px-4 py-1 border-gray-600 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
                   :href="'/settings/warehouses/' + warehouse.id +'/edit'"
               >
                 Edit
               </inertia-link>
 
-              <button class="ml-2 text-red-600" @click="deleteConfirmation(index)">
+              <button class="inline-flex items-center px-4 py-1 border-red-600 border hover:bg-red-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-red-700 uppercase tracking-widest active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-red transition ease-in-out duration-150" @click="deleteConfirmation(index)">
                 Delete
               </button>
             </td>
