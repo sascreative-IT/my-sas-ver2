@@ -18,9 +18,9 @@
                                     <span class="mr-4 inline-block hidden md:block">:</span>
                                     <div class="flex-1">
                                         <input
-                                                v-model="invoice.number"
-                                                class="appearance-none w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                id="inline-full-name" type="text" placeholder="#INV-100001">
+                                            v-model="invoice.number"
+                                            class="appearance-none w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            id="inline-full-name" type="text" placeholder="#INV-100001">
                                     </div>
                                 </div>
 
@@ -30,10 +30,10 @@
                                     <span class="mr-4 inline-block hidden md:block">:</span>
                                     <div class="flex-1">
                                         <input
-                                                :disabled="isItemReadOnly"
-                                                v-model="invoice.po_number"
-                                                class="appearance-none w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                id="inline-full-name" type="text" placeholder="#PO-100001">
+                                            :disabled="isItemReadOnly"
+                                            v-model="invoice.po_number"
+                                            class="appearance-none w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            id="inline-full-name" type="text" placeholder="#PO-100001">
                                     </div>
                                 </div>
 
@@ -67,15 +67,15 @@
                                     <span class="mr-4 inline-block hidden md:block">:</span>
                                     <div class="flex-1">
                                         <vc-date-picker
-                                                color="white"
-                                                v-model='invoice.invoiced_date'
+                                            color="white"
+                                            v-model='invoice.invoiced_date'
                                         >
                                             <template v-slot="{ inputValue, inputEvents }">
                                                 <input
-                                                        class="appearance-none border w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                        id="date"
-                                                        v-on="inputEvents"
-                                                        :value="inputValue"
+                                                    class="appearance-none border w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    id="date"
+                                                    v-on="inputEvents"
+                                                    :value="inputValue"
                                                 />
                                             </template>
                                         </vc-date-picker>
@@ -121,7 +121,6 @@
                                         ></app-select>
                                     </div>
                                 </div>
-
 
 
                             </div>
@@ -177,14 +176,15 @@
                                                        class="block text-sm font-medium text-gray-700">
                                                     Unit Price
                                                     <template v-if="material">
-                                                        ({{material.unit.toUpperCase()}})
+                                                        ({{ material.unit.toUpperCase() }})
                                                     </template>
                                                 </label>
                                                 <div class="absolute">
                                                     <div class="flex flex-wrap items-stretch w-full mb-4 relative">
                                                         <div class="flex -mr-px">
-                                                            <span class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
-                                                                {{selectedCurrency}}
+                                                            <span
+                                                                class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
+                                                                {{ selectedCurrency }}
                                                             </span>
                                                         </div>
                                                         <input type="text"
@@ -204,11 +204,11 @@
                                                     Quantity</label>
                                                 <div class="absolute">
                                                     <input
-                                                            v-model="invoiceItem.quantity"
-                                                            class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                            id="quantity-value"
-                                                            type="text"
-                                                            v-on:change="calculateSubTotal">
+                                                        v-model="invoiceItem.quantity"
+                                                        class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        id="quantity-value"
+                                                        type="text"
+                                                        v-on:change="calculateSubTotal">
                                                 </div>
                                             </div>
                                         </div>
@@ -222,8 +222,9 @@
                                                 <div class="absolute">
                                                     <div class="flex flex-wrap items-stretch w-full mb-4 relative">
                                                         <div class="flex -mr-px">
-                                                            <span class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
-                                                                {{selectedCurrency}}
+                                                            <span
+                                                                class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
+                                                                {{ selectedCurrency }}
                                                             </span>
                                                         </div>
                                                         <input type="text"
@@ -309,19 +310,55 @@
 
                                 <td class="px-6 py-4 whitespace-nowrap flex flex-row">
                                     <div class="text-sm font-medium" v-on:click="deleteItemHandler(index)">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                             fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+
+                                    <div class="text-sm font-medium" v-on:click="editItemHandler(index)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                             fill="currentColor">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                            </svg>
                                         </svg>
                                     </div>
                                 </td>
 
 
                             </tr>
+
+                            <tr v-if="this.invoice.items.length > 0">
+                                <td class="px-6 py-4 font-bold whitespace-nowrap" colspan="3">
+                                    Total
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{total_qty}}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{defaultCurrency.name}} {{total_amount}}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap flex flex-row">
+
+                                </td>
+
+                            </tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <button class="mt-10 ml-5 mb-5 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150" @click="saveInvoice">Save</button>
+                    <button
+                        class="mt-10 ml-5 mb-5 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                        @click="saveInvoice">Save
+                    </button>
                 </div>
             </div>
         </div>
@@ -390,7 +427,8 @@ export default {
             },
             invoiceItem: {
                 material_name_id: null,
-                unit : 'm',
+                unit: 'm',
+                material: '',
                 material_name: '',
                 material_colour_id: null,
                 material_colour: '',
@@ -403,11 +441,16 @@ export default {
             invoiceItems: [],
             resetSelectOptions: false,
             isItemReadOnly: false,
+            isSaving: false,
+            total_amount: 0,
+            total_qty: 0
         }
     },
     mounted() {
         this.extractFactoryName(this.factories);
-        this.selectedCurrency = this.currencies[Object.keys(this.currencies)[0]].name;
+        this.defaultCurrency = this.currencies[Object.keys(this.currencies)[0]];
+        this.selectedCurrency = this.defaultCurrency.name;
+
         this.copyMaterialPurchaseOrderToInvoice();
         this.invoice.invoiced_date = new Date();
         if (this.materialPurchaseOrder) {
@@ -461,6 +504,7 @@ export default {
         resetInvoiceItems() {
             this.invoiceItem = {
                 material_name_id: null,
+                material: '',
                 material_name: '',
                 material_colour_id: null,
                 material_colour: '',
@@ -473,20 +517,23 @@ export default {
             this.material = '';
         },
         handleAddInvoiceItems() {
-            this.invoiceItem.currency = this.selectedCurrency;
-            this.invoiceItem.unit = this.material.unit;
+            if (this.isValidPurchaseOrderItem()) {
+                this.invoiceItem.currency = this.selectedCurrency;
+                this.invoiceItem.unit = this.material.unit;
+                this.invoiceItem.material = this.material;
 
-            this.invoice.items.push(this.invoiceItem);
-            this.resetInvoiceItems();
+                this.invoice.items.push(this.invoiceItem);
+                this.resetInvoiceItems();
+            }
         },
         saveInvoice() {
             this.$inertia.post('/invoices', this.invoice)
         },
-        getMaterialNameById(material_id) {
-            return this.materials.[material_id].name;
+        getMaterialById(material_id) {
+            return this.materials.[material_id];
         },
-        getMaterialColorNameById(color_id) {
-            return this.colours.[color_id].name;
+        getMaterialColorById(color_id) {
+            return this.colours.[color_id];
         },
         copyMaterialPurchaseOrderToInvoice() {
             if (this.materialPurchaseOrder != null) {
@@ -502,12 +549,17 @@ export default {
                 }
 
                 if (typeof this.materialPurchaseOrder.items != 'undefined') {
-                    for(let item of this.materialPurchaseOrder.items) {
+                    for (let item of this.materialPurchaseOrder.items) {
+                        let material = this.getMaterialById(item.variation.material_id);
+                        let color = this.getMaterialColorById(item.variation.colour_id);
+
                         this.invoice.items.push({
                             material_name_id: item.variation.material_id,
-                            material_name: this.getMaterialNameById(item.variation.material_id),
+                            material: material,
+                            material_name: material.name,
                             material_colour_id: item.variation.colour_id,
-                            material_colour: this.getMaterialColorNameById(item.variation.colour_id),
+                            material_colour: color.name,
+                            colour: color,
                             unit: item.unit,
                             unit_price: item.unit_price,
                             quantity: item.quantity,
@@ -524,6 +576,7 @@ export default {
                     }
                 }
             }
+            this.calculateTotal();
         },
         setFactoryId(value) {
             this.invoice.factory_id = value.id;
@@ -532,10 +585,10 @@ export default {
             this.selectedCurrency = value.name;
         },
         calculateSubTotal() {
-            this.invoiceItem.sub_total = (((this.invoiceItem.unit_price * this.invoiceItem.quantity) * 100)/100).toFixed(2);
+            this.invoiceItem.sub_total = (((this.invoiceItem.unit_price * this.invoiceItem.quantity) * 100) / 100).toFixed(2);
         },
         fixUnitPrice() {
-            this.invoiceItem.unit_price = ((this.invoiceItem.unit_price* 100)/100).toFixed(2);
+            this.invoiceItem.unit_price = ((this.invoiceItem.unit_price * 100) / 100).toFixed(2);
             this.calculateSubTotal();
         },
         deleteItemHandler(index) {
@@ -544,11 +597,84 @@ export default {
                 this.unSetItemsReadOnly();
             }
         },
+        editItemHandler(index) {
+            this.invoiceItem = this.invoice.items[index];
+            this.material = this.invoiceItem.material;
+
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    material_id: this.material.id
+                }
+            })
+
+            this.setSelectedColour(this.invoiceItem.colour);
+            this.invoice.items.splice(index, 1);
+            this.calculateTotal();
+        },
+        calculateTotal() {
+            this.total_amount = 0;
+            this.total_qty = 0;
+            for(let item of this.invoice.items) {
+                this.total_amount = (((parseFloat(this.total_amount) + parseFloat(item.sub_total)) * 100) / 100).toFixed(2);
+                this.total_qty = parseFloat(this.total_qty) + parseFloat(item.quantity);
+            }
+        },
         setItemsReadOnly() {
             this.isItemReadOnly = true;
         },
         unSetItemsReadOnly() {
             this.isItemReadOnly = false;
+        },
+        isValidPurchaseOrderItem() {
+            if (typeof (this.invoice.number) == 'undefined' || this.invoice.number == '') {
+                alert("Please enter the invoice number");
+                return false;
+            }
+
+            if (typeof (this.invoice.invoiced_date) == 'undefined' || this.invoice.invoiced_date == '') {
+                alert("Please choose the invoiced date");
+                return false;
+            }
+
+            if (typeof (this.invoice.factory_id) == 'undefined' || this.invoice.factory_id == '') {
+                alert("Please choose the factory");
+                return false;
+            }
+
+            if (typeof (this.invoice.supplier_id) == 'undefined' || this.invoice.supplier_id == '') {
+                alert("Please choose the supplier");
+                return false;
+            }
+
+
+            if (this.invoiceItem.material_name == '') {
+                alert("Please choose the material name");
+                return false;
+            }
+
+            if (this.invoiceItem.material_colour == '') {
+                alert("Please choose the material color");
+                return false;
+            }
+
+            if (this.invoiceItem.unit_price == '') {
+                alert("Please choose the unit price");
+                return false;
+            }
+
+            if (this.invoiceItem.unit_price == '') {
+                alert("Please choose the unit price");
+                return false;
+            }
+
+            if (this.invoiceItem.quantity == '') {
+                alert("Please add the quantity");
+                return false;
+            }
+
+            return true;
         }
     }
 }

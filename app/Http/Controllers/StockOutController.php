@@ -111,6 +111,7 @@ class StockOutController extends Controller
         CreateStockOutAction $stockOutAction,
         StockOutRequest $stockOutRequest
     ) {
+
         $stockOutData = StockOutData::fromRequest($stockOutRequest);
         $stockOutAction->execute($stockOutData);
         return Redirect::route('inventory.index')

@@ -30,6 +30,10 @@ class PurchaseOrderController extends Controller
         $factory = $request->get('factory');
         $status = $request->get('status');
 
+        if (!$status) {
+            $status = 'Pending';
+        }
+
         $factories = Factory::all()->toArray();
 
         $purchase_orders = MaterialPurchaseOrder::query()
@@ -42,7 +46,7 @@ class PurchaseOrderController extends Controller
             })
             ->orderBy("created_at", "DESC")
             ->paginate()
-            ->appends($request->except(['page','_token']));
+            ->appends($request->except(['page', '_token']));
 
         return Inertia::render(
             'PurchaseOrder/Index',
@@ -94,8 +98,8 @@ class PurchaseOrderController extends Controller
     ): \Illuminate\Http\RedirectResponse {
 
         $purchaseOrderData = PurchaseOrderData::fromRequest($purchaseOrderRequest);
-
         $createPurchaseOrderAction->execute($purchaseOrderData);
-        return Redirect::route('purchase.orders.index');
+
+        return Redirect::route('purchase.orders.index')->with(['message' => 'successfully updated']);
     }
 }

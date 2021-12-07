@@ -3,7 +3,9 @@
 
 namespace App\Domains\PurchaseOrder\Actions;
 
+use App\Domains\PurchaseOrder\Events\MaterialPurchaseOrderRejected;
 use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrder;
+use App\Jobs\NotifyUsersWhenMaterialPurchaseOrderRejected;
 use Illuminate\Support\Carbon;
 
 class RejectPurchaseOrderAction
@@ -15,5 +17,7 @@ class RejectPurchaseOrderAction
             'evaluated_by' => auth()->user()->id,
             'evaluated_at' => Carbon::now(),
         ]);
+
+        dispatch(new NotifyUsersWhenMaterialPurchaseOrderRejected($materialPurchaseOrder));
     }
 }

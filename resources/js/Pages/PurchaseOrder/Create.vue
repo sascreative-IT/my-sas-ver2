@@ -1,5 +1,6 @@
 <template>
     <app-layout>
+        <Notify :flash="$page.props.flash"></Notify>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Create new Purchase Order
@@ -124,14 +125,15 @@
                                                        class="block text-sm font-medium text-gray-700">
                                                     Unit Price
                                                     <template v-if="material">
-                                                        ({{material.unit.toUpperCase()}})
+                                                        ({{ material.unit.toUpperCase() }})
                                                     </template>
                                                 </label>
                                                 <div class="absolute">
                                                     <div class="flex flex-wrap items-stretch w-full mb-4 relative">
                                                         <div class="flex -mr-px">
-                                                            <span class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
-                                                                {{selectedCurrency.name}}
+                                                            <span
+                                                                class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
+                                                                {{ selectedCurrency.name }}
                                                             </span>
                                                         </div>
                                                         <input type="text"
@@ -151,11 +153,11 @@
                                                     Quantity</label>
                                                 <div class="absolute">
                                                     <input
-                                                            v-model="purchaseOrderItem.quantity"
-                                                            class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md w-32"
-                                                            id="quantity-value"
-                                                            type="text"
-                                                            v-on:change="calculateSubTotal">
+                                                        v-model="purchaseOrderItem.quantity"
+                                                        class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md w-32"
+                                                        id="quantity-value"
+                                                        type="text"
+                                                        v-on:change="calculateSubTotal">
                                                 </div>
                                             </div>
                                         </div>
@@ -168,8 +170,9 @@
                                                 <div class="absolute">
                                                     <div class="flex flex-wrap items-stretch w-full mb-4 relative">
                                                         <div class="flex -mr-px">
-                                                            <span class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
-                                                                {{selectedCurrency.name}}
+                                                            <span
+                                                                class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
+                                                                {{ selectedCurrency.name }}
                                                             </span>
                                                         </div>
                                                         <input type="text"
@@ -252,10 +255,43 @@
 
                                 <td class="px-6 py-4 whitespace-nowrap flex flex-row">
                                     <div class="text-sm font-medium" v-on:click="deleteItemHandler(index)">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                             fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                  clip-rule="evenodd"/>
                                         </svg>
                                     </div>
+
+                                    <div class="text-sm font-medium" v-on:click="editItemHandler(index)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                             fill="currentColor">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                            </svg>
+                                        </svg>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                            <tr v-if="this.purchaseOrder.items.length > 0">
+                                <td class="px-6 py-4 font-bold whitespace-nowrap" colspan="3">
+                                    Total
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                     {{total_qty}}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{selectedCurrency.name}} {{total_amount}}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap flex flex-row">
+
                                 </td>
 
                             </tr>
@@ -263,7 +299,17 @@
                         </table>
                     </div>
 
-                    <button class="mt-10 ml-5 mb-5 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150" @click="savePurchaseOrder">Save</button>
+                    <button v-if="!isSaving"
+                        class="mt-10 ml-5 mb-5 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                        @click="savePurchaseOrder">Save
+                    </button>
+
+                    <button v-if="isSaving"
+                            class="mt-10 ml-5 mb-5 inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-500 active:bg-gray-500 focus:outline-none focus:border-gray-500 focus:shadow-outline-gray transition ease-in-out duration-150">
+                        Please wait...
+                    </button>
+
+
                 </div>
             </div>
         </div>
@@ -276,6 +322,7 @@ import FormButton from "@/UIElements/FormButton";
 import SelectOrCreateInput from "@/Pages/Suppliers/SelectOrCreateInput";
 import SearchAndSelect from "@/Pages/Suppliers/SearchAndSelect";
 import AppSelect from "@/UIElements/AppSelect";
+import Notify from "@/UIElements/Notify";
 
 export default {
     name: "Create",
@@ -285,6 +332,7 @@ export default {
         SelectOrCreateInput,
         SearchAndSelect,
         AppSelect,
+        Notify
     },
     props: {
         factories: {
@@ -310,7 +358,8 @@ export default {
         currencies: {
             required: true,
             type: Array
-        }
+        },
+        flash: Object
     },
     data() {
         return {
@@ -325,8 +374,9 @@ export default {
                 items: [],
             },
             purchaseOrderItem: {
+                material: '',
                 material_name_id: null,
-                unit : 'm',
+                unit: 'm',
                 material_name: '',
                 material_variation_id: null,
                 material_colour: '',
@@ -339,6 +389,9 @@ export default {
             purchaseOrderItems: [],
             resetSelectOptions: false,
             isItemReadOnly: false,
+            isSaving: false,
+            total_amount: 0,
+            total_qty: 0
         }
     },
     mounted() {
@@ -349,9 +402,9 @@ export default {
         extractFactoryName(prop) {
             this.factoryNames = [];
             if (Array.isArray(prop)) {
-            prop.forEach((val, index) => {
-                this.factoryNames.push(val.name);
-            })
+                prop.forEach((val, index) => {
+                    this.factoryNames.push(val.name);
+                })
             }
         },
         setSupplierId(value) {
@@ -414,34 +467,126 @@ export default {
             this.material = '';
         },
         handleAddPurchaseOrderItems() {
-            this.purchaseOrderItem.currency = this.selectedCurrency.name;
-            this.purchaseOrderItem.unit = this.material.unit;
-
-            this.purchaseOrder.items.push(this.purchaseOrderItem);
-            this.resetPurchaseOrderItems();
-            this.setItemsReadOnly();
+            if (this.isValidPurchaseOrderItem()) {
+                this.purchaseOrderItem.currency = this.selectedCurrency.name;
+                this.purchaseOrderItem.unit = this.material.unit;
+                this.purchaseOrderItem.material = this.material;
+                this.purchaseOrder.items.push(this.purchaseOrderItem);
+                this.calculateTotal();
+                this.resetPurchaseOrderItems();
+                this.setItemsReadOnly();
+            }
         },
         savePurchaseOrder() {
-            this.$inertia.post(route('purchase.orders.store'), this.purchaseOrder)
+            if (this.isValidPurchaseOrder()) {
+                this.isSaving = true;
+                this.$inertia.post(route('purchase.orders.store'), this.purchaseOrder)
+            }
         },
         calculateSubTotal() {
-            this.purchaseOrderItem.sub_total = (((this.purchaseOrderItem.unit_price * this.purchaseOrderItem.quantity) * 100)/100).toFixed(2);
+            this.purchaseOrderItem.sub_total = (((this.purchaseOrderItem.unit_price * this.purchaseOrderItem.quantity) * 100) / 100).toFixed(2);
         },
         fixUnitPrice() {
-            this.purchaseOrderItem.unit_price = ((this.purchaseOrderItem.unit_price* 100)/100).toFixed(2);
+            this.purchaseOrderItem.unit_price = ((this.purchaseOrderItem.unit_price * 100) / 100).toFixed(2);
             this.calculateSubTotal();
         },
         deleteItemHandler(index) {
             this.purchaseOrder.items.splice(index, 1);
             if (this.purchaseOrder.items.length == 0) {
                 this.unSetItemsReadOnly();
+                this.calculateTotal();
             }
         },
+
+        editItemHandler(index) {
+            this.purchaseOrderItem = this.purchaseOrder.items[index];
+            this.material = this.purchaseOrderItem.material;
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    material_id: this.purchaseOrderItem.material.id
+                }
+            })
+
+
+            this.purchaseOrder.items.splice(index, 1);
+            this.calculateTotal();
+        },
+
         setItemsReadOnly() {
             this.isItemReadOnly = true;
         },
         unSetItemsReadOnly() {
             this.isItemReadOnly = false;
+        },
+        isValidPurchaseOrderItem() {
+            if (this.purchaseOrder.supplier_id == '') {
+                alert("Please choose the supplier");
+                return false;
+            }
+
+            if (this.purchaseOrder.factory_id == '') {
+                alert("Please choose the factory");
+                return false;
+            }
+
+            if (this.selectedCurrency == '') {
+                alert("Please choose the currency");
+                return false;
+            }
+
+            if (this.purchaseOrderItem.material_name_id == '') {
+                alert("Please choose the material name");
+                return false;
+            }
+
+            if (this.purchaseOrderItem.color == '') {
+                alert("Please choose the color");
+                return false;
+            }
+
+            if (this.purchaseOrderItem.unit_price == '') {
+                alert("Please enter the unit price");
+                return false;
+            }
+
+            if (this.purchaseOrderItem.quantity == '') {
+                alert("Please enter the quantity");
+                return false;
+            }
+
+            return true;
+        },
+        isValidPurchaseOrder() {
+            if (this.purchaseOrder.supplier_id == '') {
+                alert("Please choose the supplier");
+                return false;
+            }
+
+            if (this.purchaseOrder.factory_id == '') {
+                alert("Please choose the factory");
+                return false;
+            }
+
+            if (this.selectedCurrency == '') {
+                alert("Please choose the currency");
+                return false;
+            }
+
+            if (this.purchaseOrder.items.length == 0) {
+                alert("Please add the items before save.");
+                return false;
+            }
+            return true;
+        },
+        calculateTotal() {
+            this.total_amount = 0;
+            this.total_qty = 0;
+            for(let item of this.purchaseOrder.items) {
+                this.total_amount = (((parseFloat(this.total_amount) + parseFloat(item.sub_total)) * 100) / 100).toFixed(2);
+                this.total_qty = parseFloat(this.total_qty) + parseFloat(item.quantity);
+            }
         }
 
     }
