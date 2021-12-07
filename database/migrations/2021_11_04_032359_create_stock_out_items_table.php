@@ -10,6 +10,7 @@ class CreateStockOutItemsTable extends Migration
     {
         Schema::create('stock_out_items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('supplier_id')->constrained('suppliers');
             $table->foreignId('stock_out_id')->constrained('stock_outs');
             $table->foreignId('style_id')->constrained('styles');
             $table->foreignId('style_panel_id')->constrained('style_panels');

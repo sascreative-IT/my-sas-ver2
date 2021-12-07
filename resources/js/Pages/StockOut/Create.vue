@@ -184,7 +184,7 @@
                                             <label class="text-base font-medium text-gray-700">
                                                 Usage
                                                 <template v-if="materialInventory">
-                                                (Avail. {{materialInventory.available_quantity}})
+                                                    (Avail. {{ materialInventory.available_quantity }})
                                                 </template>
                                                 <template v-else>
                                                     (Avail. 0)
@@ -298,7 +298,7 @@
 
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ item.usage }} {{item.material.unit}}
+                                        {{ item.usage }} {{ item.material.unit }}
                                     </div>
                                 </td>
 
@@ -403,8 +403,10 @@ export default {
     },
     methods: {
         handleAddStockItems() {
-            this.stockOut.items.push(this.stockOutItem);
-            this.resetStockOutItem();
+            if (this.isValidItem()) {
+                this.stockOut.items.push(this.stockOutItem);
+                this.resetStockOutItem();
+            }
         },
         handleSaveStockOut() {
             this.$inertia.post(route('stock.out.store'), this.stockOut)
@@ -511,6 +513,13 @@ export default {
                 items: [],
             }
         },
+        isValidItem() {
+            if (this.stockOutItem.usage > this.materialInventory.available_quantity) {
+                alert("Invalid usage");
+                return false;
+            }
+            return true;
+        }
     }
 }
 </script>
