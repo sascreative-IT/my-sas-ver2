@@ -1,16 +1,15 @@
 <template>
   <settings-layout>
-    <div class="">
+    <div class="flex justify-between">
       <h3 class="text-lg">Factories</h3>
 
       <div class="flex flex-row-reverse">
         <inertia-link
-            class="bg-green-500 w-28 h-8 text-center pt-1.5 pl-3 pr-2 text-white rounded text-sm"
-            href="/settings/factories/create"
-        >
-          Add Factory
-        </inertia-link>
+          class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+          href="/settings/factories/create">Add Factory</inertia-link>
       </div>
+    </div>
+    <div class="">  
       <div class="mt-5">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
@@ -28,14 +27,14 @@
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
           <tr v-for="factory in factories">
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="px-6 py-3 whitespace-nowrap">
               <div class="text-sm text-gray-900">{{ factory.name }}</div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="px-6 py-3 whitespace-nowrap">
               <div class="text-sm text-gray-900"> {{factory.country.name}} </div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-              <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+            <td class="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
+              <a href="#" class="inline-flex items-center px-4 py-1 border-gray-600 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">Edit</a>
             </td>
           </tr>
           </tbody>

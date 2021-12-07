@@ -1,16 +1,14 @@
 <template>
     <settings-layout>
-        <div class="">
+        <div class="flex justify-between">
             <h3 class="text-lg">Exchange Rates</h3>
-
             <div class="flex flex-row-reverse">
                 <inertia-link
-                    class="bg-green-500 w-30 h-8 text-center pt-1.5 pl-3 pr-2 text-white rounded text-sm"
-                    :href="route('settings.currency-exchange-rates.create')"
-                >
-                    Add Exchange Rate
-                </inertia-link>
+                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                    :href="route('settings.currency-exchange-rates.create')">Add Exchange Rate</inertia-link>
             </div>
+        </div>
+        <div class="">    
             <div class="mt-5">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
