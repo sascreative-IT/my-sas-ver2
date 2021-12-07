@@ -40,6 +40,7 @@ class SettingsFactoryController extends Controller
         $validated = $request->validated();
         Factory::create($validated);
 
-        return Redirect::route('settings.factories.index');
+        return Redirect::route('settings.factories.index')
+            ->with(['message' => 'successfully updated']);
     }
 }

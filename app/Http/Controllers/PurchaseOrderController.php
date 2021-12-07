@@ -100,6 +100,6 @@ class PurchaseOrderController extends Controller
         $purchaseOrderData = PurchaseOrderData::fromRequest($purchaseOrderRequest);
         $createPurchaseOrderAction->execute($purchaseOrderData);
 
-        return Redirect::route('purchase.orders.index');
+        return Redirect::route('purchase.orders.index')->with(['message' => 'successfully updated']);
     }
 }

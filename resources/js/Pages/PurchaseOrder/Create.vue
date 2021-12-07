@@ -1,5 +1,6 @@
 <template>
     <app-layout>
+        <Notify :flash="$page.props.flash"></Notify>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Create new Purchase Order
@@ -319,6 +320,7 @@ import FormButton from "@/UIElements/FormButton";
 import SelectOrCreateInput from "@/Pages/Suppliers/SelectOrCreateInput";
 import SearchAndSelect from "@/Pages/Suppliers/SearchAndSelect";
 import AppSelect from "@/UIElements/AppSelect";
+import Notify from "@/UIElements/Notify";
 
 export default {
     name: "Create",
@@ -328,6 +330,7 @@ export default {
         SelectOrCreateInput,
         SearchAndSelect,
         AppSelect,
+        Notify
     },
     props: {
         factories: {
@@ -353,7 +356,8 @@ export default {
         currencies: {
             required: true,
             type: Array
-        }
+        },
+        flash: Object
     },
     data() {
         return {

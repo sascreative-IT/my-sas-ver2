@@ -1,5 +1,6 @@
 <template>
     <app-layout>
+        <Notify :flash="$page.props.flash"></Notify>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Purchase Orders
@@ -155,10 +156,11 @@ import AppSelect from "@/UIElements/AppSelect";
 import AppTable from "@/UIElements/AppTable";
 import Paginator from "@/UIElements/Paginator";
 import SelectMenu from "@/UIElements/SelectMenu";
+import Notify from "@/UIElements/Notify";
 
 export default {
     name: "Index",
-    components: {AppTable, AppSelect, Paginator, SelectMenu},
+    components: {AppTable, AppSelect, Paginator, SelectMenu,Notify},
     props: {
         purchase_orders: {
             required: true,
@@ -172,7 +174,8 @@ export default {
         },
         factory: {
             required: false,
-        }
+        },
+        flash: Object
     },
     data() {
         return {
