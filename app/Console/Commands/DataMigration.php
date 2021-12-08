@@ -26,7 +26,9 @@ class DataMigration extends Command
             'Which data, do you want to get migrated?',
             [
                 'Factories',
-                'Colors'
+                'Warehouses',
+                'Colors',
+                'Materials'
             ]
         );
 
