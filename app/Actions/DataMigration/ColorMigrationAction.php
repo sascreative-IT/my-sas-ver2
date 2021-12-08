@@ -11,28 +11,32 @@ class ColorMigrationAction
 {
     public function execute()
     {
-        $total_records_migrated = 0;
         $output = new ConsoleOutput();
 
         $mysasColors = \App\Models\MySas\Color::all();
         $progress = new ProgressBar($output, \App\Models\MySas\Color::count());
         $progress->start();
 
-        DB::transaction(function () use ($mysasColors, $progress, $total_records_migrated) {
+        $total_records_migrated = DB::transaction(function () use ($mysasColors, $progress) {
+            $total_records_migrated = 0;
             foreach ($mysasColors as $mysasColor) {
-
-                $color = \App\Models\Colour::where('name', $mysasColor->name)
+                $color = \App\Models\Colour::where('name', $mysasColor->title)
                     ->first();
+
                 if (!$color) {
-                    if ($mysasColor->name) {
+                    if ($mysasColor->title) {
                         \App\Models\Colour::create([
-                            'name' => $mysasColor->name
+                            'name' => $mysasColor->title,
+                            'type' => 'fabric',
+                            'is_active' => 1
                         ]);
                         $total_records_migrated++;
                     }
                 }
+
                 $progress->advance();
             }
+            return $total_records_migrated;
         });
 
         $progress->finish();

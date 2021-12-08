@@ -12,14 +12,14 @@ class FactoryMigrationAction
 {
     public function execute()
     {
-        $total_records_migrated = 0;
         $output = new ConsoleOutput();
 
         $mysasFactories = Factory::all();
         $progress = new ProgressBar($output, Factory::count());
         $progress->start();
 
-        DB::transaction(function () use ($mysasFactories, $progress, $total_records_migrated) {
+        $total_records_migrated = DB::transaction(function () use ($mysasFactories, $progress) {
+            $total_records_migrated = 0;
             foreach ($mysasFactories as $mysasFactory) {
 
                 $country = Country::where('name', $mysasFactory->country)->first();
@@ -45,6 +45,8 @@ class FactoryMigrationAction
 
                 $progress->advance();
             }
+
+            return $total_records_migrated;
         });
 
 
