@@ -16,8 +16,8 @@ class Addresses extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->string('line_1', 255);
-            $table->string('line_2', 255);
-            $table->string('line_3', 255);
+            $table->string('line_2', 255)->nullable();
+            $table->string('line_3', 255)->nullable();
             $table->string('city', 50);
             $table->string('postal_code', 20);
             $table->foreignId('country_id')->constrained('countries');

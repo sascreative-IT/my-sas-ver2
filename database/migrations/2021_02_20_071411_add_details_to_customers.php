@@ -16,7 +16,7 @@ class AddDetailsToCustomers extends Migration
         Schema::table('customers', function (Blueprint $table) {
             $table->string('name',255);
             $table->string('email',255);
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->foreignId('cs_agent_id')->nullable()->constrained('users');
             $table->foreignId('sales_agent_id')->nullable()->constrained('users');
             $table->foreignId('logo_id')->nullable()->constrained('files');

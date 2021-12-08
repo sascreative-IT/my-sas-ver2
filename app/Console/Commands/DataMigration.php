@@ -28,7 +28,8 @@ class DataMigration extends Command
                 'Factories',
                 'Warehouses',
                 'Colors',
-                'Materials'
+                'Materials',
+                'Customers'
             ]
         );
 
