@@ -240,10 +240,10 @@
 
                                     </div>
                                 </div>
-                                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                                    <div v-if="invoice_item_has_error" @click="handleCloseErrorMessage">
+                                <div class="flex justify-end px-4 py-3 bg-gray-50 sm:px-6">
+                                    <p v-if="invoice_item_has_error" @click="handleCloseErrorMessage" class="error-msg">
                                         {{error_message}}
-                                    </div>
+                                    </p>
                                     <form-button type="button" @handle-on-click="handleAddInvoiceItems">
                                         Add item
                                     </form-button>
@@ -357,14 +357,14 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <button
-                        class="mt-10 ml-5 mb-5 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                        @click="saveInvoice">Save
-                    </button>
-
-                    <div v-if="invoice_has_error" @click="handleCloseErrorMessage">
-                        {{error_message}}
+                    <div class="flex justify-start py-10 px-5">
+                        <button
+                            class="mr-5 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                            @click="saveInvoice">Save
+                        </button>
+                        <p v-if="invoice_has_error" @click="handleCloseErrorMessage" class="error-msg">
+                            {{error_message}}
+                        </p>
                     </div>
                 </div>
             </div>

@@ -187,10 +187,10 @@
                                     </div>
                                 </div>
 
-                                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                                    <div v-if="purchase_order_item_has_error" @click="handleCloseErrorMessage">
+                                <div class="flex justify-end px-4 py-3 bg-gray-50 sm:px-6">
+                                    <p v-if="purchase_order_item_has_error" @click="handleCloseErrorMessage" class="error-msg">
                                         {{error_message}}
-                                    </div>
+                                    </p>
                                     <form-button type="button" @handle-on-click="handleAddPurchaseOrderItems">
                                         Add item
                                     </form-button>
@@ -301,21 +301,17 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <button v-if="!isSaving"
-                        class="mt-10 ml-5 mb-5 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                        @click="savePurchaseOrder">Save
-                    </button>
-
-                    <button v-if="isSaving"
+                    <div class="flex justify-start py-10 px-5">
+                        <button v-if="!isSaving"
+                            class="mr-5 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                            @click="savePurchaseOrder">Save</button>
+                        <button v-if="isSaving"
                             class="mt-10 ml-5 mb-5 inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-500 active:bg-gray-500 focus:outline-none focus:border-gray-500 focus:shadow-outline-gray transition ease-in-out duration-150">
-                        Please wait...
-                    </button>
-
-                    <div v-if="purchase_order_has_error" @click="handleCloseErrorMessage">
-                        {{error_message}}
+                            Please wait...</button>
+                        <p v-if="purchase_order_has_error" @click="handleCloseErrorMessage" class="error-msg">
+                            {{error_message}}
+                        </p>
                     </div>
-
                 </div>
             </div>
         </div>
