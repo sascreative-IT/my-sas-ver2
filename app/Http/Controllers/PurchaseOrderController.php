@@ -121,7 +121,7 @@ class PurchaseOrderController extends Controller
 
 
         return Inertia::render(
-            'PurchaseOrder/Edit',
+            'PurchaseOrder/View',
             [
                 'factories' => $factories,
                 'materials' => $materials,
