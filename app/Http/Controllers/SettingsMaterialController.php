@@ -19,8 +19,8 @@ class SettingsMaterialController extends Controller
         $materials = Materials::query()
             ->when($q, function ($query, $q) {
                 return $query
-                    ->where('name','like', "%{$q}%")
-                    ->orWhere('type','like', "%{$q}%");
+                    ->where('name', 'like', "%{$q}%")
+                    ->orWhere('type', 'like', "%{$q}%");
             })
             ->paginate()
             ->withQueryString();
@@ -57,6 +57,48 @@ class SettingsMaterialController extends Controller
             'fiber_content' => $request->input('fiber_content'),
         ]);
 
-        return Redirect::route('settings.materials.index');
+        return Redirect::route('settings.materials.index')
+            ->with(['message' => 'The record successfully updated.']);
+    }
+
+    public function edit(Materials $materials)
+    {
+        $materialTypes = MaterialType::all();
+        $units = Unit::all();
+
+        return Inertia::render(
+            'Settings/Materials/MaterialsEdit',
+            [
+                'units' => $units,
+                'material_types' => $materialTypes,
+                'material' => $materials
+            ]
+        );
+    }
+
+    public function update(Materials $materials, Request $request)
+    {
+        $materials->update([
+            'name' => $request->input('name'),
+            'type' => $request->input('type'),
+            'unit' => $request->input('unit'),
+            'fiber_content' => $request->input('fiber_content'),
+        ]);
+
+        return Redirect::route('settings.materials.index')
+            ->with(['message' => 'The record successfully updated.']);
+    }
+
+    public function delete(Materials $materials)
+    {
+        try {
+            $materials->delete();
+            return Redirect::route('settings.materials.index')
+                ->with(['message' => 'The record successfully deleted.']);
+        } catch (\Exception $ex) {
+            return Redirect::route('settings.materials.index')
+                ->with(['message' => 'The material is already in use and it cannot be deleted.']);
+        }
+
     }
 }
