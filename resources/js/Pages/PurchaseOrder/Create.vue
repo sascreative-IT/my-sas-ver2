@@ -1,6 +1,5 @@
 <template>
     <app-layout>
-        <Notify :flash="$page.props.flash"></Notify>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Create new Purchase Order
@@ -187,7 +186,11 @@
 
                                     </div>
                                 </div>
+
                                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                    <div v-if="purchase_order_item_has_error" @click="handleCloseErrorMessage">
+                                        {{error_message}}
+                                    </div>
                                     <form-button type="button" @handle-on-click="handleAddPurchaseOrderItems">
                                         Add item
                                     </form-button>
@@ -309,6 +312,9 @@
                         Please wait...
                     </button>
 
+                    <div v-if="purchase_order_has_error" @click="handleCloseErrorMessage">
+                        {{error_message}}
+                    </div>
 
                 </div>
             </div>
@@ -392,7 +398,9 @@ export default {
             isSaving: false,
             total_amount: 0,
             total_qty: 0,
-
+            purchase_order_item_has_error: false,
+            purchase_order_has_error: false,
+            error_message: '',
         }
     },
     mounted() {
@@ -522,38 +530,52 @@ export default {
             this.isItemReadOnly = false;
         },
         isValidPurchaseOrderItem() {
+            this.purchase_order_item_has_error = false;
             if (this.purchaseOrder.supplier_id == '') {
-                alert("Please choose the supplier");
+                this.purchase_order_item_has_error = true;
+                this.error_message = "The supplier should be selected.";
                 return false;
             }
 
             if (this.purchaseOrder.factory_id == '') {
-                alert("Please choose the factory");
+                this.purchase_order_item_has_error = true;
+                this.error_message = "The factory should be selected.";
                 return false;
             }
 
             if (this.selectedCurrency == '') {
-                alert("Please choose the currency");
+                this.purchase_order_item_has_error = true;
+                this.error_message = "The currency should be selected.";
                 return false;
             }
 
             if (this.purchaseOrderItem.material_name_id == '') {
-                alert("Please choose the material name");
+                this.purchase_order_item_has_error = true;
+                this.error_message = "The material should be selected.";
                 return false;
             }
 
             if (this.purchaseOrderItem.color == '') {
-                alert("Please choose the color");
+                this.purchase_order_item_has_error = true;
+                this.error_message = "The color should be selected.";
                 return false;
             }
 
             if (this.purchaseOrderItem.unit_price == '') {
-                alert("Please enter the unit price");
+                this.purchase_order_item_has_error = true;
+                this.error_message = "The unit price is required.";
                 return false;
             }
 
             if (this.purchaseOrderItem.quantity == '') {
-                alert("Please enter the quantity");
+                this.purchase_order_item_has_error = true;
+                this.error_message = "The quantity is required.";
+                return false;
+            }
+
+            if (this.purchaseOrderItem.sub_total == '') {
+                this.purchase_order_item_has_error = true;
+                this.error_message = "The sub total is required.";
                 return false;
             }
 
@@ -561,22 +583,26 @@ export default {
         },
         isValidPurchaseOrder() {
             if (this.purchaseOrder.supplier_id == '') {
-                alert("Please choose the supplier");
+                this.purchase_order_has_error = true;
+                this.error_message = "The supplier should be selected.";
                 return false;
             }
 
             if (this.purchaseOrder.factory_id == '') {
-                alert("Please choose the factory");
+                this.purchase_order_has_error = true;
+                this.error_message = "The factory should be selected.";
                 return false;
             }
 
             if (this.selectedCurrency == '') {
-                alert("Please choose the currency");
+                this.purchase_order_has_error = true;
+                this.error_message = "The currency should be selected.";
                 return false;
             }
 
             if (this.purchaseOrder.items.length == 0) {
-                alert("Please add the items before save.");
+                this.purchase_order_has_error = true;
+                this.error_message = "Please add the items before save.";
                 return false;
             }
             return true;
@@ -588,6 +614,10 @@ export default {
                 this.total_amount = (((parseFloat(this.total_amount) + parseFloat(item.sub_total)) * 100) / 100).toFixed(2);
                 this.total_qty = parseFloat(this.total_qty) + parseFloat(item.quantity);
             }
+        },
+        handleCloseErrorMessage() {
+            this.purchase_order_item_has_error = false;
+            this.purchase_order_has_error = false;
         }
 
     }
