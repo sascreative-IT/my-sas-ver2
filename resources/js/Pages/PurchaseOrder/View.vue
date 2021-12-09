@@ -154,7 +154,7 @@
                                     </div>
                                 </td>
 
-                                
+
 
                             </tr>
                             </tbody>
@@ -246,7 +246,7 @@ export default {
         }
     },
     mounted() {
-        this.extractFactoryName(this.factories);
+
         this.selectedCurrency = this.currencies[Object.keys(this.currencies)[1]];
         if (this.purchaseOrder.items.length > 0) {
             let currencyName = this.purchaseOrder.items[0].currency;
@@ -268,9 +268,10 @@ export default {
             this.total_amount = (((parseFloat(this.total_amount) + parseFloat(item.sub_total)) * 100) / 100).toFixed(2);
             this.total_qty = parseFloat(this.total_qty) + parseFloat(item.quantity);
         }
-
+        this.isItemReadOnly = true;
     },
     methods: {
+        /*
         extractFactoryName(prop) {
             this.factoryNames = [];
             if (Array.isArray(prop)) {
@@ -482,6 +483,8 @@ export default {
             this.purchase_order_item_has_error = false;
             this.purchase_order_has_error = false;
         },
+
+         */
         getMaterialNameById(material_id) {
             if (typeof(this.materials.[material_id]) == 'object') {
                 return this.materials.[material_id].name;

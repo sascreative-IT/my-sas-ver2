@@ -44,12 +44,19 @@
                         {key: 'evaluated_at', name: 'Evaluated On'},
                       ]"
                             >
-                                <template v-if="hasAnyRole(['Production Manager','Administrator','Purchasing Officer'])">
+                                <template
+                                    v-if="hasAnyRole(['Production Manager','Administrator','Purchasing Officer'])">
                                     <el-table-column
                                         fixed="right"
                                         label="Operations"
-                                        width="220">
+                                        width="250">
                                         <template #default="scope">
+                                            <inertia-link
+                                                class="inline-flex items-center px-4 py-1 border-green-600 border hover:bg-green-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-green-900 uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:shadow-outline-green transition ease-in-out duration-150"
+                                                :href="route('purchase.orders.show',{ purchase_order: scope.row.id })">
+                                                View
+                                            </inertia-link>
+
                                             <template v-if="hasAnyRole(['Purchasing Officer','Administrator'])">
                                                 <inertia-link
                                                     class="inline-flex items-center px-4 py-1 border-green-600 border hover:bg-green-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-green-900 uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:shadow-outline-green transition ease-in-out duration-150"
@@ -63,7 +70,8 @@
                                                 <template v-if="scope.row.evaluation_status === 'Pending'">
                                                     <button
                                                         class="inline-flex items-center px-4 py-1 border-green-600 border hover:bg-green-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-green-900 uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:shadow-outline-green transition ease-in-out duration-150"
-                                                        @click="approvePurchaseOrder(scope.row.id)">Approve</button>
+                                                        @click="approvePurchaseOrder(scope.row.id)">Approve
+                                                    </button>
 
                                                     <button
                                                         class="inline-flex items-center px-4 py-1 border-red-600 border hover:bg-red-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-red-900 uppercase tracking-widest active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-red transition ease-in-out duration-150"
@@ -95,10 +103,17 @@
                                 <el-table-column
                                     fixed="right"
                                     label="Operations"
-                                    width="220">
+                                    width="250">
                                     <template #default="scope">
+
                                         <inertia-link
-                                            class="inline-flex items-center px-2 py-2 border-gray-800 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-md font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                            class="inline-flex items-center px-4 py-1 border-green-600 border hover:bg-green-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-green-900 uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:shadow-outline-green transition ease-in-out duration-150"
+                                            :href="route('purchase.orders.show',{ purchase_order: scope.row.id })">
+                                            View
+                                        </inertia-link>
+
+                                        <inertia-link
+                                            class="inline-flex items-center px-4 py-1 border-green-600 border hover:bg-green-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-green-900 uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:shadow-outline-green transition ease-in-out duration-150"
                                             v-if="scope.row.evaluation_status === 'Approved'"
                                             :href="route('invoices.create',{ materialPurchaseOrder: scope.row.id })">
                                             Create Invoice
@@ -136,6 +151,19 @@
                         {key: 'evaluated_at', name: 'Evaluated On'},
                       ]"
                             >
+                                <el-table-column
+                                    fixed="right"
+                                    label="Operations"
+                                    width="250">
+                                    <template #default="scope">
+
+                                        <inertia-link
+                                            class="inline-flex items-center px-4 py-1 border-green-600 border hover:bg-green-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-green-900 uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:shadow-outline-green transition ease-in-out duration-150"
+                                            :href="route('purchase.orders.show',{ purchase_order: scope.row.id })">
+                                            View
+                                        </inertia-link>
+                                    </template>
+                                </el-table-column>
                             </app-table>
 
                         </el-tab-pane>
@@ -160,7 +188,7 @@ import Notify from "@/UIElements/Notify";
 
 export default {
     name: "Index",
-    components: {AppTable, AppSelect, Paginator, SelectMenu,Notify},
+    components: {AppTable, AppSelect, Paginator, SelectMenu, Notify},
     props: {
         purchase_orders: {
             required: true,
@@ -200,7 +228,10 @@ export default {
             this.$inertia.form({})
                 .post(route('purchase.orders.reject', {materialPurchaseOrder: id}));
         },
-
+        viewPurchaseOrder(id) {
+            this.$inertia.form({})
+                .get(route('purchase.orders.show', {purchase_order: id}));
+        },
         setSelectedFactory(val) {
             this.$inertia.visit(this.$inertia.page.url, {
                 preserveState: true,
