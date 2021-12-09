@@ -30,7 +30,7 @@ class SettingsFactoryController extends Controller
         $countries = Country::all();
 
         return Inertia::render(
-            'Settings/FactoryAdd',
+            'Settings/Factory/FactoryAdd',
             ['countries' => $countries],
         );
     }
@@ -42,5 +42,40 @@ class SettingsFactoryController extends Controller
 
         return Redirect::route('settings.factories.index')
             ->with(['message' => 'successfully updated']);
+    }
+
+    public function edit(Factory $factory)
+    {
+        $countries = Country::all();
+
+        return Inertia::render(
+            'Settings/Factory/FactoryEdit',
+            [
+                'countries' => $countries,
+                'factory' => $factory
+            ],
+        );
+    }
+
+    public function update(Factory $factory, StoreFactoryRequest $request)
+    {
+        $validated = $request->validated();
+        $factory->update($validated);
+
+        return Redirect::route('settings.factories.index')
+            ->with(['message' => 'The record successfully updated.']);
+    }
+
+    public function delete(Factory $factory)
+    {
+        try{
+            $factory->delete();
+            return Redirect::route('settings.factories.index')
+                ->with(['message' => 'The record successfully deleted.']);
+        } catch (\Exception $ex) {
+            return Redirect::route('settings.factories.index')
+                ->with(['message' => 'The factory is already in use and it cannot be deleted.']);
+        }
+
     }
 }
