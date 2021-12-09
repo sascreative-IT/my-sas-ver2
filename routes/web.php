@@ -61,6 +61,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/settings/factories', [SettingsFactoryController::class, 'index'])->name('settings.factories.index');
     Route::post('/settings/factories', [SettingsFactoryController::class, 'store'])->name('settings.factories.store');
     Route::get('/settings/factories/create', [SettingsFactoryController::class, 'create'])->name('settings.factories.create');
+    Route::get('/settings/factories/{factory}/edit', [SettingsFactoryController::class, 'edit'])->name('settings.factories.edit');
+    Route::put('/settings/factories/{factory}', [SettingsFactoryController::class, 'update'])->name('settings.factories.update');
+    Route::delete('/settings/factories/{factory}', [SettingsFactoryController::class, 'delete'])->name('settings.factories.update');
+
 
     Route::get('/settings/warehouses', [SettingsWarehouseController::class, 'index'])->name('settings.warehouses.index');
     Route::get('/settings/warehouses/create', [SettingsWarehouseController::class, 'create'])->name('settings.warehouses.create');
@@ -79,6 +83,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/settings/materials', [SettingsMaterialController::class, 'index'])->name('settings.materials.index');
     Route::get('/settings/material/create', [SettingsMaterialController::class, 'create'])->name('settings.materials.create');
     Route::post('/settings/materials', [SettingsMaterialController::class, 'store'])->name('settings.materials.store');
+    Route::get('/settings/materials/{materials}/edit', [SettingsMaterialController::class, 'edit'])->name('settings.materials.edit');
+    Route::put('/settings/materials/{materials}', [SettingsMaterialController::class, 'update'])->name('settings.materials.update');
+    Route::delete('/settings/materials/{materials}', [SettingsMaterialController::class, 'delete'])->name('settings.materials.update');
+
 
     Route::get('/settings/colours', [SettingsColourController::class, 'index'])->name('settings.colours.index');
     Route::get('/settings/colours/create', [SettingsColourController::class, 'create'])->name('settings.colours.create');

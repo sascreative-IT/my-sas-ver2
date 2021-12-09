@@ -20,7 +20,7 @@
             <input type="search" v-model="query" class="py-2 text-sm text-white rounded-md pl-10 focus:outline-none focus:bg-white focus:text-gray-900" placeholder="Search..." autocomplete="off" @input="searchMaterials">
           </div>
         </div>
-      </div>  
+      </div>
     <div class="">
       <div class="mt-5">
         <table class="min-w-full divide-y divide-gray-200">
@@ -60,12 +60,12 @@
             <td class="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
               <inertia-link
                   class="inline-flex items-center px-4 py-1 border-gray-600 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                  :href="'/settings/material/' + material.id +'/edit'"
+                  :href="'/settings/materials/' + material.id +'/edit'"
               >
                 Edit
               </inertia-link>
 
-              <button class="inline-flex items-center px-4 py-1 border-red-600 border hover:bg-red-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-red-700 uppercase tracking-widest active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-red transition ease-in-out duration-150" @click="deleteConfirmation(index)">
+              <button class="inline-flex items-center px-4 py-1 border-red-600 border hover:bg-red-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-red-700 uppercase tracking-widest active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-red transition ease-in-out duration-150" @click="deleteConfirmation(material)">
                 Delete
               </button>
             </td>
@@ -80,10 +80,10 @@
 
     <delete-confirmation-modal
         title="Delete Outlet"
-        :message='`Are you sure you want delete "${this.selectedOutlet.name}" outlet ?`'
-        :delete-url="'/settings/outlets/' + this.selectedOutlet.id"
-        :show="confirmingUserDeletion"
-        @close="confirmingUserDeletion = false"
+        :message='`Are you sure you want delete "${this.selectedMaterial.name}" material ?`'
+        :delete-url="'/settings/materials/' + this.selectedMaterial.id"
+        :show="confirmingMaterialDeletion"
+        @close="confirmingMaterialDeletion = false"
     ></delete-confirmation-modal>
   </settings-layout>
 </template>
@@ -110,17 +110,17 @@ export default {
   data() {
     return {
         query: '',
-      selectedOutlet: {},
-      confirmingUserDeletion: false
+      selectedMaterial: {},
+      confirmingMaterialDeletion: false
     }
   },
     mounted() {
       this.query = this.q;
     },
   methods: {
-    deleteConfirmation(index) {
-      this.selectedOutlet = this.outlets[index]
-      this.confirmingUserDeletion = true;
+    deleteConfirmation(material) {
+      this.selectedMaterial = material;
+      this.confirmingMaterialDeletion = true;
     },
       searchMaterials() {
           this.$inertia.visit(this.$inertia.page.url, {
