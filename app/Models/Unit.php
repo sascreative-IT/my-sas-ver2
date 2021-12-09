@@ -13,4 +13,7 @@ class Unit extends Model implements Auditable
     protected $primaryKey = 'type';
     public $incrementing = false;
     protected $keyType = 'string';
+    public $timestamps = false;
+
+    protected $guarded = [];
 }

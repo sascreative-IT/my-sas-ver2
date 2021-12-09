@@ -76,7 +76,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>    
+                        </div>
                     </div>
                 </div>
                 <div class="mt-5 bg-white overflow-hidden shadow-xl sm:rounded-lg mt-5">
@@ -391,7 +391,8 @@ export default {
             isItemReadOnly: false,
             isSaving: false,
             total_amount: 0,
-            total_qty: 0
+            total_qty: 0,
+
         }
     },
     mounted() {
