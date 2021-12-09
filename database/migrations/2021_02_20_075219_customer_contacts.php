@@ -16,10 +16,10 @@ class CustomerContacts extends Migration
         Schema::create('customer_contacts', function (Blueprint $table) {
             $table->id();
             $table->string('first_name', 100);
-            $table->string('last_name', 100);
+            $table->string('last_name', 100)->nullable();
             $table->string('email', 255);
             $table->string('contact_no', 50);
-            $table->string('designation', 50);
+            $table->string('designation', 50)->nullable();
             $table->enum('type',['sport','school-uniform', 'school-sport', 'corporate']);
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->timestamps();

@@ -25,7 +25,7 @@ class CustomerMigrationAction
         $output = new ConsoleOutput();
 
         $mysasCustomers = \App\Models\MySas\Client::with('addresses', 'contacts')->get();
-        $progress = new ProgressBar($output, \App\Models\MySas\Color::count());
+        $progress = new ProgressBar($output, \App\Models\MySas\Client::count());
         $progress->start();
 
         $sales_agent_role = Role::where('name', 'Sales Agent')->first();
@@ -51,6 +51,10 @@ class CustomerMigrationAction
         ) {
             $total_records_migrated = 0;
             foreach ($mysasCustomers as $mysasCustomer) {
+
+                if ($mysasCustomer->email == '') {
+                    continue;
+                }
 
                 $cs_person_id = null;
                 $sales_person_id = null;
@@ -131,7 +135,7 @@ class CustomerMigrationAction
                             'password' => $my_sas_sales_person->email . 'password'
                         ]);
 
-                        $sales_person->assignRole($customer_service_agent_role);
+                        $sales_person->assignRole($sales_agent_role);
                         $sales_person->factories()->sync($salesPersonFactoryIds);
 
                         $default_factory = null;
@@ -165,6 +169,10 @@ class CustomerMigrationAction
 
                 foreach ($my_sas_client_address_details as $my_sas_client_address) {
 
+                    if ($my_sas_client_address->state == "") {
+                        $my_sas_client_address->state = "New Zealand";
+                    }
+
                     $country = Country::where('name', $my_sas_client_address->state)->first();
                     if (!$country) {
                         $country = Country::create(
@@ -185,9 +193,13 @@ class CustomerMigrationAction
                     ];
 
                     $savedAddress = Address::query()->create($address);
+                    $address_type = $my_sas_client_address->type;
+                    if ($address_type == '') {
+                        $address_type = 'Primary';
+                    }
                     $addressType = [
                         'address_id' => $savedAddress->id,
-                        'type' => $my_sas_client_address->type
+                        'type' => $address_type
                     ];
 
                     $customerAddress = new CustomerAddress($addressType);
@@ -199,14 +211,46 @@ class CustomerMigrationAction
                 $my_sas_customer_contact_details = ClientContactDetail::where('client_id', $mysasCustomer->id)
                     ->get();
 
+
                 foreach ($my_sas_customer_contact_details as $my_sas_customer_contact) {
+
+                    $first_name = $my_sas_customer_contact->first_name;
+                    if ($first_name == "") {
+                        $first_name = "N/A";
+                    }
+
+                    $last_name = $my_sas_customer_contact->last_name;
+                    if ($last_name == "") {
+                        $last_name = "N/A";
+                    }
+
+                    $type = $my_sas_customer_contact->type;
+                    if ($type == "") {
+                        $type = "Primary";
+                    }
+
+                    $phone_number = $my_sas_customer_contact->phone_number;
+                    if ($phone_number == '') {
+                        $phone_number = '0000000000';
+                    }
+
+                    $designation = $my_sas_customer_contact->designation;
+                    if ($designation == "") {
+                        $designation = "N/A";
+                    }
+
+                    $email = $my_sas_customer_contact->email;
+                    if ($email == "") {
+                        $email = "na@na.com";
+                    }
+
                     CustomerContact::create([
-                        'first_name' => $my_sas_customer_contact->first_name,
-                        'last_name' => $my_sas_customer_contact->last_name,
-                        'email' => $my_sas_customer_contact->email,
-                        'contact_no' => $my_sas_customer_contact->phone_number,
-                        'designation' => $my_sas_customer_contact->designation,
-                        'type' => $my_sas_customer_contact->type,
+                        'first_name' => $first_name,
+                        'last_name' => $last_name,
+                        'email' => $email,
+                        'contact_no' => $phone_number,
+                        'designation' => $designation,
+                        'type' => $type,
                         'customer_id' => $customer->id,
                     ]);
                 }
