@@ -241,6 +241,9 @@
                                     </div>
                                 </div>
                                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                    <div v-if="invoice_item_has_error" @click="handleCloseErrorMessage">
+                                        {{error_message}}
+                                    </div>
                                     <form-button type="button" @handle-on-click="handleAddInvoiceItems">
                                         Add item
                                     </form-button>
@@ -359,6 +362,10 @@
                         class="mt-10 ml-5 mb-5 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
                         @click="saveInvoice">Save
                     </button>
+
+                    <div v-if="invoice_has_error" @click="handleCloseErrorMessage">
+                        {{error_message}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -443,7 +450,10 @@ export default {
             isItemReadOnly: false,
             isSaving: false,
             total_amount: 0,
-            total_qty: 0
+            total_qty: 0,
+            invoice_item_has_error: false,
+            invoice_has_error: false,
+            error_message: '',
         }
     },
     mounted() {
@@ -517,7 +527,7 @@ export default {
             this.material = '';
         },
         handleAddInvoiceItems() {
-            if (this.isValidPurchaseOrderItem()) {
+            if (this.isValidInvoiceItem()) {
                 this.invoiceItem.currency = this.selectedCurrency;
                 this.invoiceItem.unit = this.material.unit;
                 this.invoiceItem.material = this.material;
@@ -527,7 +537,9 @@ export default {
             }
         },
         saveInvoice() {
-            this.$inertia.post('/invoices', this.invoice)
+            if (this.isValidInvoice()) {
+                this.$inertia.post('/invoices', this.invoice)
+            }
         },
         getMaterialById(material_id) {
             return this.materials.[material_id];
@@ -627,54 +639,97 @@ export default {
         unSetItemsReadOnly() {
             this.isItemReadOnly = false;
         },
-        isValidPurchaseOrderItem() {
+        isValidInvoiceItem() {
             if (typeof (this.invoice.number) == 'undefined' || this.invoice.number == '') {
-                alert("Please enter the invoice number");
+                this.invoice_item_has_error = true;
+                this.error_message = "The invoice number is required.";
                 return false;
             }
 
             if (typeof (this.invoice.invoiced_date) == 'undefined' || this.invoice.invoiced_date == '') {
-                alert("Please choose the invoiced date");
+                this.invoice_item_has_error = true;
+                this.error_message = "The invoice date is required.";
                 return false;
             }
 
             if (typeof (this.invoice.factory_id) == 'undefined' || this.invoice.factory_id == '') {
-                alert("Please choose the factory");
+                this.invoice_item_has_error = true;
+                this.error_message = "The factory should be selected.";
                 return false;
             }
 
             if (typeof (this.invoice.supplier_id) == 'undefined' || this.invoice.supplier_id == '') {
-                alert("Please choose the supplier");
+                this.invoice_item_has_error = true;
+                this.error_message = "The supplier should be selected.";
                 return false;
             }
 
 
             if (this.invoiceItem.material_name == '') {
-                alert("Please choose the material name");
+                this.invoice_item_has_error = true;
+                this.error_message = "The material should be selected.";
                 return false;
             }
 
             if (this.invoiceItem.material_colour == '') {
-                alert("Please choose the material color");
+                this.invoice_item_has_error = true;
+                this.error_message = "The color should be selected.";
                 return false;
             }
 
             if (this.invoiceItem.unit_price == '') {
-                alert("Please choose the unit price");
+                this.invoice_item_has_error = true;
+                this.error_message = "The unit price is required.";
                 return false;
             }
 
-            if (this.invoiceItem.unit_price == '') {
-                alert("Please choose the unit price");
-                return false;
-            }
 
             if (this.invoiceItem.quantity == '') {
-                alert("Please add the quantity");
+                this.invoice_item_has_error = true;
+                this.error_message = "The quantity is required.";
                 return false;
             }
 
             return true;
+        },
+        isValidInvoice() {
+
+            if (typeof (this.invoice.number) == 'undefined' || this.invoice.number == '') {
+                this.invoice_has_error = true;
+                this.error_message = "The invoice number is required.";
+                return false;
+            }
+
+            if (typeof (this.invoice.invoiced_date) == 'undefined' || this.invoice.invoiced_date == '') {
+                this.invoice_has_error = true;
+                this.error_message = "The invoice date is required.";
+                return false;
+            }
+
+            if (typeof (this.invoice.factory_id) == 'undefined' || this.invoice.factory_id == '') {
+                this.invoice_has_error = true;
+                this.error_message = "The factory should be selected.";
+                return false;
+            }
+
+            if (typeof (this.invoice.supplier_id) == 'undefined' || this.invoice.supplier_id == '') {
+                this.invoice_has_error = true;
+                this.error_message = "The supplier should be selected.";
+                return false;
+            }
+
+            if (this.invoice.items.length == 0) {
+                this.invoice_has_error = true;
+                this.error_message = "Please add the items before save.";
+                return false;
+            }
+
+            return true;
+        },
+
+        handleCloseErrorMessage() {
+            this.invoice_item_has_error = false;
+            this.invoice_has_error = false;
         }
     }
 }
