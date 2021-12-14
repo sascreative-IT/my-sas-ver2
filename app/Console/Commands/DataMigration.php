@@ -30,7 +30,9 @@ class DataMigration extends Command
                 'Colors',
                 'Materials',
                 'Customers',
-                'StyleCodes'
+                'StyleCodes',
+                'LocalStyleCode',
+
             ]
         );
 

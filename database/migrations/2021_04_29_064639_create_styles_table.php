@@ -14,7 +14,7 @@ class CreateStylesTable extends Migration
             $table->string('name');
             $table->integer('production_time')->nullable();
             $table->foreignId('customer_id')->nullable()->constrained('customers');
-            $table->foreignId('type_id')->constrained('item_types');
+            $table->foreignId('type_id')->nullable()->constrained('item_types');
             $table->longText('description')->nullable();
             $table->enum('belongs_to', ['internal', 'external']);
             $table->enum('status', ['draft', 'active', 'inactive'])->default('draft');
