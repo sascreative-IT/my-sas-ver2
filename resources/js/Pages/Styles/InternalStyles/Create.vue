@@ -237,6 +237,7 @@ export default {
             }
         },
         save() {
+            console.log(this.styleForm);
             this.$inertia.post('/internal-styles', this.styleForm)
         },
     }

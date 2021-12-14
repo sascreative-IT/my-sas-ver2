@@ -29,7 +29,8 @@ class DataMigration extends Command
                 'Warehouses',
                 'Colors',
                 'Materials',
-                'Customers'
+                'Customers',
+                'StyleCodes'
             ]
         );
 
