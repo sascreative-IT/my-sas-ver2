@@ -6925,11 +6925,3 @@ readers do not read off random characters that represent icons */
   line-height: 1.5;
   margin-bottom: 0.25em;
 }
-
-
-p.error-msg {
-  color: #f70909;
-  font-size: 16px;
-  font-weight: 600;
-  margin: 7px 10px 0 0;
-}

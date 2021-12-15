@@ -59,4 +59,9 @@ class Style extends Model implements Auditable
     {
         return $this->where('belongs_to', self::INTERNAL);
     }
+
+    public function scopeExternal(): Builder
+    {
+        return $this->where('belongs_to', self::EXTERNAL);
+    }
 }

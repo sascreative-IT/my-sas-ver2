@@ -2,7 +2,7 @@
     <app-layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Internal(SAS) Styles
+                External Styles
             </h2>
         </template>
         <div class="py-12">
@@ -10,7 +10,7 @@
                 <div class="flex flex-row-reverse">
                     <inertia-link
                       class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                      href="/internal-styles/create">Add New Style
+                      href="/external-styles/create">Add New Style
                     </inertia-link>
                 </div>
 
@@ -41,7 +41,7 @@
                             <template #default="scope">
                                 <inertia-link
                                   class="inline-flex items-center px-4 py-1 border-gray-600 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                                  :href="`/internal-styles/edit/${scope.row.id}`"
+                                  :href="`/external-styles/edit/${scope.row.id}`"
                                 >
                                     Edit
                                 </inertia-link>
