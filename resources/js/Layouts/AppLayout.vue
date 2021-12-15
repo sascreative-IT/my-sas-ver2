@@ -114,11 +114,11 @@
                                         </span>
                                         </template>
                                         <template #content>
-                                            <jet-dropdown-link href="/internal-styles">
+                                            <jet-dropdown-link :href="route('style.internal.index')">
                                                 Internal styles
                                             </jet-dropdown-link>
 
-                                            <jet-dropdown-link :href="route('style.internal.create')">
+                                            <jet-dropdown-link :href="route('style.external.index')">
                                                 External styles
                                             </jet-dropdown-link>
                                         </template>

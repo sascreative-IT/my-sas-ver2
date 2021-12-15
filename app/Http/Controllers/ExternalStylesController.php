@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class InternalStylesController extends Controller
+class ExternalStylesController extends Controller
 {
     public function index(Request $request)
     {
@@ -24,7 +24,7 @@ class InternalStylesController extends Controller
 
         /** @var Collection $internalStyles */
         $internalStyles = Style::query()
-            ->internal()
+            ->external()
             ->when($q, function ($query, $q) {
                 return $query
                     ->where('code', 'like', "%{$q}%")
@@ -35,7 +35,7 @@ class InternalStylesController extends Controller
 
         $internalStyles->loadMissing(['type']);
 
-        return Inertia::render('Styles/InternalStyles/Index', [
+        return Inertia::render('Styles/ExternalStyles/Index', [
             'internal-styles' => $internalStyles
         ]);
     }
@@ -60,10 +60,10 @@ class InternalStylesController extends Controller
         $style = new StyleDto([
             'sizes' => [],
             'panels' => [],
-            'belongs_to' => 'internal'
+            'belongs_to' => 'external'
         ]);
 
-        return Inertia::render('Styles/InternalStyles/Create', [
+        return Inertia::render('Styles/ExternalStyles/Create', [
             'styleData' => $style,
             'customers' => $customers,
             'categories' => $categories,
@@ -78,7 +78,7 @@ class InternalStylesController extends Controller
     {
         resolve(CreateStyle::class)->execute($request->toDto());
 
-        return redirect('/internal-styles');
+        return redirect('/external-styles');
     }
 
     public function edit(CustomerRepository $customerRepository,
@@ -101,7 +101,7 @@ class InternalStylesController extends Controller
         $style->load(['type', 'categories', 'sizes', 'factories', 'panels.consumption']);
         $styleDto = new StyleDto($style->toArray());
 
-        return Inertia::render('Styles/InternalStyles/Create', [
+        return Inertia::render('Styles/ExternalStyles/Create', [
             'styleData' => $styleDto,
             'customers' => $customers,
             'categories' => $categories,

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\ExternalStylesController;
 use App\Http\Controllers\FactoryOrderController;
 use App\Http\Controllers\InternalStylesController;
 use App\Http\Controllers\InventoryAdjustmentController;
@@ -162,6 +163,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/inventory/{inventory}/adjust', [InventoryAdjustmentController::class, 'store'])->name('inventory.adjust');
 
     Route::get('/internal-styles/create', [InternalStylesController::class, 'create'])->name('style.internal.create');
+    Route::get('/external-styles/create', [ExternalStylesController::class, 'create'])->name('style.external.create');
 
     Route::get('/factory', [FactoryOrderController::class, 'index'])->name('factory.orders.index');
     Route::get('/factory/create', [FactoryOrderController::class, 'create'])->name('factory.orders.create');
@@ -170,6 +172,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/internal-styles/edit/{style}', [InternalStylesController::class, 'edit'])->name('style.internal.edit');
     Route::get('/internal-styles', [InternalStylesController::class, 'index'])->name('style.internal.index');
     Route::post('/internal-styles', [InternalStylesController::class, 'store'])->name('style.internal.store');
+
+    Route::get('/external-styles/edit/{style}', [ExternalStylesController::class, 'edit'])->name('style.external.edit');
+    Route::get('/external-styles', [ExternalStylesController::class, 'index'])->name('style.external.index');
+
 
     Route::resource('purchase-order', \App\Http\Controllers\PurchaseOrderController::class, ['names' => 'purchase.orders']);
     Route::post('/approve-purchase-order/{materialPurchaseOrder}', \App\Http\Controllers\ApprovePurchaseOrderController::class)->name('purchase.orders.approve');
