@@ -64,7 +64,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/settings/factories/create', [SettingsFactoryController::class, 'create'])->name('settings.factories.create');
     Route::get('/settings/factories/{factory}/edit', [SettingsFactoryController::class, 'edit'])->name('settings.factories.edit');
     Route::put('/settings/factories/{factory}', [SettingsFactoryController::class, 'update'])->name('settings.factories.update');
-    Route::delete('/settings/factories/{factory}', [SettingsFactoryController::class, 'delete'])->name('settings.factories.update');
+    Route::delete('/settings/factories/{factory}', [SettingsFactoryController::class, 'delete'])->name('settings.factories.delete');
 
 
     Route::get('/settings/warehouses', [SettingsWarehouseController::class, 'index'])->name('settings.warehouses.index');
