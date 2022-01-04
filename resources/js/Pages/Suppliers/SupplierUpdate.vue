@@ -13,6 +13,9 @@
                     :init-supplier="initSupplier"
                     :contacts="contacts"
                     :countries="countries"
+                    :materials="materials"
+                    :colours="colours"
+                    :materialSuppliers="materialSuppliers"
                     v-on:onUpdate="onSubmit"
                 ></supplier-form>
             </div>
@@ -44,6 +47,18 @@ export default {
             type: Array
         },
         countries: {
+            required: false,
+            type: Array
+        },
+        materials: {
+            required: false,
+            type: Array
+        },
+        colours: {
+            required: false,
+            type: Array
+        },
+        materialSuppliers: {
             required: false,
             type: Array
         },
