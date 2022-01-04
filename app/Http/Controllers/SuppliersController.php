@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
+use App\Models\Colour;
 use App\Models\Country;
+use App\Models\Materials;
+use App\Models\MaterialSupplier;
 use App\Models\Supplier;
 use App\Models\SupplierContact;
 use Illuminate\Support\Facades\Redirect;
@@ -50,16 +53,33 @@ class SuppliersController extends Controller
 
     public function edit(Supplier $supplier)
     {
-        $contacts = SupplierContact::query()->where('supplier_id', $supplier->id)->whereNull('deleted_at')->get();
-        $savedSupplier = Supplier::query()->with(['addresses.address.country', 'contacts'])->find($supplier->id);
+        $contacts = SupplierContact::query()
+            ->where('supplier_id', $supplier->id)
+            ->whereNull('deleted_at')
+            ->get();
+
+        $savedSupplier = Supplier::query()
+            ->with(['addresses.address.country', 'contacts'])
+            ->find($supplier->id);
+
+        $materialSuppliers = MaterialSupplier::query()
+            ->with(['variation','variation.colour','variation.material'])
+            ->where('supplier_id', $supplier->id)
+            ->get();
+
         $countries = Country::all();
+        $materials = Materials::all();
+        $colours = Colour::all();
 
         return Inertia::render('Suppliers/SupplierUpdate',
             [
                 'crudAction' => 'edit',
                 'contacts' => $contacts,
                 'initSupplier' => $savedSupplier,
-                'countries' => $countries
+                'countries' => $countries,
+                'materials' => $materials,
+                'colours' => $colours,
+                'materialSuppliers' => $materialSuppliers
             ]
         );
     }

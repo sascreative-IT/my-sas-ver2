@@ -12,7 +12,7 @@ class CreateMaterialSuppliersTable extends Migration
             $table->id();
             $table->foreignId('variation_id')->constrained('material_variations');
             $table->foreignId('supplier_id')->constrained('suppliers');
-            $table->foreignId('factory_id')->constrained('factories');
+            $table->foreignId('factory_id')->nullable()->constrained('factories');
             $table->timestamps();
         });
     }

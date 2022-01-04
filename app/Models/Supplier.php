@@ -29,4 +29,9 @@ class Supplier extends Model implements Auditable
     {
         return $this->hasMany(SupplierAddress::class,'supplier_id');
     }
+
+    public function materialSuppliers()
+    {
+        return $this->hasMany(MaterialSupplier::class,'supplier_id');
+    }
 }

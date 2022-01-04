@@ -10,4 +10,11 @@ class MaterialSupplier extends Model implements Auditable
 {
     use HasFactory;
     use \OwenIt\Auditing\Auditable;
+
+    protected $guarded = [];
+
+    public function variation()
+    {
+        return $this->belongsTo(MaterialVariation::class);
+    }
 }

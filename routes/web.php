@@ -9,6 +9,7 @@ use App\Http\Controllers\InternalStylesController;
 use App\Http\Controllers\InventoryAdjustmentController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InvoicesController;
+use App\Http\Controllers\MaterialSupplierController;
 use App\Http\Controllers\SettingsColourController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SettingsCurrencyController;
@@ -156,6 +157,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/suppliers/addresses', [SupplierAddressController::class, 'store'])->name('suppliers.addresses.store');
     Route::put('/suppliers/addresses/{address}', [SupplierAddressController::class, 'update'])->name('suppliers.addresses.update');
     Route::delete('/suppliers/addresses/{address}', [SupplierAddressController::class, 'delete'])->name('suppliers.addresses.delete');
+
+    Route::post('/suppliers/material-supplier', [MaterialSupplierController::class, 'store'])->name('suppliers.material-supplier.store');
+    Route::put('/suppliers/material-supplier/{materialSupplier}', [MaterialSupplierController::class, 'update'])->name('suppliers.material-supplier.update');
+    Route::delete('/suppliers/material-supplier/{materialSupplier}', [MaterialSupplierController::class, 'delete'])->name('suppliers.material-supplier.delete');
+
 
     Route::get('/invoices/create/{materialPurchaseOrder?}', [InvoicesController::class, 'create'])->name('invoices.create');
     Route::post('/invoices', [InvoicesController::class, 'store'])->name('invoice.store');

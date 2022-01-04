@@ -107,6 +107,99 @@
 
             <div class="mt-5 bg-white overflow-hidden shadow-xl rounded-md">
                 <div class="bg-gray-500 pl-5 pt-2 pb-2 text-white">
+                    <h4>Supplier Materials</h4>
+                </div>
+
+                <div class="p-5">
+                    <form>
+
+                        <div class="shadow overflow-hidden sm:rounded-md">
+                            <div class="px-4 py-5 bg-white sm:p-6">
+                                <div class="grid grid-cols-2 gap-6">
+                                    <div class="sm:col-span-1">
+                                        <label for="supplier_material" class="block text-sm font-medium text-gray-700">
+                                            Material
+                                        </label>
+                                        <app-select
+                                            placeholder="Select Material"
+                                            option-label="name"
+                                            option-value="id"
+                                            :filterable="true"
+                                            :options="materials"
+                                            v-model="materialSupplier.material"
+                                            @input="setSelectedMaterial"
+                                        ></app-select>
+                                    </div>
+                                    <div class="sm:col-span-1">
+                                        <label for="supplier_color" class="block text-sm font-medium text-gray-700">
+                                            Color
+                                        </label>
+                                        <app-select
+                                            placeholder="Select Color"
+                                            option-label="name"
+                                            option-value="id"
+                                            :filterable="true"
+                                            :options="colours"
+                                            v-model="materialSupplier.color"
+                                            @input="setSelectedColor"
+                                        ></app-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                <form-button @handle-on-click="saveMaterialSupplier">
+                                    Save
+                                </form-button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="p-5">
+                    <div class="shadow overflow-hidden sm:rounded-md">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col"
+                                    class="px-8 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Material
+                                </th>
+                                <th scope="col"
+                                    class="px-8 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Color
+                                </th>
+                                <th scope="col" class="relative px-2 py-3 w-16">
+                                    <span class="sr-only">Actions</span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tr v-for="(materialSupplier, index) in materialSuppliers">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{materialSupplier.variation.material.name}}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{materialSupplier.variation.colour.name}}
+                                    </div>
+                                </td>
+
+                                <td class="px-2 py-4 whitespace-nowrap">
+                                    <edit-button @handle-on-click="editMaterialSupplier(index)">
+                                        Edit
+                                    </edit-button>
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 bg-white overflow-hidden shadow-xl rounded-md">
+                <div class="bg-gray-500 pl-5 pt-2 pb-2 text-white">
                     <h4>Supplier Contacts</h4>
                 </div>
                 <div class="p-5">
@@ -441,6 +534,7 @@ import FormButton from "@/UIElements/FormButton";
 import DeleteButton from "@/UIElements/DeleteButton";
 import DeleteConfirmationModal from "@/Pages/Common/DeleteConfirmationModal";
 import EditButton from "@/UIElements/EditButton";
+import AppSelect from "@/UIElements/AppSelect";
 
 export default {
     name: "SupplierForm",
@@ -448,6 +542,7 @@ export default {
         FormButton,
         EditButton,
         DeleteButton,
+        AppSelect,
         DeleteConfirmationModal
     },
     props: {
@@ -466,7 +561,19 @@ export default {
         countries: {
             required: false,
             type: Array
-        }
+        },
+        colours: {
+            required: false,
+            type: Array
+        },
+        materials: {
+            required: false,
+            type: Array
+        },
+        materialSuppliers: {
+            required: false,
+            type: Array
+        },
     },
     methods: {
         showFormsLogic(action) {
@@ -603,6 +710,33 @@ export default {
             }
             this.resetAddressForm();
         },
+        saveMaterialSupplier(e) {
+            e.preventDefault();
+            this.materialSupplier.supplier_id = this.initSupplier.id;
+            if (this.materialSupplier.id === undefined) {
+                this.$inertia.post('/suppliers/material-supplier', this.materialSupplier, {
+                    preserveScroll: true,
+                    onSuccess:(response) => {
+                        console.log(response);
+                    },
+                    onError: (error) => {
+                        console.error(error);
+                    },
+                });
+            } else {
+                this.$inertia.put('/suppliers/material-supplier/'+this.materialSupplier.id, this.materialSupplier, {
+                    preserveScroll: true,
+                    onSuccess:(response) => {
+                        console.log(response);
+                    },
+                    onError: (error) => {
+                        console.error(error);
+                    },
+                });
+            }
+
+            this.resetMaterialSupplierForm();
+        },
         editContact(index) {
             this.contact = this.contacts[index];
         },
@@ -634,6 +768,30 @@ export default {
                 });
             })
         },
+        setSelectedMaterial(value) {
+            this.materialSupplier.material = value;
+        },
+
+        setSelectedColor(value) {
+            this.materialSupplier.color = value;
+        },
+        resetMaterialSupplierForm() {
+            this.materialSupplier = {
+                id: '',
+                material: '',
+                color: ''
+            }
+        },
+        editMaterialSupplier(index) {
+            const materialSupplier = this.materialSuppliers[index];
+            this.materialSupplier = this.materialSuppliers[index];
+            this.materialSupplier = {
+                id: materialSupplier.id,
+                variation: materialSupplier.variation.id,
+                material: materialSupplier.variation.material,
+                color: materialSupplier.variation.colour
+            }
+        },
     },
     mounted() {
         this.showFormsLogic(this.crudAction);
@@ -659,7 +817,8 @@ export default {
             address: {},
             selectedContact: {},
             selectedAddress:{},
-            confirmingUserDeletion: false
+            confirmingUserDeletion: false,
+            materialSupplier: {},
         }
     }
 
