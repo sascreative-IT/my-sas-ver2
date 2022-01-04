@@ -777,7 +777,6 @@ export default {
         },
         resetMaterialSupplierForm() {
             this.materialSupplier = {
-                id: '',
                 material: '',
                 color: ''
             }
