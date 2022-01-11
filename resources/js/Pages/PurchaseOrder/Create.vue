@@ -361,6 +361,10 @@ export default {
             required: true,
             type: Array
         },
+        material_variations: {
+            required: false,
+            type: Object
+        },
         flash: Object
     },
     data() {
@@ -435,8 +439,15 @@ export default {
         },
         setSelectedColour(value) {
             this.purchaseOrderItem.color = value;
-            this.purchaseOrderItem.material_variation_id = this.purchaseOrderItem.color.id;
             this.purchaseOrderItem.material_colour = this.purchaseOrderItem.color.name;
+
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    color_id: value.id
+                }
+            })
 
         },
         setSelectedUnit(value) {
@@ -476,6 +487,7 @@ export default {
                 this.purchaseOrderItem.currency = this.selectedCurrency.name;
                 this.purchaseOrderItem.unit = this.material.unit;
                 this.purchaseOrderItem.material = this.material;
+                this.purchaseOrderItem.material_variation_id = this.material_variations.id;
                 this.purchaseOrder.items.push(this.purchaseOrderItem);
                 this.calculateTotal();
                 this.resetPurchaseOrderItems();
