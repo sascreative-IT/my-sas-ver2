@@ -124,7 +124,7 @@
                                                        class="block text-sm font-medium text-gray-700">
                                                     Unit Price
                                                     <template v-if="material">
-                                                        ({{ material.unit.toUpperCase() }})
+                                                        ({{ material.unit}})
                                                     </template>
                                                 </label>
                                                 <div class="absolute">
@@ -419,6 +419,13 @@ export default {
         setSupplierId(value) {
             this.purchaseOrder.supplier = value;
             this.purchaseOrder.supplier_id = value.id;
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    supplier_id: value.id
+                }
+            })
         },
         setFactoryId(value) {
             this.purchaseOrder.factory = value;

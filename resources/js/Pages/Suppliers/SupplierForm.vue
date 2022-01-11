@@ -74,14 +74,6 @@
                                                    id="email_address" autocomplete="email"
                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                         </div>
-                                        <div class="pt-2 pb-4">
-                                            <label for="email_address" class="block text-base font-medium text-gray-700">Currency</label>
-                                            <input type="text" name="currency"
-                                                   disabled
-                                                   placeholder="NZD"
-                                                   id="currency" autocomplete="currency"
-                                                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                        </div>
                                     </div>
                                     <div>
                                         <div class="pt-2 pb-4">
