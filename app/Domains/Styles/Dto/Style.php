@@ -9,6 +9,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class Style extends DataTransferObject
 {
+    public ?int $id;
     public ?string $belongs_to;
     public ?string $code;
     public ?string $name;

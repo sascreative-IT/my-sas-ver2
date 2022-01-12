@@ -375,32 +375,36 @@ export default {
             this.panel = this.defaultPanel()
         },
         updateConsumptionWhenSizeChanges() {
+            /*
             this.panel.consumption = this.form.sizes.map(size => {
+                console.log(">>>",size)
                return {
                    size: size,
                    amount: null
                }
             });
-            // let temp_consumption = [...this.panel.consumption]
-            // this.panel.consumption = this.form.sizes.map(selected_size => {
-            //     let amount = null
-            //
-            //     let already_set_consumption = temp_consumption.filter((already_set_consumption) => {
-            //         return already_set_consumption.size.id === selected_size.id
-            //     })
-            //
-            //     if (already_set_consumption.length > 0) {
-            //         amount = already_set_consumption[0].amount;
-            //     }
-            //
-            //     return  {
-            //         size: {
-            //             id: selected_size.id,
-            //             name: selected_size.name
-            //         },
-            //         amount: amount
-            //     }
-            // })
+             */
+
+             let temp_consumption = [...this.panel.consumption]
+             this.panel.consumption = this.form.sizes.map(selected_size => {
+                 let amount = null
+
+                 let already_set_consumption = temp_consumption.filter((already_set_consumption) => {
+                     return already_set_consumption.size.id === selected_size.id
+                 })
+
+                 if (already_set_consumption.length > 0) {
+                     amount = already_set_consumption[0].amount;
+                 }
+
+                 return  {
+                     size: {
+                         id: selected_size.id,
+                         name: selected_size.name
+                     },
+                     amount: amount
+                 }
+             })
         },
 
         resetFormField() {

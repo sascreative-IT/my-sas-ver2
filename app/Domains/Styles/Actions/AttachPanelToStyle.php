@@ -28,6 +28,8 @@ class AttachPanelToStyle
             $stylePanel = $this->createPanel($style, $panel);
         }
 
+        $stylePanel->consumption()->delete();
+
         foreach ($panel->consumption as $consumption) {
             $this->attachConsumptionToPanel->execute($stylePanel, $consumption, 'm');
         }

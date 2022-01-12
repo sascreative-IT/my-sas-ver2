@@ -2,7 +2,13 @@
     <app-layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Add a new style
+                <template v-if="styleData.id">
+                Edit Style - {{styleData.code}}
+                </template>
+                <template v-else>
+                    Add a new style
+                </template>
+
             </h2>
         </template>
 
@@ -237,8 +243,11 @@ export default {
             }
         },
         save() {
-            console.log(this.styleForm);
-            this.$inertia.post('/internal-styles', this.styleForm)
+            if (this.styleForm.id !== null) {
+                this.$inertia.put('/internal-styles/' + this.styleForm.id, this.styleForm)
+            } else {
+                this.$inertia.post('/internal-styles', this.styleForm)
+            }
         },
     }
 }
