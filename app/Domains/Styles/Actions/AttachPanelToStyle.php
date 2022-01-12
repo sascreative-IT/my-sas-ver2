@@ -39,11 +39,13 @@ class AttachPanelToStyle
 
     private function updatePanel(Panel $panel): StylePanel
     {
-        return StylePanel::find($panel->id)
-            ->update([
-                'name' => $panel->name,
-                'default_fabric_id' => optional($panel->default_fabric)->id
-            ]);
+        $stylePanel = StylePanel::find($panel->id);
+        $stylePanel->update([
+            'name' => $panel->name,
+            'default_fabric_id' => optional($panel->default_fabric)->id
+        ]);
+        $stylePanel->refresh();
+        return $stylePanel;
     }
 
     private function createPanel(Style $style, Panel $panel): StylePanel
