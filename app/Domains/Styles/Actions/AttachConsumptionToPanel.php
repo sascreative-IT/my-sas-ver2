@@ -11,11 +11,7 @@ class AttachConsumptionToPanel
 {
     public function execute(StylePanel $panel, Consumption $consumptionDto, string $unitType): void
     {
-        if ($consumptionDto->id) {
-            $createdConsumption = $this->updateConsumption($consumptionDto);
-        } else {
-            $createdConsumption = $this->createConsumption($panel, $consumptionDto, $unitType);
-        }
+        $this->createConsumption($panel, $consumptionDto, $unitType);
     }
 
     private function createConsumption(

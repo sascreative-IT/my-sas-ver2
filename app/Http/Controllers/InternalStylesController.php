@@ -16,6 +16,7 @@ use App\Repositories\MaterialRepository;
 use App\Repositories\SizeRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class InternalStylesController extends Controller
@@ -78,9 +79,8 @@ class InternalStylesController extends Controller
 
     public function store(StyleStoreRequest $request)
     {
-        resolve(CreateStyle::class)->execute($request->toDto());
-
-        return redirect('/internal-styles');
+        $style = resolve(CreateStyle::class)->execute($request->toDto());
+        return Redirect::route('style.internal.edit', [$style->id])->with(['message' => 'successfully updated']);
     }
 
     public function edit(CustomerRepository $customerRepository,
@@ -118,6 +118,6 @@ class InternalStylesController extends Controller
     {
         resolve(UpdateStyle::class)->execute($style, $request->toDto());
 
-        return redirect('/internal-styles');
+        return Redirect::route('style.internal.edit', [$style->id])->with(['message' => 'successfully updated']);
     }
 }
