@@ -56,6 +56,8 @@ class UpdateStyle
             $this->attachPanelToStyle->execute($style, $panel);
         }
 
+        $style->refresh();
+
         return $style;
     }
 }
