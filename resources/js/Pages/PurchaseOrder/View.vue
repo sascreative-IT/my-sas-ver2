@@ -27,7 +27,6 @@
                                             :filterable="true"
                                             :options="suppliers"
                                             v-model="purchaseOrder.supplier"
-                                            @input="setSupplierId"
                                         ></app-select>
                                     </div>
                                 </div>
@@ -49,7 +48,6 @@
                                             :filterable="true"
                                             :options="factories"
                                             v-model="purchaseOrder.factory"
-                                            @input="setFactoryId"
                                         ></app-select>
                                     </div>
                                 </div>
@@ -70,7 +68,6 @@
                                             :filterable="true"
                                             :options="currencies"
                                             v-model="selectedCurrency"
-                                            @input="setSelectedCurrency"
                                         ></app-select>
                                     </div>
                                 </div>
@@ -486,15 +483,19 @@ export default {
 
          */
         getMaterialNameById(material_id) {
-            if (typeof(this.materials.[material_id]) == 'object') {
-                return this.materials.[material_id].name;
+            for (let material of this.materials) {
+                if (material.id == material_id) {
+                    return material.name;
+                }
             }
             return null;
         },
 
         getColorNameById(color_id) {
-            if (typeof(this.colours.[color_id]) == 'object') {
-                return this.colours.[color_id].name;
+            for (let color of this.colours) {
+                if (color.id == color_id) {
+                    return color.name;
+                }
             }
             return null;
         },

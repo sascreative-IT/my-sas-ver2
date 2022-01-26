@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Domains\Currency\Models\Currency;
-use App\Domains\Invoices\Actions\CreateInvoices;
-use App\Domains\Invoices\Dtos\Invoice;
-use App\Domains\Invoices\Dtos\InvoiceItem;
 use App\Domains\PurchaseOrder\Actions\CreatePurchaseOrderAction;
 use App\Domains\PurchaseOrder\Dtos\PurchaseOrderData;
 use App\Domains\PurchaseOrder\Models\MaterialPurchaseOrder;
@@ -14,6 +11,8 @@ use App\Models\Colour;
 use App\Models\Factory;
 use App\Models\MaterialInvoice;
 use App\Models\Materials;
+use App\Models\MaterialSupplier;
+use App\Models\MaterialVariation;
 use App\Models\Supplier;
 use App\Models\Unit;
 use Doctrine\DBAL\Exception\DatabaseObjectExistsException;
@@ -61,8 +60,8 @@ class PurchaseOrderController extends Controller
 
     public function create(Request $request): \Inertia\Response
     {
-        $materials = Materials::all();
-        $colours = Colour::all();
+        $materials = [];
+        $colours = [];
         $suppliers = Supplier::all();
 
         $unitCollection = Unit::all();
@@ -72,9 +71,33 @@ class PurchaseOrderController extends Controller
 
         $currencies = Currency::all();
 
+        if ($request->filled('supplier_id')) {
+            $suplier_materials = MaterialSupplier::with('variation','variation.material')->where("supplier_id", $request->get('supplier_id'))->get();
+            $material_ids = [];
+            foreach ($suplier_materials as $suplier_material) {
+                if ($suplier_material->variation->material) {
+                    array_push($material_ids, $suplier_material->variation->material->id);
+                }
+            }
+
+            $materials = Materials::query()->whereIn("id", $material_ids)->get();
+        }
+
+
         $material = null;
         if ($request->filled('material_id')) {
             $material = Materials::find($request->get('material_id'));
+            $colorIds = MaterialVariation::where("material_id",$request->get('material_id'))
+                ->pluck("colour_id")
+                ->toArray();
+            $colours = Colour::whereIn('id', $colorIds)->get();
+        }
+
+        $material_variations = null;
+        if ($request->filled('material_id') && $request->filled('color_id')) {
+            $material_variations = MaterialVariation::where("material_id",$request->get('material_id'))
+            ->where("colour_id",$request->get('color_id'))
+            ->first();
         }
 
 
@@ -87,7 +110,8 @@ class PurchaseOrderController extends Controller
                 'suppliers' => $suppliers,
                 'units' => $units,
                 'currencies' => $currencies,
-                'material' => $material
+                'material' => $material,
+                'material_variations' => $material_variations
             ]
         );
     }

@@ -179,6 +179,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/internal-styles/edit/{style}', [InternalStylesController::class, 'edit'])->name('style.internal.edit');
     Route::get('/internal-styles', [InternalStylesController::class, 'index'])->name('style.internal.index');
     Route::post('/internal-styles', [InternalStylesController::class, 'store'])->name('style.internal.store');
+    Route::put('/internal-styles/{style}', [InternalStylesController::class, 'update'])->name('style.internal.update');
+
 
     Route::get('/external-styles/edit/{style}', [ExternalStylesController::class, 'edit'])->name('style.external.edit');
     Route::get('/external-styles', [ExternalStylesController::class, 'index'])->name('style.external.index');

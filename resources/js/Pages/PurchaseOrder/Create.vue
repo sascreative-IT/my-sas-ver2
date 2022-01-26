@@ -124,7 +124,7 @@
                                                        class="block text-sm font-medium text-gray-700">
                                                     Unit Price
                                                     <template v-if="material">
-                                                        ({{ material.unit.toUpperCase() }})
+                                                        ({{ material.unit}})
                                                     </template>
                                                 </label>
                                                 <div class="absolute">
@@ -361,6 +361,10 @@ export default {
             required: true,
             type: Array
         },
+        material_variations: {
+            required: false,
+            type: Object
+        },
         flash: Object
     },
     data() {
@@ -415,6 +419,13 @@ export default {
         setSupplierId(value) {
             this.purchaseOrder.supplier = value;
             this.purchaseOrder.supplier_id = value.id;
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    supplier_id: value.id
+                }
+            })
         },
         setFactoryId(value) {
             this.purchaseOrder.factory = value;
@@ -435,8 +446,15 @@ export default {
         },
         setSelectedColour(value) {
             this.purchaseOrderItem.color = value;
-            this.purchaseOrderItem.material_variation_id = this.purchaseOrderItem.color.id;
             this.purchaseOrderItem.material_colour = this.purchaseOrderItem.color.name;
+
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    color_id: value.id
+                }
+            })
 
         },
         setSelectedUnit(value) {
@@ -476,6 +494,7 @@ export default {
                 this.purchaseOrderItem.currency = this.selectedCurrency.name;
                 this.purchaseOrderItem.unit = this.material.unit;
                 this.purchaseOrderItem.material = this.material;
+                this.purchaseOrderItem.material_variation_id = this.material_variations.id;
                 this.purchaseOrder.items.push(this.purchaseOrderItem);
                 this.calculateTotal();
                 this.resetPurchaseOrderItems();

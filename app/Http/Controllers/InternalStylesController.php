@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Domains\Styles\Actions\CreateStyle;
+use App\Domains\Styles\Actions\UpdateStyle;
 use App\Domains\Styles\Dto\Style as StyleDto;
 use App\Http\Requests\Styles\StyleStoreRequest;
+use App\Http\Requests\Styles\StyleUpdateRequest;
 use App\Models\Factory;
 use App\Models\Style;
 use App\Repositories\CategoryRepository;
@@ -14,6 +16,7 @@ use App\Repositories\MaterialRepository;
 use App\Repositories\SizeRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class InternalStylesController extends Controller
@@ -76,9 +79,8 @@ class InternalStylesController extends Controller
 
     public function store(StyleStoreRequest $request)
     {
-        resolve(CreateStyle::class)->execute($request->toDto());
-
-        return redirect('/internal-styles');
+        $style = resolve(CreateStyle::class)->execute($request->toDto());
+        return Redirect::route('style.internal.edit', [$style->id])->with(['message' => 'successfully updated']);
     }
 
     public function edit(CustomerRepository $customerRepository,
@@ -110,5 +112,12 @@ class InternalStylesController extends Controller
             'factories' => $factories,
             'materials' => $materials,
         ]);
+    }
+
+    public function update(Style $style, StyleUpdateRequest $request)
+    {
+        resolve(UpdateStyle::class)->execute($style, $request->toDto());
+
+        return Redirect::route('style.internal.edit', [$style->id])->with(['message' => 'successfully updated']);
     }
 }
