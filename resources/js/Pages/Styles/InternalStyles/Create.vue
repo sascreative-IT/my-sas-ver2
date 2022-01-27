@@ -98,6 +98,7 @@
                                             item-id="id"
                                             :options="customers"
                                             :reduce="customer => customer.id"
+                                            @input="setSelectedCustomerId"
                                         ></v-select>
                                     </div>
                                     <div class="pt-2 pb-4" v-if="style_code_type === 'Customized'">
@@ -111,7 +112,7 @@
                                             <v-select
                                                 :disabled="style_code_type === 'General'"
                                                 id="extending_style_code"
-                                                v-model="styleForm.extending_style_id"
+                                                v-model="styleForm.extending_style"
                                                 :options="styles"
                                                 label="name"
                                                 item-id="id"
@@ -288,9 +289,22 @@ export default {
                 preserveScroll: true,
                 data: {
                     parent_id: value.id
-                }
+                },
+                onSuccess: () => {
+                    if (this.parentStyleCode !== null) {
+                        this.styleForm = this.parentStyleCode;
+                        this.styleForm.extending_style_id = value.id;
+                        this.styleForm.extending_style = {
+                            'id' : value.id,
+                            'name' : value.name,
+                        };
+                    }
+                },
             })
         },
+        setSelectedCustomerId(value) {
+            this.styleForm.customer_id = value;
+        }
     }
 }
 </script>
