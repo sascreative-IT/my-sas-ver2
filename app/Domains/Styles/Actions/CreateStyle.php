@@ -33,7 +33,7 @@ class CreateStyle
             'code' => $styleDto->code,
             'name' => $styleDto->name,
             'production_time' => $styleDto->production_time,
-            'type_id' => $styleDto->type->id,
+            'item_type_id' => $styleDto->type->id,
             'description' => $styleDto->description,
             'belongs_to' => $styleDto->belongs_to,
             'status' => $styleDto->status,

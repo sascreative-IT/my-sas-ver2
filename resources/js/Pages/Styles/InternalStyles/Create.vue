@@ -66,6 +66,22 @@
                             </div>
                             <div>
                                 <div>
+
+                                    <div class="pt-2 pb-4">
+
+                                        <label
+                                            for="customer_name"
+                                            class="block text-base font-medium text-gray-700"
+                                        >
+                                            Type
+                                        </label>
+
+                                        <el-radio v-model="style_code_type" label="General">General</el-radio>
+                                        <el-radio v-model="style_code_type" label="Customized">Customized</el-radio>
+                                        <el-radio v-model="style_code_type" label="New Customized">New Customized</el-radio>
+                                    </div>
+
+                                    <div v-if="style_code_type !== 'General'">
                                     <div class="pt-2 pb-4">
 
                                         <label
@@ -84,7 +100,7 @@
                                             :reduce="customer => customer.id"
                                         ></v-select>
                                     </div>
-                                    <div class="pt-2 pb-4">
+                                    <div class="pt-2 pb-4" v-if="style_code_type === 'Customized'">
                                         <div class="pt-2 pb-4">
 
                                             <label for="extending_style_code"
@@ -93,12 +109,17 @@
                                             </label>
 
                                             <v-select
+                                                :disabled="style_code_type === 'General'"
                                                 id="extending_style_code"
                                                 v-model="styleForm.extending_style_id"
+                                                :options="styles"
                                                 label="name"
                                                 item-id="id"
+                                                @input="setSelectedStyleCode"
                                             ></v-select>
                                         </div>
+                                    </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -122,6 +143,7 @@
                                 :factories="factories"
                                 v-model="styleForm"
                                 :errors="errors"
+                                :styleCodeType="style_code_type"
                             ></general-style-form>
                         </div>
                         <!--                        <div v-show="show_customized_form && is_customized">-->
@@ -192,6 +214,13 @@ export default {
         errors: {
             type: Object,
             required: false
+        },
+        styles: {
+            type: Array,
+            required: true
+        },
+        parentStyleCode: {
+            type: Object
         }
     },
     components: {
@@ -215,10 +244,14 @@ export default {
             },
             reset_forms: false,
             styleForm: {},
+            style_code_type: "General"
         }
     },
     mounted() {
         this.styleForm = this.styleData
+        if (this.parentStyleCode !== null) {
+            this.styleForm = this.parentStyleCode;
+        }
     },
     methods: {
         selectStyleType() {
@@ -248,6 +281,15 @@ export default {
             } else {
                 this.$inertia.post('/internal-styles', this.styleForm)
             }
+        },
+        setSelectedStyleCode(value) {
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    parent_id: value.id
+                }
+            })
         },
     }
 }

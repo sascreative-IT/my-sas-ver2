@@ -58,6 +58,14 @@ class InternalStylesController extends Controller
         $itemTypes = $itemTypeRepository->getAll();
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
+        $styles = Style::all('id','code','name')->toArray();
+        $parent_style_code = null;
+
+        if ($request->has('parent_id')) {
+            $parent_id = $request->get('parent_id');
+            $parent_style_code = Style::find($parent_id);
+            $parent_style_code->load(['type', 'categories', 'sizes', 'factories', 'panels.consumption']);
+        }
 
 
         $style = new StyleDto([
@@ -74,6 +82,8 @@ class InternalStylesController extends Controller
             'sizes' => $sizes,
             'factories' => $factories,
             'materials' => $materials,
+            'styles' => $styles,
+            'parentStyleCode' => $parent_style_code
         ]);
     }
 

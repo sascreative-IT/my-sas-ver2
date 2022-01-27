@@ -12,10 +12,13 @@
                                        class="block text-sm font-medium text-gray-700">
                                     Style code</label>
                                 <input type="text" name="style_code_general_style"
+                                       :disabled="(styleCodeType == 'Customized')"
                                        v-model="form.code"
                                        id="style_code_general_style"
                                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
+
+
 
                             <div class="col-span-1 sm:col-span-1">
                                 <label for="style_name_general_style"
@@ -43,6 +46,17 @@
                                 ></app-select>
                             </div>
                         </div>
+                        <div class="mt-5" v-if="styleCodeType == 'Customized'">
+                        <div class="col-span-1 sm:col-span-1">
+                            <label for="style_code_general_style"
+                                   class="block text-sm font-medium text-gray-700">
+                                Extended Style code</label>
+                            <input type="text" name="extended_style_code"
+                                   v-model="form.extended_style_code"
+                                   id="extended_style_code"
+                                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        </div>
+                            </div>
 
                         <div class="mt-5">
                             <div>
@@ -303,6 +317,7 @@ export default {
     },
     props: {
         resetForm: Boolean,
+        styleCodeType: String,
         categories: {
             required: true,
             type: Array
@@ -448,12 +463,7 @@ export default {
 }
 </script>
 
-<style >
-#vs3__listbox {
-    background-color: green !important;
-    z-index: 100;
-}
-
+<style>
 .dropdown-menu {
     z-index:10030 !important;
 }
