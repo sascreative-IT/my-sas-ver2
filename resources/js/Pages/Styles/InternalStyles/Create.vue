@@ -261,8 +261,8 @@ export default {
         }
     },
     mounted() {
-        this.styleForm = this.styleData
         this.styleForm.styles_type = "General"
+        this.styleForm = this.styleData
         if (this.parentStyleCode !== null && (typeof this.parentStyleCode  != 'undefined')) {
             this.styleForm = this.parentStyleCode;
             this.styleForm.parent_style_code = this.parentStyleCode.code;
@@ -278,6 +278,11 @@ export default {
             });
         }
 
+        this.url = "/" + this.styleForm.style_image;
+
+        if (typeof(this.styleForm.parent_style) != 'undefined') {
+            this.styleForm.parent_style_code = this.styleForm.parent_style.code;
+        }
     },
     methods: {
         selectStyleType() {
@@ -364,11 +369,7 @@ export default {
                     type: value
                 },
                 onSuccess: () => {
-                    this.styleForm.styles_type = this.styleType
-
-                    if (this.styleType != null) {
-                        this.styleForm.styles_type = this.styleType
-                    }
+                    this.styleForm.styles_type = value
                 }
             })
         },

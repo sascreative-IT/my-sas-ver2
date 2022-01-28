@@ -64,4 +64,14 @@ class Style extends Model implements Auditable
     {
         return $this->where('belongs_to', self::EXTERNAL);
     }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    public function parentStyle(): BelongsTo
+    {
+        return $this->belongsTo(Style::class, 'parent_style_id');
+    }
 }

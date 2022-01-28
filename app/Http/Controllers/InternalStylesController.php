@@ -46,18 +46,17 @@ class InternalStylesController extends Controller
         CustomerRepository $customerRepository,
         CategoryRepository $categoryRepository,
         ItemTypeRepository $itemTypeRepository,
-        SizeRepository     $sizeRepository,
+        SizeRepository $sizeRepository,
         MaterialRepository $materialRepository,
-        Request            $request,
-    )
-    {
+        Request $request,
+    ) {
         $factories = Factory::all();
         $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
         $itemTypes = $itemTypeRepository->getAll();
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
-        $styles = Style::all('id','code','name')->toArray();
+        $styles = Style::all('id', 'code', 'name')->toArray();
         $parent_style_code = null;
 
         if ($request->has('parent_id')) {
@@ -100,15 +99,15 @@ class InternalStylesController extends Controller
         return Redirect::route('style.internal.edit', [$style->id])->with(['message' => 'successfully updated']);
     }
 
-    public function edit(CustomerRepository $customerRepository,
-                         CategoryRepository $categoryRepository,
-                         ItemTypeRepository $itemTypeRepository,
-                         SizeRepository     $sizeRepository,
-                         MaterialRepository $materialRepository,
-                         Style              $style,
-                         Request            $request
-    )
-    {
+    public function edit(
+        CustomerRepository $customerRepository,
+        CategoryRepository $categoryRepository,
+        ItemTypeRepository $itemTypeRepository,
+        SizeRepository $sizeRepository,
+        MaterialRepository $materialRepository,
+        Style $style,
+        Request $request
+    ) {
         $factories = Factory::all();
         $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
@@ -117,7 +116,7 @@ class InternalStylesController extends Controller
         $materials = $materialRepository->getAll();
 
 
-        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
+        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
         $styleDto = new StyleDto($style->toArray());
 
         return Inertia::render('Styles/InternalStyles/Create', [
