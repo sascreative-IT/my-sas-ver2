@@ -33,11 +33,14 @@ class UpdateStyle
             'code' => $styleDto->code,
             'name' => $styleDto->name,
             'production_time' => $styleDto->production_time,
-            'item_type_id' => $styleDto->type->id,
+            'item_type_id' => $styleDto->item_type->id,
+            'styles_type' => $styleDto->styles_type,
             'description' => $styleDto->description,
             'belongs_to' => $styleDto->belongs_to,
             'status' => $styleDto->status,
-            'customer_id' => optional($styleDto->customer)->id
+            'customer_id' => optional($styleDto->customer)->id,
+            'parent_style_id' => optional($styleDto->parent_style)->id,
+            'style_image' => $styleDto->style_image
         ]);
 
         foreach ($styleDto->sizes as $size) {
