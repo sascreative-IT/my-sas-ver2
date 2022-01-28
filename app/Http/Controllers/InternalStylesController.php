@@ -133,11 +133,14 @@ class InternalStylesController extends Controller
     public function update(Style $style, StyleUpdateRequest $request)
     {
         $image_path = '';
+        dd($request->all());
 
         if ($request->hasFile('image')) {
             $image_path = $request->file('image')->store('style_images', 'public');
+            if ($image_path != "") {
+                $request->merge(['style_image' => $image_path]);
+            }
         }
-        $request->merge(['style_image' => $image_path]);
 
         resolve(UpdateStyle::class)->execute($style, $request->toDto());
 

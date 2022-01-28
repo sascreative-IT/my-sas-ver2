@@ -39,9 +39,15 @@ class UpdateStyle
             'belongs_to' => $styleDto->belongs_to,
             'status' => $styleDto->status,
             'customer_id' => optional($styleDto->customer)->id,
-            'parent_style_id' => optional($styleDto->parent_style)->id,
-            'style_image' => $styleDto->style_image
+            'parent_style_id' => optional($styleDto->parent_style)->id
         ]);
+
+        dd($styleDto->style_image);
+        if ($styleDto->style_image) {
+            $style->update(
+                ['style_image' => $styleDto->style_image]
+            );
+        }
 
         foreach ($styleDto->sizes as $size) {
             $this->attachSizeToStyle->execute($style, $size);
