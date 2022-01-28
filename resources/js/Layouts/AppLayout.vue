@@ -118,9 +118,6 @@
                                                 Internal styles
                                             </jet-dropdown-link>
 
-                                            <jet-dropdown-link :href="route('style.external.index')">
-                                                External styles
-                                            </jet-dropdown-link>
                                         </template>
                                     </menu-dropdown>
                                 </div>

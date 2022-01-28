@@ -28,6 +28,7 @@ class InternalStylesController extends Controller
         /** @var Collection $internalStyles */
         $internalStyles = Style::query()
             ->internal()
+            ->with('itemType')
             ->when($q, function ($query, $q) {
                 return $query
                     ->where('code', 'like', "%{$q}%")
@@ -35,8 +36,6 @@ class InternalStylesController extends Controller
             })
             ->paginate()
             ->withQueryString();
-
-        $internalStyles->loadMissing(['type']);
 
         return Inertia::render('Styles/InternalStyles/Index', [
             'internal-styles' => $internalStyles
@@ -47,17 +46,24 @@ class InternalStylesController extends Controller
         CustomerRepository $customerRepository,
         CategoryRepository $categoryRepository,
         ItemTypeRepository $itemTypeRepository,
-        SizeRepository     $sizeRepository,
+        SizeRepository $sizeRepository,
         MaterialRepository $materialRepository,
-        Request            $request,
-    )
-    {
+        Request $request,
+    ) {
         $factories = Factory::all();
         $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
         $itemTypes = $itemTypeRepository->getAll();
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
+        $styles = Style::all('id', 'code', 'name')->toArray();
+        $parent_style_code = null;
+
+        if ($request->has('parent_id')) {
+            $parent_id = $request->get('parent_id');
+            $parent_style_code = Style::find($parent_id);
+            $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
+        }
 
 
         $style = new StyleDto([
@@ -74,24 +80,34 @@ class InternalStylesController extends Controller
             'sizes' => $sizes,
             'factories' => $factories,
             'materials' => $materials,
+            'styles' => $styles,
+            'parentStyleCode' => $parent_style_code,
+            'styleType' => $request->get('type'),
+            'customer' => $request->get('customer'),
         ]);
     }
 
     public function store(StyleStoreRequest $request)
     {
+        $image_path = '';
+
+        if ($request->hasFile('image')) {
+            $image_path = $request->file('image')->store('style_images', 'public');
+        }
+        $request->merge(['style_image' => $image_path]);
         $style = resolve(CreateStyle::class)->execute($request->toDto());
         return Redirect::route('style.internal.edit', [$style->id])->with(['message' => 'successfully updated']);
     }
 
-    public function edit(CustomerRepository $customerRepository,
-                         CategoryRepository $categoryRepository,
-                         ItemTypeRepository $itemTypeRepository,
-                         SizeRepository     $sizeRepository,
-                         MaterialRepository $materialRepository,
-                         Style              $style,
-                         Request            $request
-    )
-    {
+    public function edit(
+        CustomerRepository $customerRepository,
+        CategoryRepository $categoryRepository,
+        ItemTypeRepository $itemTypeRepository,
+        SizeRepository $sizeRepository,
+        MaterialRepository $materialRepository,
+        Style $style,
+        Request $request
+    ) {
         $factories = Factory::all();
         $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
@@ -100,7 +116,7 @@ class InternalStylesController extends Controller
         $materials = $materialRepository->getAll();
 
 
-        $style->load(['type', 'categories', 'sizes', 'factories', 'panels.consumption']);
+        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
         $styleDto = new StyleDto($style->toArray());
 
         return Inertia::render('Styles/InternalStyles/Create', [
@@ -116,6 +132,16 @@ class InternalStylesController extends Controller
 
     public function update(Style $style, StyleUpdateRequest $request)
     {
+        $image_path = '';
+        dd($request->all());
+
+        if ($request->hasFile('image')) {
+            $image_path = $request->file('image')->store('style_images', 'public');
+            if ($image_path != "") {
+                $request->merge(['style_image' => $image_path]);
+            }
+        }
+
         resolve(UpdateStyle::class)->execute($style, $request->toDto());
 
         return Redirect::route('style.internal.edit', [$style->id])->with(['message' => 'successfully updated']);

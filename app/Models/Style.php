@@ -45,9 +45,9 @@ class Style extends Model implements Auditable
         return $this->BelongsToMany(Factory::class);
     }
 
-    public function type(): BelongsTo
+    public function itemType(): BelongsTo
     {
-        return $this->belongsTo(ItemType::class, 'type_id');
+        return $this->belongsTo(ItemType::class, 'item_type_id');
     }
 
     public function panels(): HasMany
@@ -63,5 +63,15 @@ class Style extends Model implements Auditable
     public function scopeExternal(): Builder
     {
         return $this->where('belongs_to', self::EXTERNAL);
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    public function parentStyle(): BelongsTo
+    {
+        return $this->belongsTo(Style::class, 'parent_style_id');
     }
 }

@@ -31,7 +31,8 @@
                       :headers="[
                         {key: 'code', name: 'Code', width: '200px'},
                         {key: 'name', name: 'Name'},
-                        {key: 'type.name', name: 'Type'},
+                        {key: 'styles_type', name: 'Style Type'},
+                        {key: 'item_type.name', name: 'Item Type'},
                       ]"
                     >
                         <el-table-column

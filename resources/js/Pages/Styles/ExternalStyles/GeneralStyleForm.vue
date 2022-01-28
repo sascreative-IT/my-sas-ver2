@@ -440,11 +440,7 @@ export default {
 }
 </script>
 
-<style >
-#vs3__listbox {
-    background-color: green !important;
-    z-index: 100;
-}
+<style>
 
 .dropdown-menu {
     z-index:10030 !important;
