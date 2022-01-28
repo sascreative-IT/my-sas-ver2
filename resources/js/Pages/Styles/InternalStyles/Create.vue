@@ -43,22 +43,28 @@
 
                                     <div
                                         class="mt-1 pb-4 border-dotted h-48 rounded-lg border-dashed border-2 border-gray-400 flex justify-center items-center">
-                                        <div
-                                            class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden">
-                                            <img class="w-32" alt="uploaded-file-thumbnail">
-                                        </div>
+
                                         <div class="p-2 flex flex-col justify-between leading-normal">
                                             <label
-                                                class="bg-gray-300 w-52 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded inline-flex items-center">
-                                                <i class="fas fa-file-upload fa-lg"></i>
-                                                <span class="pl-2">Upload the image</span>
+                                                class="w-52 py-2 px-4 rounded inline-flex items-center">
                                                 <input
-                                                    ref="logo" type="file"
-                                                    class="opacity-0 w-2"
                                                     name="style_image"
                                                     id="style_image"
+                                                    type="file"
+                                                    @change="previewImage"
+                                                    ref="style_code_image"
+                                                    class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none"
                                                 />
                                             </label>
+                                        </div>
+
+                                        <div
+                                            class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden">
+                                            <img
+                                                v-if="url"
+                                                :src="url"
+                                                class="mt-4 h-32"
+                                            />
                                         </div>
                                     </div>
 
@@ -76,12 +82,12 @@
                                             Type
                                         </label>
 
-                                        <el-radio v-model="style_code_type" label="General">General</el-radio>
-                                        <el-radio v-model="style_code_type" label="Customized">Customized</el-radio>
-                                        <el-radio v-model="style_code_type" label="New Customized">New Customized</el-radio>
+                                        <el-radio @input="setStyleType" v-model="styleForm.styles_type" label="General">General</el-radio>
+                                        <el-radio @input="setStyleType" v-model="styleForm.styles_type" label="Customized">Customized</el-radio>
+                                        <el-radio @input="setStyleType" v-model="styleForm.styles_type" label="New Customized">New Customized</el-radio>
                                     </div>
 
-                                    <div v-if="style_code_type !== 'General'">
+                                    <div v-if="styleForm.styles_type !== 'General'">
                                     <div class="pt-2 pb-4">
 
                                         <label
@@ -93,7 +99,7 @@
 
                                         <v-select
                                             id="customer_name"
-                                            v-model="styleForm.customer_id"
+                                            v-model="styleForm.customer"
                                             label="name"
                                             item-id="id"
                                             :options="customers"
@@ -101,18 +107,18 @@
                                             @input="setSelectedCustomerId"
                                         ></v-select>
                                     </div>
-                                    <div class="pt-2 pb-4" v-if="style_code_type === 'Customized'">
+                                    <div class="pt-2 pb-4" v-if="styleForm.styles_type === 'Customized'">
                                         <div class="pt-2 pb-4">
 
-                                            <label for="extending_style_code"
+                                            <label for="parent_style_code"
                                                    class="block text-base font-medium text-gray-700">
                                                 Extending Style code
                                             </label>
 
                                             <v-select
-                                                :disabled="style_code_type === 'General'"
-                                                id="extending_style_code"
-                                                v-model="styleForm.extending_style"
+                                                :disabled="styleForm.styles_type === 'General'"
+                                                id="parent_style_code"
+                                                v-model="styleForm.parent_style"
                                                 :options="styles"
                                                 label="name"
                                                 item-id="id"
@@ -144,7 +150,7 @@
                                 :factories="factories"
                                 v-model="styleForm"
                                 :errors="errors"
-                                :styleCodeType="style_code_type"
+                                :styleCodeType="styleForm.styles_type"
                             ></general-style-form>
                         </div>
                         <!--                        <div v-show="show_customized_form && is_customized">-->
@@ -222,6 +228,12 @@ export default {
         },
         parentStyleCode: {
             type: Object
+        },
+        styleType: {
+            type: String
+        },
+        customer: {
+            type: String
         }
     },
     components: {
@@ -245,14 +257,27 @@ export default {
             },
             reset_forms: false,
             styleForm: {},
-            style_code_type: "General"
+            url: null,
         }
     },
     mounted() {
         this.styleForm = this.styleData
-        if (this.parentStyleCode !== null) {
+        this.styleForm.styles_type = "General"
+        if (this.parentStyleCode !== null && (typeof this.parentStyleCode  != 'undefined')) {
             this.styleForm = this.parentStyleCode;
+            this.styleForm.parent_style_code = this.parentStyleCode.code;
         }
+
+        if (this.styleType != null) {
+            this.styleForm.styles_type = this.styleType
+        }
+
+        if (this.customer != null) {
+            this.styleForm.customer = this.customers.find(item => {
+                return item.id == this.customer
+            });
+        }
+
     },
     methods: {
         selectStyleType() {
@@ -277,6 +302,10 @@ export default {
             }
         },
         save() {
+            if (this.$refs.style_code_image) {
+                this.styleForm.image = this.$refs.style_code_image.files[0];
+            }
+
             if (this.styleForm.id !== null) {
                 this.$inertia.put('/internal-styles/' + this.styleForm.id, this.styleForm)
             } else {
@@ -293,18 +322,60 @@ export default {
                 onSuccess: () => {
                     if (this.parentStyleCode !== null) {
                         this.styleForm = this.parentStyleCode;
-                        this.styleForm.extending_style_id = value.id;
-                        this.styleForm.extending_style = {
+                        this.styleForm.parent_style_code = this.parentStyleCode.code;
+                        this.styleForm.code = "";
+                        this.styleForm.name = "";
+                        this.styleForm.id = null;
+                        this.styleForm.parent_style_id = value.id;
+                        this.styleForm.parent_style = {
                             'id' : value.id,
                             'name' : value.name,
                         };
+
+                        if (this.styleType != null) {
+                            this.styleForm.styles_type = this.styleType
+                        }
+
+                        if (this.customer != null) {
+                            this.styleForm.customer = this.customers.find(item => {
+                                return item.id == this.customer
+                            });
+                        }
                     }
                 },
             })
         },
         setSelectedCustomerId(value) {
-            this.styleForm.customer_id = value;
-        }
+            this.styleForm.customer = value;
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    customer: value
+                }
+            })
+
+        },
+        setStyleType(value) {
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    type: value
+                },
+                onSuccess: () => {
+                    this.styleForm.styles_type = this.styleType
+
+                    if (this.styleType != null) {
+                        this.styleForm.styles_type = this.styleType
+                    }
+                }
+            })
+        },
+        previewImage(e) {
+            const file = e.target.files[0];
+            this.url = URL.createObjectURL(file);
+        },
     }
 }
 </script>

@@ -13,11 +13,12 @@ class Style extends DataTransferObject
     public ?string $belongs_to;
     public ?string $code;
     public ?string $name;
-    public ?Type $type;
+    public ?string $styles_type;
+    public ?Type $item_type;
     public ?string $description;
     public ?Customer $customer;
-    public ?int $extending_style_id;
-    public ?array $images;
+    public ?ParentStyle $parent_style;
+    public ?string $style_image;
     public ?int $production_time;
 
     public ?string $status;

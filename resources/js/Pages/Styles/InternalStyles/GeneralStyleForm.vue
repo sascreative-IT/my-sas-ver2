@@ -12,7 +12,6 @@
                                        class="block text-sm font-medium text-gray-700">
                                     Style code</label>
                                 <input type="text" name="style_code_general_style"
-                                       :disabled="(styleCodeType == 'Customized')"
                                        v-model="form.code"
                                        id="style_code_general_style"
                                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -50,10 +49,11 @@
                         <div class="col-span-1 sm:col-span-1">
                             <label for="style_code_general_style"
                                    class="block text-sm font-medium text-gray-700">
-                                Extended Style code</label>
-                            <input type="text" name="extended_style_code"
-                                   v-model="form.extended_style_code"
-                                   id="extended_style_code"
+                                Parent Style code</label>
+                            <input type="text" name="parent_style_code"
+                                   :disabled="(styleCodeType == 'Customized')"
+                                   v-model="form.parent_style_code"
+                                   id="parent_style_code"
                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                         </div>
                             </div>
@@ -83,7 +83,7 @@
                                   option-label="name"
                                   no-data-text="No Categories available"
                                   no-match-text="Category not found"
-                                  v-model="form.type"
+                                  v-model="form.item_type"
                                   placeholder="Select Type"
                                 ></app-select>
                             </div>

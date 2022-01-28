@@ -28,6 +28,7 @@ class InternalStylesController extends Controller
         /** @var Collection $internalStyles */
         $internalStyles = Style::query()
             ->internal()
+            ->with('itemType')
             ->when($q, function ($query, $q) {
                 return $query
                     ->where('code', 'like', "%{$q}%")
@@ -35,8 +36,6 @@ class InternalStylesController extends Controller
             })
             ->paginate()
             ->withQueryString();
-
-        $internalStyles->loadMissing(['type']);
 
         return Inertia::render('Styles/InternalStyles/Index', [
             'internal-styles' => $internalStyles
@@ -64,7 +63,7 @@ class InternalStylesController extends Controller
         if ($request->has('parent_id')) {
             $parent_id = $request->get('parent_id');
             $parent_style_code = Style::find($parent_id);
-            $parent_style_code->load(['type', 'categories', 'sizes', 'factories', 'panels.consumption']);
+            $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
         }
 
 
@@ -83,12 +82,20 @@ class InternalStylesController extends Controller
             'factories' => $factories,
             'materials' => $materials,
             'styles' => $styles,
-            'parentStyleCode' => $parent_style_code
+            'parentStyleCode' => $parent_style_code,
+            'styleType' => $request->get('type'),
+            'customer' => $request->get('customer'),
         ]);
     }
 
     public function store(StyleStoreRequest $request)
     {
+        $image_path = '';
+
+        if ($request->hasFile('image')) {
+            $image_path = $request->file('image')->store('style_images', 'public');
+        }
+        $request->merge(['style_image' => $image_path]);
         $style = resolve(CreateStyle::class)->execute($request->toDto());
         return Redirect::route('style.internal.edit', [$style->id])->with(['message' => 'successfully updated']);
     }
@@ -110,7 +117,7 @@ class InternalStylesController extends Controller
         $materials = $materialRepository->getAll();
 
 
-        $style->load(['type', 'categories', 'sizes', 'factories', 'panels.consumption']);
+        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
         $styleDto = new StyleDto($style->toArray());
 
         return Inertia::render('Styles/InternalStyles/Create', [

@@ -17,11 +17,12 @@ class AlterStylesTableAddTypeAndExtendedStyleCode extends Migration
             $table->dropForeign('styles_type_id_foreign');
             $table->string('styles_type')->after('name')->nullable();
             $table->string('extended_style_code')->after('description')->nullable();
+            $table->string('style_image')->after('description')->nullable();
             $table->renameColumn('type_id', 'item_type_id');
         });
 
         Schema::table('styles', function (Blueprint $table) {
-            $table->foreignId('extended_style_id')
+            $table->foreignId('parent_style_id')
                 ->after('customer_id')
                 ->nullable()
                 ->constrained('styles');
@@ -45,6 +46,7 @@ class AlterStylesTableAddTypeAndExtendedStyleCode extends Migration
             $table->renameColumn('item_type_id', 'type_id');
             $table->dropColumn('styles_type');
             $table->dropColumn('extended_style_code');
+            $table->dropColumn('style_image');
         });
 
         Schema::table('styles', function (Blueprint $table) {
@@ -54,8 +56,8 @@ class AlterStylesTableAddTypeAndExtendedStyleCode extends Migration
                 ->onDelete('cascade');
 
             $table->dropForeign('styles_item_type_id_foreign');
-            $table->dropForeign('styles_extended_style_id_foreign');
-            $table->dropColumn('extended_style_id');
+            $table->dropForeign('styles_parent_style_id_foreign');
+            $table->dropColumn('parent_style_id');
         });
     }
 }

@@ -33,7 +33,7 @@ class ExternalStylesController extends Controller
             ->paginate()
             ->withQueryString();
 
-        $internalStyles->loadMissing(['type']);
+        $internalStyles->loadMissing(['itemType']);
 
         return Inertia::render('Styles/ExternalStyles/Index', [
             'internal-styles' => $internalStyles
@@ -98,7 +98,7 @@ class ExternalStylesController extends Controller
         $materials = $materialRepository->getAll();
 
 
-        $style->load(['type', 'categories', 'sizes', 'factories', 'panels.consumption']);
+        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
         $styleDto = new StyleDto($style->toArray());
 
         return Inertia::render('Styles/ExternalStyles/Create', [

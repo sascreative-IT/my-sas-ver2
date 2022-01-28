@@ -45,9 +45,9 @@ class Style extends Model implements Auditable
         return $this->BelongsToMany(Factory::class);
     }
 
-    public function type(): BelongsTo
+    public function itemType(): BelongsTo
     {
-        return $this->belongsTo(ItemType::class, 'type_id');
+        return $this->belongsTo(ItemType::class, 'item_type_id');
     }
 
     public function panels(): HasMany
