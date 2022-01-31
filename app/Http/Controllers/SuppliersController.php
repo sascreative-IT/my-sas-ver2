@@ -11,6 +11,7 @@ use App\Models\MaterialSupplier;
 use App\Models\Supplier;
 use App\Models\SupplierContact;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class SuppliersController extends Controller
@@ -29,6 +30,7 @@ class SuppliersController extends Controller
 
     public function create()
     {
+        return Redirect::route('suppliers.edit', [12])->with(['message' => 'successfully created']);
         return Inertia::render('Suppliers/SupplierAdd',
             [
                 'crudAction' => 'create'
@@ -48,7 +50,7 @@ class SuppliersController extends Controller
         ];
         $savedSupplier = Supplier::query()->create($supplier);
 
-        return Redirect::route('suppliers.edit', [$savedSupplier->id]);
+        return Redirect::route('suppliers.edit', [$savedSupplier->id])->with(['message' => 'successfully created']);
     }
 
     public function edit(Supplier $supplier)

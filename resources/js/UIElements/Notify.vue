@@ -39,12 +39,24 @@ export default {
             deep: true,
             handler() {
                 this.visible = true;
+                /*
+                if (Object.keys(this.flash.errors).length !== 0) {
+                    this.flash.message = "Required fields are missing!";
+                }
+                 */
                 if(this.timeout || this.flash.message === "") {
                     clearTimeout(this.timeout);
                 }
                 this.timeout = setTimeout(() => this.visible = false, 2000);
             }
         }
+    },
+    mounted() {
+        console.log(".....",this.flash)
+        if (this.flash.message !== null) {
+            this.visible = true;
+        }
+
     }
 }
 </script>

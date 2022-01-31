@@ -366,6 +366,7 @@
 
             <!-- Page Content -->
             <main>
+                <Notify :flash="$page.props.flash"></Notify>
                 <slot></slot>
             </main>
 
@@ -384,6 +385,7 @@ import JetDropdownLink from '@/Jetstream/DropdownLink'
 import JetNavLink from '@/Jetstream/NavLink'
 import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
 import MenuDropdown from "@/UIElements/MenuDropdown";
+import Notify from "@/UIElements/Notify";
 
 export default {
     components: {
@@ -393,9 +395,12 @@ export default {
         JetDropdownLink,
         JetNavLink,
         JetResponsiveNavLink,
-        MenuDropdown
+        MenuDropdown,
+        Notify
     },
-
+    props: {
+        flash: Object
+    },
     data() {
         return {
             showingNavigationDropdown: false,
