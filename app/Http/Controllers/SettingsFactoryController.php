@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -37,11 +37,15 @@ class SettingsFactoryController extends Controller
 
     public function store(StoreFactoryRequest $request)
     {
-        $validated = $request->validated();
-        Factory::create($validated);
+        try {
+            $validated = $request->validated();
+            Factory::create($validated);
 
-        return Redirect::route('settings.factories.index')
-            ->with(['message' => 'successfully updated']);
+            return Redirect::route('settings.factories.index')
+                ->with(['message' => 'successfully updated']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function edit(Factory $factory)
@@ -59,16 +63,20 @@ class SettingsFactoryController extends Controller
 
     public function update(Factory $factory, StoreFactoryRequest $request)
     {
-        $validated = $request->validated();
-        $factory->update($validated);
+        try {
+            $validated = $request->validated();
+            $factory->update($validated);
 
-        return Redirect::route('settings.factories.index')
-            ->with(['message' => 'The record successfully updated.']);
+            return Redirect::route('settings.factories.index')
+                ->with(['message' => 'The record successfully updated.']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function delete(Factory $factory)
     {
-        try{
+        try {
             $factory->delete();
             return Redirect::route('settings.factories.index')
                 ->with(['message' => 'The record successfully deleted.']);

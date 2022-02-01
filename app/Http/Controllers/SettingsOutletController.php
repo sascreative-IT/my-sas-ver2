@@ -36,10 +36,15 @@ class SettingsOutletController extends Controller
 
     public function store(StoreOutletRequest $request)
     {
-        $validated = $request->validated();
-        Outlet::create($validated);
+        try {
+            $validated = $request->validated();
+            Outlet::create($validated);
 
-        return Redirect::route('settings.outlets.index');
+            return Redirect::route('settings.outlets.index')
+                ->with(['message' => 'successfully saved']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function edit(Outlet $outlet)
@@ -57,17 +62,27 @@ class SettingsOutletController extends Controller
 
     public function update(Outlet $outlet, UpdateOutletRequest $request)
     {
-        $validated = $request->validated();
-        $outlet->update($validated);
+        try {
+            $validated = $request->validated();
+            $outlet->update($validated);
 
-        return Redirect::route('settings.outlets.index');
+            return Redirect::route('settings.outlets.index')
+                ->with(['message' => 'successfully saved']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function delete(Outlet $outlet)
     {
-        $outlet->delete();
+        try {
+            $outlet->delete();
 
-        return Redirect::route('settings.outlets.index');
+            return Redirect::route('settings.outlets.index')
+                ->with(['message' => 'successfully deleted']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
 }

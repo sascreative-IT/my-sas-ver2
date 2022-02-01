@@ -12,24 +12,44 @@ class SupplierContactsController extends Controller
 {
     public function store(StoreSupplierContactRequest $request)
     {
-        SupplierContact::query()->create($request->all());
+        try {
+            SupplierContact::query()->create($request->all());
 
-        return Redirect::route('suppliers.edit', [$request->input('supplier_id')])->with(['message' => 'successfully saved']);
+            return Redirect::route('suppliers.edit',
+                [$request->input('supplier_id')])
+                ->with(['message' => 'successfully saved']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function update(SupplierContact $supplierContact, UpdateSupplierContactRequest $request)
     {
-        $validated = $request->validated();
-        $supplierContact->fill($validated);
-        $supplierContact->save();
+        try {
+            $validated = $request->validated();
+            $supplierContact->fill($validated);
+            $supplierContact->save();
 
-        return Redirect::route('suppliers.edit', ['supplier' =>  $supplierContact->supplier_id])->with(['message' => 'successfully updated']);
+            return Redirect::route('suppliers.edit',
+                ['supplier' => $supplierContact->supplier_id])->with(['message' => 'successfully updated']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->with(['message' => $ex->getMessage(), 'type' => 'error']);
+        }
     }
 
     public function delete(SupplierContact $supplierContact)
     {
-        $supplierContact->delete();
+        try {
+            $supplierContact->delete();
 
-        return Redirect::route('suppliers.edit', ['supplier' =>  $supplierContact->supplier_id])->with(['message' => 'successfully deleted']);
+            return Redirect::route('suppliers.edit',
+                ['supplier' => $supplierContact->supplier_id])
+                ->with(['message' => 'successfully deleted']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->with(['message' => $ex->getMessage(), 'type' => 'error']);
+        }
     }
 }

@@ -112,9 +112,13 @@ class StockOutController extends Controller
         StockOutRequest $stockOutRequest
     ) {
 
-        $stockOutData = StockOutData::fromRequest($stockOutRequest);
-        $stockOutAction->execute($stockOutData);
-        return Redirect::route('inventory.index')
-            ->with('success', 'Record has been saved successfully.');
+        try {
+            $stockOutData = StockOutData::fromRequest($stockOutRequest);
+            $stockOutAction->execute($stockOutData);
+            return Redirect::route('inventory.index')
+                ->with('success', 'Record has been saved successfully.');
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 }

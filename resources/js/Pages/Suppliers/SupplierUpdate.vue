@@ -1,6 +1,5 @@
 <template>
     <app-layout>
-        <Notify :flash="$page.props.flash"></Notify>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Update Supplier - {{ initSupplier.name }}
@@ -25,13 +24,11 @@
 
 <script>
 import SupplierForm from "@/Pages/Suppliers/SupplierForm";
-import Notify from "@/UIElements/Notify";
 
 export default {
     name: "SupplierUpdate",
     components: {
-        SupplierForm,
-        Notify
+        SupplierForm
     },
     props: {
         crudAction: {
@@ -61,8 +58,7 @@ export default {
         materialSuppliers: {
             required: false,
             type: Array
-        },
-        flash: Object
+        }
     },
     methods: {
         onSubmit(supplier) {

@@ -26,13 +26,13 @@ class StoreSupplierContactRequest extends FormRequest
     public function rules()
     {
         return [
-//            'first_name' => 'required|string|min:2|max:100',
-//            'last_name' => 'required|string|min:2|max:100',
-//            'email' => 'required|email',
-//            'contact_number' => 'required|string|min:10|max:15',
-//            'designation' => 'string|max:100',
-//            'type' => ['required', Rule::in(SupplierContact::$types)],
-//            'supplier_id' => 'required|integer'
+           'first_name' => 'required|string|min:2|max:100',
+            'last_name' => 'required|string|min:2|max:100',
+            'email' => 'required|email',
+            'contact_number' => 'required|string|min:10|max:15',
+            'designation' => 'string|max:100',
+            'type' => ['required', Rule::in(SupplierContact::$types)],
+            'supplier_id' => 'required|integer'
         ];
     }
 

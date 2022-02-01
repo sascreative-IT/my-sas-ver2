@@ -50,7 +50,7 @@ class FactoryOrderController extends Controller
             ->get();
 
         $customers = Customer::query()
-            ->select('id','name','cs_agent_id','sales_agent_id')
+            ->select('id', 'name', 'cs_agent_id', 'sales_agent_id')
             ->get();
 
         $users = User::query()->get();
@@ -95,78 +95,83 @@ class FactoryOrderController extends Controller
 //            'customer_service_by_id' => User::find(1)->id,
 //        ]);
 
-        $order = [
-            'public_id' => 'SAS ' . random_int(100, 1000),
-            'factory_id' => $request->input('factory.id'),
-            'type' => 'direct',
-            'production_requirement' => 'make',
-            'customer_id' => $request->input('customer.id'),
-            'sale_made_by_id' => $request->input('sale_made_by.id.id'),
-            'customer_service_by_id' => $request->input('customer_service_by.id.id'),
-        ];
+        try {
+            $order = [
+                'public_id' => 'SAS ' . random_int(100, 1000),
+                'factory_id' => $request->input('factory.id'),
+                'type' => 'direct',
+                'production_requirement' => 'make',
+                'customer_id' => $request->input('customer.id'),
+                'sale_made_by_id' => $request->input('sale_made_by.id.id'),
+                'customer_service_by_id' => $request->input('customer_service_by.id.id'),
+            ];
 
-        // move to action...
-        $createdOrder = $this->orderRepository->createOrder($order);
+            // move to action...
+            $createdOrder = $this->orderRepository->createOrder($order);
 
-        foreach ($request->input('items') as $item) {
+            foreach ($request->input('items') as $item) {
 
-            $orderItem = $this->orderRepository->createOrderItem([
-                'order_id' => $createdOrder->id,
-                'style_id' => $item['style']['id'],
-                'production_type' => 'cut-and-saw',
-                'price' => $item['price']
-            ]);
+                $orderItem = $this->orderRepository->createOrderItem([
+                    'order_id' => $createdOrder->id,
+                    'style_id' => $item['style']['id'],
+                    'production_type' => 'cut-and-saw',
+                    'price' => $item['price']
+                ]);
 
-            foreach ($item['sizes'] as $size) {
+                foreach ($item['sizes'] as $size) {
 
-                $orderItemSize = $this->orderRepository->createOrderItemSize([
-                    'order_item_id' => $orderItem->id,
-                    'size_id' => $size['id'],
-                    'quantity' => $size['quantity'],
-                    'unit_price' => $size['price'],
-                    'total_price' => $size['price'],
-                ], $orderItem);
+                    $orderItemSize = $this->orderRepository->createOrderItemSize([
+                        'order_item_id' => $orderItem->id,
+                        'size_id' => $size['id'],
+                        'quantity' => $size['quantity'],
+                        'unit_price' => $size['price'],
+                        'total_price' => $size['price'],
+                    ], $orderItem);
 
+                }
+
+                foreach ($item['panels'] as $panel) {
+                    $this->orderRepository->createOrderItemPanel([
+                        'panel_id' => $panel['id'],
+                        'fabric_id' => $panel['fabric']['id'],
+                        'fabric_variation_id' => $panel['fabric_variation'] ?? null,
+                    ], $orderItem);
+
+                    $sizeIds = collect($item['sizes'])->pluck('id');
+                    $toReduce = StylePanelConsumption::query()
+                        ->where('style_panel_id', $panel['id'])
+                        ->whereIn('size_id', $sizeIds->toArray())
+                        ->sum('amount');
+
+                    $inventory = MaterialInventory::query()
+                        ->where('material_variation_id', $panel['fabric_variation'])
+                        ->where('factory_id', $request->input('factory.id'))
+                        ->get();
+
+                    $inventory = $inventory->first();
+
+                    InventoryReserv::create([
+                        'material_inventory_id' => $inventory->id,
+                        'order_id' => $order->id,
+                        'quantity' => $toReduce
+                    ]);
+
+                    $inventory->refresh()->update([
+                        'allocated_quantity' => ($inventory->allocated_quantity + $toReduce),
+                    ]);
+
+                    $inventory->refresh()->update([
+                        'usable_quantity' => ($inventory->available_quantity - $inventory->allocated_quantity),
+                    ]);
+                }
             }
 
-            foreach ($item['panels'] as $panel) {
-                $this->orderRepository->createOrderItemPanel([
-                    'panel_id' => $panel['id'],
-                    'fabric_id' => $panel['fabric']['id'],
-                    'fabric_variation_id' => $panel['fabric_variation'] ?? null,
-                ],$orderItem);
+            event(new OrderCreated($order));
+            return redirect()->to('/factory')->with(['message' => 'successfully saved']);
 
-                $sizeIds = collect($item['sizes'])->pluck('id');
-                $toReduce = StylePanelConsumption::query()
-                    ->where('style_panel_id', $panel['id'])
-                    ->whereIn('size_id', $sizeIds->toArray())
-                    ->sum('amount');
-
-                $inventory = MaterialInventory::query()
-                    ->where('material_variation_id', $panel['fabric_variation'])
-                    ->where('factory_id', $request->input('factory.id'))
-                    ->get();
-
-                $inventory = $inventory->first();
-
-                InventoryReserv::create([
-                    'material_inventory_id' => $inventory->id,
-                    'order_id' => $order->id,
-                    'quantity' => $toReduce
-                ]);
-
-                $inventory->refresh()->update([
-                    'allocated_quantity' => ($inventory->allocated_quantity + $toReduce),
-                ]);
-
-                $inventory->refresh()->update([
-                    'usable_quantity' => ($inventory->available_quantity - $inventory->allocated_quantity),
-                ]);
-            }
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
         }
-
-        event(new OrderCreated($order));
-        return redirect()->to('/factory');
     }
 
     public function show(Request $request)

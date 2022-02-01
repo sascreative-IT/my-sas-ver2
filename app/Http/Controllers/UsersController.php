@@ -23,8 +23,8 @@ class UsersController extends Controller
             ->with(['roles', 'erpUserDetails.factory'])
             ->when($q, function ($query, $q) {
                 return $query
-                    ->where('name','like', "%{$q}%")
-                    ->orWhere('email','like', "%{$q}%");
+                    ->where('name', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%");
             })
             ->paginate()
             ->withQueryString();
@@ -44,25 +44,29 @@ class UsersController extends Controller
 
     public function store(StoreUserRequest $request)
     {
-        $password = $this->generateRandomPassword();
-        $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => $password,
-        ]);
+        try {
+            $password = $this->generateRandomPassword();
+            $user = User::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'password' => $password,
+            ]);
 
-        $user->assignRole($request->input('selected_roles'));
-        $user->factories()->sync($request->input('selected_factories'));
+            $user->assignRole($request->input('selected_roles'));
+            $user->factories()->sync($request->input('selected_factories'));
 
-        ErpUserDetail::create([
-            'user_id' => $user->id,
-            'contact_number' => $request->input('contact_number'),
-            'factory_id' => $request->input('selected_factory_id'),
-        ]);
+            ErpUserDetail::create([
+                'user_id' => $user->id,
+                'contact_number' => $request->input('contact_number'),
+                'factory_id' => $request->input('selected_factory_id'),
+            ]);
 
-        dispatch(new SendWelcomeEmailToUser($user, $password));
-        return redirect()->route('users.index')
-            ->with(['message' => 'user account created successfully.']);
+            dispatch(new SendWelcomeEmailToUser($user, $password));
+            return redirect()->route('users.index')
+                ->with(['message' => 'user account created successfully.']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function edit(User $user)
@@ -72,32 +76,41 @@ class UsersController extends Controller
             [
                 'factories' => Factory::all()->toArray(),
                 'roles' => \Spatie\Permission\Models\Role::select('name')->get(),
-                'initUser' => $user->loadMissing(['roles', 'erpUserDetails.factory','factories'])->toArray()
+                'initUser' => $user->loadMissing(['roles', 'erpUserDetails.factory', 'factories'])->toArray()
             ],
         );
     }
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->save();
-        $user->erpUserDetails()->update([
-            'factory_id' => $request->input('selected_factory_id'),
-            'contact_number' => $request->input('contact_number'),
-        ]);
-        $user->syncRoles($request->input('selected_roles'));
-        $user->factories()->sync($request->input('selected_factories'));
-        return redirect()->route('users.index')
-            ->with(['message' => 'user account created successfully.']);
+        try {
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->save();
+            $user->erpUserDetails()->update([
+                'factory_id' => $request->input('selected_factory_id'),
+                'contact_number' => $request->input('contact_number'),
+            ]);
+            $user->syncRoles($request->input('selected_roles'));
+            $user->factories()->sync($request->input('selected_factories'));
+            return redirect()->route('users.index')
+                ->with(['message' => 'user account created successfully.']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function resetPassword(ResetPasswordRequest $request, User $user)
     {
-        $user->password = $request->input('password');
-        $user->save();
+        try {
+            $user->password = $request->input('password');
+            $user->save();
 
-        return Redirect::route('users.edit', [$user->id])->with(['message' => 'password updated']);
+            return Redirect::route('users.edit', [$user->id])
+                ->with(['message' => 'password updated']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function deactivateUser(\Illuminate\Http\Request $request)

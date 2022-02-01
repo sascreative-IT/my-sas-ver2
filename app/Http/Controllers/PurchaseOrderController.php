@@ -72,7 +72,8 @@ class PurchaseOrderController extends Controller
         $currencies = Currency::all();
 
         if ($request->filled('supplier_id')) {
-            $suplier_materials = MaterialSupplier::with('variation','variation.material')->where("supplier_id", $request->get('supplier_id'))->get();
+            $suplier_materials = MaterialSupplier::with('variation', 'variation.material')->where("supplier_id",
+                $request->get('supplier_id'))->get();
             $material_ids = [];
             foreach ($suplier_materials as $suplier_material) {
                 if ($suplier_material->variation->material) {
@@ -87,7 +88,7 @@ class PurchaseOrderController extends Controller
         $material = null;
         if ($request->filled('material_id')) {
             $material = Materials::find($request->get('material_id'));
-            $colorIds = MaterialVariation::where("material_id",$request->get('material_id'))
+            $colorIds = MaterialVariation::where("material_id", $request->get('material_id'))
                 ->pluck("colour_id")
                 ->toArray();
             $colours = Colour::whereIn('id', $colorIds)->get();
@@ -95,9 +96,9 @@ class PurchaseOrderController extends Controller
 
         $material_variations = null;
         if ($request->filled('material_id') && $request->filled('color_id')) {
-            $material_variations = MaterialVariation::where("material_id",$request->get('material_id'))
-            ->where("colour_id",$request->get('color_id'))
-            ->first();
+            $material_variations = MaterialVariation::where("material_id", $request->get('material_id'))
+                ->where("colour_id", $request->get('color_id'))
+                ->first();
         }
 
 
@@ -121,15 +122,22 @@ class PurchaseOrderController extends Controller
         StorePurchaseOrderRequest $purchaseOrderRequest
     ): \Illuminate\Http\RedirectResponse {
 
-        $purchaseOrderData = PurchaseOrderData::fromRequest($purchaseOrderRequest);
-        $createPurchaseOrderAction->execute($purchaseOrderData);
+        try {
+            $purchaseOrderData = PurchaseOrderData::fromRequest($purchaseOrderRequest);
+            $createPurchaseOrderAction->execute($purchaseOrderData);
 
-        return Redirect::route('purchase.orders.index')->with(['message' => 'successfully updated']);
+            return Redirect::route('purchase.orders.index')
+                ->with(['message' => 'successfully updated']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function show(MaterialPurchaseOrder $purchase_order)
     {
-        $purchase_order = MaterialPurchaseOrder::with('items','supplier','assignedFactory')->find($purchase_order->id);
+        $purchase_order = MaterialPurchaseOrder::with('items', 'supplier',
+            'assignedFactory')->find($purchase_order->id);
         $materials = Materials::all();
         $colours = Colour::all();
         $suppliers = Supplier::all();
@@ -140,8 +148,6 @@ class PurchaseOrderController extends Controller
         $factories = Factory::all();
 
         $currencies = Currency::all();
-
-
 
 
         return Inertia::render(

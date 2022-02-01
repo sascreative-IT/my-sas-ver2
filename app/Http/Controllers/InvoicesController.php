@@ -34,7 +34,7 @@ class InvoicesController extends Controller
 
         $materialPurchaseOrder = MaterialPurchaseOrder::with(
             'items', 'assignedFactory', 'supplier'
-            )
+        )
             ->find($materialPurchaseOrder->id);
 
         $currencies = Currency::all();
@@ -61,28 +61,34 @@ class InvoicesController extends Controller
 
     public function store(CreateInvoices $createInvoices, Request $request)
     {
-        $invoiceDto = new Invoice();
-        $invoiceDto->number = $request->input('number');
-        $invoiceDto->poNumber = $request->input('po_number');
-        $invoiceDto->invoicedDate = $request->input('invoiced_date');
-        $invoiceDto->factory = Factory::find($request->input('factory_id'));
-        $invoiceDto->supplier = Supplier::find($request->input('supplier_id'));
+        try {
+            $invoiceDto = new Invoice();
+            $invoiceDto->number = $request->input('number');
+            $invoiceDto->poNumber = $request->input('po_number');
+            $invoiceDto->invoicedDate = $request->input('invoiced_date');
+            $invoiceDto->factory = Factory::find($request->input('factory_id'));
+            $invoiceDto->supplier = Supplier::find($request->input('supplier_id'));
 
-        $invoiceDto->items = collect($request->input('items'))->map(function ($inputItem, $index) {
-            $item = new InvoiceItem();
-            $item->material = Materials::find($inputItem['material_name_id']);
-            $item->colour = Colour::find($inputItem['material_colour_id']);
-            $item->unit_price = $inputItem['unit_price'];
-            $item->quantity = $inputItem['quantity'];
-            $item->sub_total = $inputItem['sub_total'];
-            $item->currency = $inputItem['currency'];
+            $invoiceDto->items = collect($request->input('items'))->map(function ($inputItem, $index) {
+                $item = new InvoiceItem();
+                $item->material = Materials::find($inputItem['material_name_id']);
+                $item->colour = Colour::find($inputItem['material_colour_id']);
+                $item->unit_price = $inputItem['unit_price'];
+                $item->quantity = $inputItem['quantity'];
+                $item->sub_total = $inputItem['sub_total'];
+                $item->currency = $inputItem['currency'];
 
-            return $item;
-        })->toArray();
+                return $item;
+            })->toArray();
 
-        $createInvoices->execute($invoiceDto);
+            $createInvoices->execute($invoiceDto);
 
-        return Redirect::route('inventory.index');
+            return Redirect::route('inventory.index')
+                ->with(['message' => 'successfully saved']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function show(MaterialInvoice $invoice)

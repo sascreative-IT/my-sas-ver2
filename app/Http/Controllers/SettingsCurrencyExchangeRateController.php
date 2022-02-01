@@ -45,10 +45,16 @@ class SettingsCurrencyExchangeRateController extends Controller
 
     public function store(StoreCurrencyExchangeRequest $request): \Illuminate\Http\RedirectResponse
     {
-        $currencyData = new CurrencyExchangeRateData(...$request->validated());
-        (new CreateCurrencyExchangeRateAction())->execute($currencyData);
+        try {
+            $currencyData = new CurrencyExchangeRateData(...$request->validated());
+            (new CreateCurrencyExchangeRateAction())->execute($currencyData);
 
-        return Redirect::route('settings.currency-exchange-rates.index');
+            return Redirect::route('settings.currency-exchange-rates.index')
+                ->with(['message' => 'successfully saved']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function edit(CurrencyExchangeRate $currencyExchangeRate)
@@ -66,16 +72,27 @@ class SettingsCurrencyExchangeRateController extends Controller
 
     public function update(CurrencyExchangeRate $currencyExchangeRate, StoreCurrencyExchangeRequest $request)
     {
-        $currencyExchangeRateData = new CurrencyExchangeRateData(...$request->validated());
-        (new UpdateCurrencyExchangeRateAction())->execute($currencyExchangeRateData, $currencyExchangeRate);
+        try {
+            $currencyExchangeRateData = new CurrencyExchangeRateData(...$request->validated());
+            (new UpdateCurrencyExchangeRateAction())->execute($currencyExchangeRateData, $currencyExchangeRate);
 
-        return Redirect::route('settings.currency-exchange-rates.index');
+            return Redirect::route('settings.currency-exchange-rates.index')
+                ->with(['message' => 'successfully saved']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function delete(CurrencyExchangeRate $currencyExchangeRate)
     {
-        (new DeleteCurrencyExchangeRateAction())->execute($currencyExchangeRate);
+        try {
+            (new DeleteCurrencyExchangeRateAction())->execute($currencyExchangeRate);
 
-        return Redirect::route('settings.currency-exchange-rates.index');
+            return Redirect::route('settings.currency-exchange-rates.index')
+                ->with(['message' => 'successfully deleted']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 }

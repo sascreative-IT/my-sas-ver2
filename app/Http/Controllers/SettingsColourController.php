@@ -21,7 +21,7 @@ class SettingsColourController extends Controller
             ->with('type')
             ->when($q, function ($query, $q) {
                 return $query
-                    ->where('name','like', "%{$q}%");
+                    ->where('name', 'like', "%{$q}%");
             })
             ->paginate()
             ->withQueryString();
@@ -46,10 +46,14 @@ class SettingsColourController extends Controller
 
     public function store(StoreColourRequest $request)
     {
-        $validated = $request->validated();
-        Colour::create($validated);
+        try {
+            $validated = $request->validated();
+            Colour::create($validated);
 
-        return Redirect::route('settings.colours.index');
+            return Redirect::route('settings.colours.index');
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function edit(Colour $colour)
@@ -67,16 +71,27 @@ class SettingsColourController extends Controller
 
     public function update(Colour $colour, UpdateColourRequest $request)
     {
-        $validated = $request->validated();
-        $colour->update($validated);
+        try {
+            $validated = $request->validated();
+            $colour->update($validated);
 
-        return Redirect::route('settings.colours.index');
+            return Redirect::route('settings.colours.index')
+                ->with(['message' => 'successfully saved']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function delete(Colour $colour)
     {
-        $colour->delete();
+        try {
+            $colour->delete();
 
-        return Redirect::route('settings.colours.index');
+            return Redirect::route('settings.colours.index')
+                ->with(['message' => 'successfully deleted']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 }
