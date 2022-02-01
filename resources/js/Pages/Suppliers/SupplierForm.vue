@@ -198,6 +198,7 @@
                                     <div class="sm:col-span-1">
                                         <label for="first_name" class="block text-sm font-medium text-gray-700">
                                             First Name</label>
+
                                         <input v-model="contact.first_name" type="text" name="first_name"
                                                id="first_name"
                                                autocomplete="given-name"

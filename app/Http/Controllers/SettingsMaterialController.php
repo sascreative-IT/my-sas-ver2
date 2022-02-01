@@ -50,15 +50,19 @@ class SettingsMaterialController extends Controller
 
     public function store(Request $request)
     {
-        Materials::create([
-            'name' => $request->input('name'),
-            'type' => $request->input('type'),
-            'unit' => $request->input('unit'),
-            'fiber_content' => $request->input('fiber_content'),
-        ]);
+        try {
+            Materials::create([
+                'name' => $request->input('name'),
+                'type' => $request->input('type'),
+                'unit' => $request->input('unit'),
+                'fiber_content' => $request->input('fiber_content'),
+            ]);
 
-        return Redirect::route('settings.materials.index')
-            ->with(['message' => 'The record successfully updated.']);
+            return Redirect::route('settings.materials.index')
+                ->with(['message' => 'The record successfully updated.']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function edit(Materials $materials)
@@ -78,15 +82,19 @@ class SettingsMaterialController extends Controller
 
     public function update(Materials $materials, Request $request)
     {
-        $materials->update([
-            'name' => $request->input('name'),
-            'type' => $request->input('type'),
-            'unit' => $request->input('unit'),
-            'fiber_content' => $request->input('fiber_content'),
-        ]);
+        try {
+            $materials->update([
+                'name' => $request->input('name'),
+                'type' => $request->input('type'),
+                'unit' => $request->input('unit'),
+                'fiber_content' => $request->input('fiber_content'),
+            ]);
 
-        return Redirect::route('settings.materials.index')
-            ->with(['message' => 'The record successfully updated.']);
+            return Redirect::route('settings.materials.index')
+                ->with(['message' => 'The record successfully updated.']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function delete(Materials $materials)

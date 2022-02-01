@@ -36,10 +36,16 @@ class SettingsCurrencyController extends Controller
 
     public function store(StoreCurrencyRequest $request): \Illuminate\Http\RedirectResponse
     {
-        $currencyData = new CurrencyData(...$request->validated());
-        (new CreateCurrencyAction())->execute($currencyData);
+        try {
+            $currencyData = new CurrencyData(...$request->validated());
+            (new CreateCurrencyAction())->execute($currencyData);
 
-        return Redirect::route('settings.currencies.index');
+            return Redirect::route('settings.currencies.index')
+                ->with(['message' => 'successfully saved']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function edit(Currency $currency)
@@ -54,10 +60,16 @@ class SettingsCurrencyController extends Controller
 
     public function update(Currency $currency, StoreCurrencyRequest $request)
     {
-        $currencyData = new CurrencyData(...$request->validated());
-        (new UpdateCurrencyAction())->execute($currencyData, $currency);
+        try {
+            $currencyData = new CurrencyData(...$request->validated());
+            (new UpdateCurrencyAction())->execute($currencyData, $currency);
 
-        return Redirect::route('settings.currencies.index');
+            return Redirect::route('settings.currencies.index')
+                ->with(['message' => 'successfully saved']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function delete(Currency $currency)

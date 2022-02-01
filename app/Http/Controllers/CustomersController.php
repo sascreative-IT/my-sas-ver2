@@ -29,8 +29,7 @@ class CustomersController extends Controller
         CsAgentRepository $csAgentRepository,
         SalesAgentRepository $salesAgentRepository,
         CustomerContactsRepository $customerContactsRepository
-    )
-    {
+    ) {
         $this->fileRepository = $fileRepository;
         $this->customerRepository = $customerRepository;
         $this->csAgentRepository = $csAgentRepository;
@@ -66,20 +65,26 @@ class CustomersController extends Controller
 
     public function store(StoreCustomerRequest $request)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $customer = [
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'description' => $validated['description'],
-            'cs_agent_id' => $validated['cs_agent_id'],
-            'sales_agent_id' => $validated['sales_agent_id'],
-            'logo_id' => $validated['logo_id'],
-        ];
+            $customer = [
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'description' => $validated['description'],
+                'cs_agent_id' => $validated['cs_agent_id'],
+                'sales_agent_id' => $validated['sales_agent_id'],
+                'logo_id' => $validated['logo_id'],
+            ];
 
-        $savedCustomer = $this->customerRepository->create($customer);
+            $savedCustomer = $this->customerRepository->create($customer);
 
-        return Redirect::route('customers.edit', [$savedCustomer->id]);
+            return Redirect::route('customers.edit', [$savedCustomer->id])
+                ->with(['message' => 'successfully saved']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function edit(Customer $customer)
@@ -105,26 +110,38 @@ class CustomersController extends Controller
 
     public function update(Customer $customer, UpdateCustomerRequest $request)
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $customerDetails = [
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'description' => $validated['description'],
-            'cs_agent_id' => $validated['cs_agent_id'],
-            'sales_agent_id' => $validated['sales_agent_id'],
-            'logo_id' => $validated['logo_id'],
-        ];
+            $customerDetails = [
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'description' => $validated['description'],
+                'cs_agent_id' => $validated['cs_agent_id'],
+                'sales_agent_id' => $validated['sales_agent_id'],
+                'logo_id' => $validated['logo_id'],
+            ];
 
-        $savedCustomer = $this->customerRepository->update($customer->id,$customerDetails);
+            $savedCustomer = $this->customerRepository->update($customer->id, $customerDetails);
 
-        return Redirect::route('customers.edit', [$savedCustomer->id])->with(['message' => 'successfully updated']);
+            return Redirect::route('customers.edit', [$savedCustomer->id])
+                ->with(['message' => 'successfully updated']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function delete(Customer $customer)
     {
-        $this->customerRepository->delete($customer->id);
+        try {
+            $this->customerRepository->delete($customer->id);
 
-        return Redirect::route('customers.index')->with(['message' => 'successfully updated']);
+            return Redirect::route('customers.index')
+                ->with(['message' => 'successfully updated']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 }

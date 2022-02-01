@@ -24,27 +24,44 @@ class AddressController extends Controller
 
     public function store(StoreAddressRequest $request)
     {
-        $validated = $request->validated();
-        $this->addressRepository->store($validated);
-        $customer = $this->customerRepository->show($validated['customer_id']);
+        try {
 
-        return Redirect::route('customers.edit', ['customer' => $customer->id ])->with(['message' => 'successfully saved']);
+            $validated = $request->validated();
+            $this->addressRepository->store($validated);
+            $customer = $this->customerRepository->show($validated['customer_id']);
+
+            return Redirect::route('customers.edit', ['customer' => $customer->id])
+                ->with(['message' => 'successfully saved']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function update(Address $address, UpdateAddressRequest $request)
     {
-        $validated = $request->validated();
-        $customer = Customer::query()->find($validated['customer_id']);
-        $this->addressRepository->update($address->id, $validated);
+        try {
 
-        return Redirect::route('customers.edit', ['customer' => $customer->id ]);
+            $validated = $request->validated();
+            $customer = Customer::query()->find($validated['customer_id']);
+            $this->addressRepository->update($address->id, $validated);
+
+            return Redirect::route('customers.edit', ['customer' => $customer->id]);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function delete(Address $address)
     {
-        $customerId = $address->customerAddresses->first()->customer_id;;
-        $this->addressRepository->delete($address->id);
+        try {
 
-        return Redirect::route('customers.edit', ['customer' => $customerId ]);
+            $customerId = $address->customerAddresses->first()->customer_id;;
+            $this->addressRepository->delete($address->id);
+
+            return Redirect::route('customers.edit', ['customer' => $customerId]);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 }

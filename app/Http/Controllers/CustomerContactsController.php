@@ -16,26 +16,48 @@ class CustomerContactsController extends Controller
     {
         $this->customerContactsRepository = $customerContactsRepository;
     }
+
     public function store(StoreCustomerContactRequest $request)
     {
-        $validated = $request->validated();
-        $this->customerContactsRepository->store($validated);
+        try {
+            $validated = $request->validated();
+            $this->customerContactsRepository->store($validated);
 
-        return Redirect::route('customers.edit', ['customer' => $validated['customer_id']])->with(['message' => 'successfully saved']);
+            return Redirect::route('customers.edit',
+                ['customer' => $validated['customer_id']])
+                ->with(['message' => 'successfully saved']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function update(CustomerContact $customerContact, UpdateCustomerContactRequest $request)
     {
-        $validated = $request->validated();
-        $this->customerContactsRepository->update($customerContact->id, $validated);
+        try {
+            $validated = $request->validated();
+            $this->customerContactsRepository->update($customerContact->id, $validated);
 
-        return Redirect::route('customers.edit', ['customer' =>  $customerContact->customer_id])->with(['message' => 'successfully updated']);
+            return Redirect::route('customers.edit',
+                ['customer' => $customerContact->customer_id])
+                ->with(['message' => 'successfully updated']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function delete(CustomerContact $customerContact)
     {
-        $customerContact->delete();
+        try {
+            $customerContact->delete();
 
-        return Redirect::route('customers.edit', ['customer' =>  $customerContact->customer_id])->with(['message' => 'successfully deleted']);
+            return Redirect::route('customers.edit',
+                ['customer' => $customerContact->customer_id])
+                ->with(['message' => 'successfully deleted']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 }

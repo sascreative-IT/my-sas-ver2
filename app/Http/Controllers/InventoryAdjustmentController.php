@@ -12,25 +12,24 @@ use Illuminate\Support\Facades\Redirect;
 
 class InventoryAdjustmentController
 {
-    public function store(CreateInventoryStockIn $createInventoryStockIn, MaterialInventory $inventory, Request $request)
-    {
-//        InventoryIn::create([
-//            'material_inventory_id' => $inventory->id,
-//            'quantity' => (float) $request->input('quantity'),
-//            'price' => 0,
-//            'description' => $request->input('reason')
-//        ]);
+    public function store(
+        CreateInventoryStockIn $createInventoryStockIn,
+        MaterialInventory $inventory,
+        Request $request
+    ) {
+        try {
+            $createInventoryStockIn->execute(
+                $inventory,
+                null,
+                (float)$request->input('quantity'),
+                0,
+                $request->input('reason')
+            );
 
-//        (new IncreaseAvailableQuantity())->execute($inventory, (float) $request->input('quantity'));
-
-        $createInventoryStockIn->execute(
-            $inventory,
-            null,
-            (float) $request->input('quantity'),
-            0,
-            $request->input('reason')
-        );
-
-        return Redirect::route('inventory.show', ['materialInventory' => $inventory->id ]);
+            return Redirect::route('inventory.show', ['materialInventory' => $inventory->id])
+                ->with(['message' => 'successfully saved']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 }

@@ -40,13 +40,16 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'roles' => $request->user() ? $request->user()->getRoleNames()->toArray() : null,
             'flash' => [
-                'message' => fn () => $request->session()->get('message'),
+                'message' => fn() => $request->session()->get('message'),
                 'errors' => function () {
                     return Session::get('errors')
                         ? Session::get('errors')->getBag('default')->getMessages()
-                        : (object) [];
+                        : (object)[];
                 },
-                'visible' => fn () => true
+                'type' => function () {
+                    return Session::get('errors') ? 'error' : 'success';
+                },
+                'visible' => fn() => true
             ],
         ]);
     }

@@ -36,10 +36,15 @@ class SettingsWarehouseController extends Controller
 
     public function store(StoreWarehouseRequest $request)
     {
-        $validated = $request->validated();
-        Warehouse::create($validated);
+        try {
+            $validated = $request->validated();
+            Warehouse::create($validated);
 
-        return Redirect::route('settings.warehouses.index');
+            return Redirect::route('settings.warehouses.index')
+                ->with(['message' => 'successfully saved']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function edit(Warehouse $warehouse)
@@ -57,16 +62,26 @@ class SettingsWarehouseController extends Controller
 
     public function update(Warehouse $warehouse, UpdateWarehouseRequest $request)
     {
-        $validated = $request->validated();
-        $warehouse->update($validated);
+        try {
+            $validated = $request->validated();
+            $warehouse->update($validated);
 
-        return Redirect::route('settings.warehouses.index');
+            return Redirect::route('settings.warehouses.index')
+                ->with(['message' => 'successfully saved']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 
     public function delete(Warehouse $warehouse)
     {
-        $warehouse->delete();
+        try {
+            $warehouse->delete();
 
-        return Redirect::route('settings.warehouses.index');
+            return Redirect::route('settings.warehouses.index')
+                ->with(['message' => 'successfully deleted']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
     }
 }

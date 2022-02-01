@@ -89,14 +89,19 @@ class InternalStylesController extends Controller
 
     public function store(StyleStoreRequest $request)
     {
-        $image_path = '';
+        try {
+            $image_path = '';
 
-        if ($request->hasFile('image')) {
-            $image_path = $request->file('image')->store('style_images', 'public');
+            if ($request->hasFile('image')) {
+                $image_path = $request->file('image')->store('style_images', 'public');
+            }
+            $request->merge(['style_image' => $image_path]);
+            $style = resolve(CreateStyle::class)->execute($request->toDto());
+            return Redirect::route('style.internal.edit', [$style->id])
+                ->with(['message' => 'successfully updated']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
         }
-        $request->merge(['style_image' => $image_path]);
-        $style = resolve(CreateStyle::class)->execute($request->toDto());
-        return Redirect::route('style.internal.edit', [$style->id])->with(['message' => 'successfully updated']);
     }
 
     public function edit(
@@ -132,18 +137,22 @@ class InternalStylesController extends Controller
 
     public function update(Style $style, StyleUpdateRequest $request)
     {
-        $image_path = '';
-        dd($request->all());
-
-        if ($request->hasFile('image')) {
-            $image_path = $request->file('image')->store('style_images', 'public');
-            if ($image_path != "") {
-                $request->merge(['style_image' => $image_path]);
+        try {
+            $image_path = '';
+            if ($request->hasFile('image')) {
+                $image_path = $request->file('image')->store('style_images', 'public');
+                if ($image_path != "") {
+                    $request->merge(['style_image' => $image_path]);
+                }
             }
+
+            resolve(UpdateStyle::class)->execute($style, $request->toDto());
+
+            return Redirect::route('style.internal.edit', [$style->id])
+                ->with(['message' => 'successfully updated']);
+
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
         }
-
-        resolve(UpdateStyle::class)->execute($style, $request->toDto());
-
-        return Redirect::route('style.internal.edit', [$style->id])->with(['message' => 'successfully updated']);
     }
 }
