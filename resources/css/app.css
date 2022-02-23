@@ -91,6 +91,12 @@
     position: relative;
 }
 
+.error-notification {
+    font-size: 0.8em;
+    margin-top: 2px;
+    color: red;
+}
+
 .nprogress-custom-parent #nprogress .spinner,
 .nprogress-custom-parent #nprogress .bar {
     position: absolute;

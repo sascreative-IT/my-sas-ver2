@@ -10,6 +10,7 @@
                 <div class="col-span-6 sm:col-span-3">
                   <label for="full_name" class="block text-sm font-medium text-gray-700">Warehouse Name</label>
                   <input v-model="warehouse.name" type="text" name="full_name" id="full_name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    <div v-if="$page.props.errors.name" class="error-notification">{{ $page.props.errors.name }}</div>
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">

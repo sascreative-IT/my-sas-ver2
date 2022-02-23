@@ -186,9 +186,6 @@
                                                 <template v-if="materialInventory">
                                                     (Avail. {{ materialInventory.available_quantity }})
                                                 </template>
-                                                <template v-else>
-                                                    (Avail. 0)
-                                                </template>
                                             </label>
                                             <div>
                                                 <div class="flex flex-wrap items-stretch w-full mb-4 relative">
@@ -514,11 +511,11 @@ export default {
             }
         },
         isValidItem() {
+            return true;
             if (this.stockOutItem.usage > this.materialInventory.available_quantity) {
                 alert("Invalid usage");
                 return false;
             }
-            return true;
         }
     }
 }

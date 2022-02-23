@@ -51,6 +51,7 @@ class HandleInertiaRequests extends Middleware
                 },
                 'visible' => fn() => true
             ],
+            'some_info' => "test test..."
         ]);
     }
 }
