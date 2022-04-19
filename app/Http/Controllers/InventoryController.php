@@ -24,14 +24,14 @@ class InventoryController extends Controller
 
 
         $inventories = MaterialInventory::with(['variation.material', 'variation.colour'])
-            ->where('factory_id','=',$request->get('factory'))
+            ->where('factory_id', '=', $request->get('factory'))
             ->when($q, function ($query, $q) {
                 $query
-                    ->whereHas('variation.material', function($query) use ($q) {
-                    $query->where('name', 'LIKE', "%$q%");
-                })->orWhereHas('variation.colour', function($query) use ($q) {
+                    ->whereHas('variation.material', function ($query) use ($q) {
                         $query->where('name', 'LIKE', "%$q%");
-                    })->orWhereHas('supplier', function($query) use ($q) {
+                    })->orWhereHas('variation.colour', function ($query) use ($q) {
+                        $query->where('name', 'LIKE', "%$q%");
+                    })->orWhereHas('supplier', function ($query) use ($q) {
                         $query->where('name', 'LIKE', "%$q%");
                     });
 
