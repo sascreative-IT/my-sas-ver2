@@ -25,7 +25,8 @@
                     </div>
 
                     <div class="flex flex-row-reverse">
-                        <div class="w-80 pt-2">
+
+                            <div class="w-80 pt-2">
                             <select-menu
                                 placeholder="Select a factory"
                                 label="name"
@@ -33,6 +34,9 @@
                                 :default-selected="true"
                                 @selected="setSelectedFactory"
                             ></select-menu>
+                        </div>
+                        <div class="pt-2 pr-2">
+                            <input type="search" v-model="query" class="py-2 text-sm text-white rounded-md pl-2 pr-0 focus:outline-none focus:bg-white focus:text-gray-900" placeholder="Search..." autocomplete="off" @input="searchMaterials">
                         </div>
                     </div>
                 </div>
@@ -142,12 +146,17 @@ export default {
         },
         pagination: {
             type: Object
+        },
+        q: {
+            required: false,
+            type: String
         }
     },
     data() {
         return {
             factory_options: [],
-            selected_factory: {}
+            selected_factory: {},
+            query: '',
         }
     },
     mounted() {
@@ -160,6 +169,16 @@ export default {
     methods: {
         setSelectedFactory(val) {
             this.$inertia.visit('/inventory?factory=' + val.id ,{ preserveScroll: true, preserveState: true, only: ['inventory','pagination']})
+        },
+        searchMaterials(){
+            console.log("came here...")
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    q: this.query
+                }
+            })
         }
     }
 }

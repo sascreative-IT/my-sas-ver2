@@ -20,26 +20,43 @@ class InventoryController extends Controller
             return redirect()->route('inventory.index', ['factory' => 1]);
         }
 
+        $q = $request->get('q');
+
+
+        $inventories = MaterialInventory::with(['variation.material', 'variation.colour'])
+            ->where('factory_id', '=', $request->get('factory'))
+            ->when($q, function ($query, $q) {
+                $query
+                    ->whereHas('variation.material', function ($query) use ($q) {
+                        $query->where('name', 'LIKE', "%$q%");
+                    })->orWhereHas('variation.colour', function ($query) use ($q) {
+                        $query->where('name', 'LIKE', "%$q%");
+                    })->orWhereHas('supplier', function ($query) use ($q) {
+                        $query->where('name', 'LIKE', "%$q%");
+                    });
+
+            })
+            ->paginate(15)
+            ->withQueryString()
+            ->through(function ($inventory) {
+                return [
+                    'id' => $inventory->id,
+                    'unit' => $inventory->unit,
+                    'available_quantity' => $inventory->available_quantity,
+                    'allocated_quantity' => $inventory->allocated_quantity,
+                    'usable_quantity' => $inventory->usable_quantity,
+                    'factory_id' => $inventory->factory_id,
+                    'material_name' => $inventory->variation->material->name,
+                    'color_name' => $inventory->variation->colour->name,
+                    'supplier_name' => $inventory->supplier->name,
+                ];
+            });
+
+
         return Inertia::render('Inventory/InventoryIndex',
             [
                 'factories' => $factories,
-                'inventory' => MaterialInventory::with(['variation.material', 'variation.colour'])
-                    ->where('factory_id','=',$request->get('factory'))
-                    ->paginate(15)
-                    ->withQueryString()
-                    ->through(function ($inventory) {
-                        return [
-                            'id' => $inventory->id,
-                            'unit' => $inventory->unit,
-                            'available_quantity' => $inventory->available_quantity,
-                            'allocated_quantity' => $inventory->allocated_quantity,
-                            'usable_quantity' => $inventory->usable_quantity,
-                            'factory_id' => $inventory->factory_id,
-                            'material_name' => $inventory->variation->material->name,
-                            'color_name' => $inventory->variation->colour->name,
-                            'supplier_name' => $inventory->supplier->name,
-                        ];
-                    }),
+                'inventory' => $inventories
             ]
         );
     }
