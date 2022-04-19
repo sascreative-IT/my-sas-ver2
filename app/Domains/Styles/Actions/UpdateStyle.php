@@ -42,7 +42,7 @@ class UpdateStyle
             'parent_style_id' => optional($styleDto->parent_style)->id
         ]);
 
-        dd($styleDto->style_image);
+       
         if ($styleDto->style_image) {
             $style->update(
                 ['style_image' => $styleDto->style_image]
