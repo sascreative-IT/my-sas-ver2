@@ -19,4 +19,6 @@ class Panel extends DataTransferObject
     /** @var \App\Domains\Styles\Dto\Fabric[] */
     #[CastWith(FabricCaster::class)]
     public ?array $fabrics;
+
+    public ?\App\Domains\Styles\Dto\Color $color;
 }

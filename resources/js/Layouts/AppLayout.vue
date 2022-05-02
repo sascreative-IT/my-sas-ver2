@@ -115,7 +115,11 @@
                                         </template>
                                         <template #content>
                                             <jet-dropdown-link :href="route('style.internal.index')">
-                                                Internal styles
+                                                General styles
+                                            </jet-dropdown-link>
+
+                                            <jet-dropdown-link :href="route('style.customized.index')">
+                                                Customized styles
                                             </jet-dropdown-link>
 
                                         </template>

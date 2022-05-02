@@ -24,6 +24,7 @@ class StylePanel extends Model implements Auditable
         'default_fabric_id',
         'created_at',
         'updated_at',
+        'color_id',
     ];
 
     public function consumption(): HasMany
@@ -39,5 +40,10 @@ class StylePanel extends Model implements Auditable
     public function defaultFabric(): BelongsTo
     {
         return $this->belongsTo(Materials::class, 'default_fabric_id');
+    }
+
+    public function color(): BelongsTo
+    {
+        return $this->belongsTo(Colour::class, 'color_id');
     }
 }
