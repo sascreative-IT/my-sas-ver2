@@ -72,8 +72,10 @@ class PurchaseOrderController extends Controller
         $currencies = Currency::all();
 
         if ($request->filled('supplier_id')) {
-            $suplier_materials = MaterialSupplier::with('variation', 'variation.material')->where("supplier_id",
-                $request->get('supplier_id'))->get();
+            $suplier_materials = MaterialSupplier::with('variation', 'variation.material')
+                ->where("supplier_id", $request->get('supplier_id'))
+                ->get();
+
             $material_ids = [];
             foreach ($suplier_materials as $suplier_material) {
                 if ($suplier_material->variation->material) {
@@ -87,11 +89,22 @@ class PurchaseOrderController extends Controller
 
         $material = null;
         if ($request->filled('material_id')) {
-            $material = Materials::find($request->get('material_id'));
-            $colorIds = MaterialVariation::where("material_id", $request->get('material_id'))
-                ->pluck("colour_id")
-                ->toArray();
-            $colours = Colour::whereIn('id', $colorIds)->get();
+
+            $materialSuppliers = MaterialSupplier::query()
+                ->with(['variation' => function($query) use ($request) {
+                    $query->where('material_id',$request->get('material_id'));
+                }, 'variation.colour'])
+                ->where('supplier_id', $request->get('supplier_id'))
+                ->get();
+
+            $supplier_material_color_ids = [];
+            foreach ($materialSuppliers as $material_supplier) {
+                if($material_supplier->variation) {
+                    array_push($supplier_material_color_ids, $material_supplier->variation->colour_id);
+                }
+            }
+
+            $colours = Colour::whereIn('id', $supplier_material_color_ids)->get();
         }
 
         $material_variations = null;
