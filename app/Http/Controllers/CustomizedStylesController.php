@@ -58,7 +58,7 @@ class CustomizedStylesController extends Controller
         $itemTypes = $itemTypeRepository->getAll();
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
-        $styles = Style::all('id', 'code', 'name')->toArray();
+        $styles = Style::where('styles_type','LIKE', "General")->get()->toArray();
         $colours = Colour::query()->get();
         /*
         foreach ($styles as $style) {
