@@ -7,6 +7,7 @@ use App\Domains\Styles\Actions\UpdateStyle;
 use App\Domains\Styles\Dto\Style as StyleDto;
 use App\Http\Requests\Styles\StyleStoreRequest;
 use App\Http\Requests\Styles\StyleUpdateRequest;
+use App\Models\Colour;
 use App\Models\Factory;
 use App\Models\Style;
 use App\Repositories\CategoryRepository;
@@ -19,7 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
-class InternalStylesController extends Controller
+class CustomizedStylesController extends Controller
 {
     public function index(Request $request)
     {
@@ -29,7 +30,7 @@ class InternalStylesController extends Controller
         $internalStyles = Style::query()
             ->internal()
             ->with('itemType')
-            ->where('styles_type', "General")
+            ->where('styles_type', "Customized")
             ->when($q, function ($query, $q) {
                 return $query
                     ->where('code', 'like', "%{$q}%")
@@ -38,7 +39,7 @@ class InternalStylesController extends Controller
             ->paginate()
             ->withQueryString();
 
-        return Inertia::render('Styles/InternalStyles/Index', [
+        return Inertia::render('Styles/CustomizedStyles/Index', [
             'internal-styles' => $internalStyles
         ]);
     }
@@ -58,6 +59,7 @@ class InternalStylesController extends Controller
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
         $styles = Style::all('id', 'code', 'name')->toArray();
+        $colours = Colour::query()->get();
         /*
         foreach ($styles as $style) {
             print($style['id']."-".$style['code']."<BR/>");
@@ -78,7 +80,7 @@ class InternalStylesController extends Controller
             'belongs_to' => 'internal'
         ]);
 
-        return Inertia::render('Styles/InternalStyles/Create', [
+        return Inertia::render('Styles/CustomizedStyles/Create', [
             'styleData' => $style,
             'customers' => $customers,
             'categories' => $categories,
@@ -88,8 +90,9 @@ class InternalStylesController extends Controller
             'materials' => $materials,
             'styles' => $styles,
             'parentStyleCode' => $parent_style_code,
-            'styleType' => 'General',
+            'styleType' => 'Customized',
             'customer' => $request->get('customer'),
+            'colours' => $colours
         ]);
     }
 
@@ -103,7 +106,7 @@ class InternalStylesController extends Controller
             }
             $request->merge(['style_image' => $image_path]);
             $style = resolve(CreateStyle::class)->execute($request->toDto());
-            return Redirect::route('style.internal.edit', [$style->id])
+            return Redirect::route('style.customized.edit', [$style->id])
                 ->with(['message' => 'successfully updated']);
         } catch (\Exception $ex) {
             return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
@@ -125,12 +128,13 @@ class InternalStylesController extends Controller
         $itemTypes = $itemTypeRepository->getAll();
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
+        $colours = Colour::query()->get();
 
 
-        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
+        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle','panels.color']);
         $styleDto = new StyleDto($style->toArray());
 
-        return Inertia::render('Styles/InternalStyles/Create', [
+        return Inertia::render('Styles/CustomizedStyles/Create', [
             'styleData' => $styleDto,
             'customers' => $customers,
             'categories' => $categories,
@@ -138,6 +142,7 @@ class InternalStylesController extends Controller
             'sizes' => $sizes,
             'factories' => $factories,
             'materials' => $materials,
+            'colours' => $colours,
         ]);
     }
 

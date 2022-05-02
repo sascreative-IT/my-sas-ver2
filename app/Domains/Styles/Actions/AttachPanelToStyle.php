@@ -55,7 +55,8 @@ class AttachPanelToStyle
         return StylePanel::create([
             'name' => $panel->name,
             'style_id' => $style->id,
-            'default_fabric_id' => optional($panel->default_fabric)->id
+            'default_fabric_id' => optional($panel->default_fabric)->id,
+            'color_id' => optional($panel->color)->id,
         ]);
     }
 }

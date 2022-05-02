@@ -16,7 +16,7 @@ class StyleStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'required|unique:styles,code',
+            //'code' => 'required|unique:styles,code',
             'name' => 'required',
             'categories' => ['required', 'array'],
             'categories.*.ids' => 'exists:categories,id',
@@ -56,6 +56,6 @@ class StyleStoreRequest extends FormRequest
 
     public function toDto(): Style
     {
-        return new Style(array_merge($this->all(), ['status' => 'draft']));
+        return new Style(array_merge($this->all(), ['status' => 'active']));
     }
 }

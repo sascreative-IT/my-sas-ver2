@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\ExternalStylesController;
 use App\Http\Controllers\FactoryOrderController;
 use App\Http\Controllers\InternalStylesController;
+use App\Http\Controllers\CustomizedStylesController;
 use App\Http\Controllers\InventoryAdjustmentController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InvoicesController;
@@ -180,6 +181,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/internal-styles', [InternalStylesController::class, 'index'])->name('style.internal.index');
     Route::post('/internal-styles', [InternalStylesController::class, 'store'])->name('style.internal.store');
     Route::put('/internal-styles/{style}', [InternalStylesController::class, 'update'])->name('style.internal.update');
+
+    Route::get('/customized-styles', [CustomizedStylesController::class, 'index'])->name('style.customized.index');
+    Route::get('/customized-styles/create', [CustomizedStylesController::class, 'create'])->name('style.internal.create');
+    Route::post('/customized-styles', [CustomizedStylesController::class, 'store'])->name('style.internal.store');
+    Route::get('/customized-styles/edit/{style}', [CustomizedStylesController::class, 'edit'])->name('style.customized.edit');
 
 
     Route::get('/external-styles/edit/{style}', [ExternalStylesController::class, 'edit'])->name('style.external.edit');
