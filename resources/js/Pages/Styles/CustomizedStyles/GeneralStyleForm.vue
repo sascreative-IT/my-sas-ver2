@@ -140,6 +140,59 @@
         </el-tab-pane>
         <el-tab-pane label="Panels">
 
+            <!-- Panel Table -->
+            <div>
+                <el-table
+                    :data="form.panels"
+                    stripe
+                    style="width: 100%"
+                >
+
+                    <el-table-column
+                        prop="name"
+                        label="Name"
+                        width="180">
+                    </el-table-column>
+
+                    <el-table-column
+                        label="Fabrics"
+                    >
+                        <template slot-scope="scope">
+                            {{ scope.row.fabrics.map(fabric => fabric.name).join(', ') }}
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column
+                        prop="color.name"
+                        label="Color"
+                        width="180">
+                    </el-table-column>
+
+                    <el-table-column
+                        label="Consumption"
+                        width="180">
+                        <template slot-scope="scope">
+                            <div v-for="consumption in scope.row.consumption">
+                                <label> <b>{{ consumption.size.name }} : </b></label>
+                                <span> {{ consumption.amount }}</span>
+                            </div>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column
+                        label="Action"
+                        width="180">
+                        <template slot-scope="scope">
+                            <form-button @handle-on-click="handleEditPanelRow(scope.row)">
+                                Edit
+                            </form-button>
+                        </template>
+                    </el-table-column>
+
+                </el-table>
+            </div>
+            <!-- End panel table -->
+
             <!-- Panel Add form -->
             <div>
                 <div class="shadow overflow-hidden sm:rounded-md">
@@ -213,56 +266,6 @@
             </div>
 
             <!-- End of Panel Add form -->
-            <div>
-                <el-table
-                    :data="form.panels"
-                    stripe
-                    style="width: 100%"
-                >
-
-                    <el-table-column
-                        prop="name"
-                        label="Name"
-                        width="180">
-                    </el-table-column>
-
-                    <el-table-column
-                        label="Fabrics"
-                    >
-                        <template slot-scope="scope">
-                            {{ scope.row.fabrics.map(fabric => fabric.name).join(', ') }}
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column
-                        prop="color.name"
-                        label="Color"
-                        width="180">
-                    </el-table-column>
-
-                    <el-table-column
-                        label="Consumption"
-                        width="180">
-                        <template slot-scope="scope">
-                            <div v-for="consumption in scope.row.consumption">
-                                <label> <b>{{ consumption.size.name }} : </b></label>
-                                <span> {{ consumption.amount }}</span>
-                            </div>
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column
-                        label="Action"
-                        width="180">
-                        <template slot-scope="scope">
-                            <form-button @handle-on-click="handleEditPanelRow(scope.row)">
-                                Edit
-                            </form-button>
-                        </template>
-                    </el-table-column>
-
-                </el-table>
-            </div>
         </el-tab-pane>
         <el-tab-pane label="Trims / Accessories">
             <form>
