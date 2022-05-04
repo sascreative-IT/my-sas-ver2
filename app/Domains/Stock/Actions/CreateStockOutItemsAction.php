@@ -16,7 +16,7 @@ class CreateStockOutItemsAction
         foreach ($stockOutItemsData as $stockOutItemData) {
             StockOutItem::create([
                 'stock_out_id' => $stockOut->id,
-                'supplier_id' => $stockOut->supplier_id,
+                'supplier_id' => $stockOutItemData->supplier->id,
                 'style_id' => $stockOutItemData->style->id,
                 'style_panel_id' => $stockOutItemData->stylePanel->id,
                 'material_id' => $stockOutItemData->material->id,
@@ -24,7 +24,6 @@ class CreateStockOutItemsAction
                 'pieces' => $stockOutItemData->pieces,
                 'usage' => $stockOutItemData->usage,
             ]);
-
 
             // the following code should be refactored
             $materialVariation = MaterialVariation::where('material_id', $stockOutItemData->material->id)
@@ -36,9 +35,11 @@ class CreateStockOutItemsAction
                     ->where('factory_id', $stockOut->factory_id)
                     ->where('supplier_id', $stockOutItemData->supplier->id)
                     ->first();
-                $materialInventory->update([
-                    'available_quantity' => ($materialInventory->available_quantity - $stockOutItemData->usage),
-                ]);
+                if ($materialInventory) {
+                    $materialInventory->update([
+                        'available_quantity' => ($materialInventory->available_quantity - $stockOutItemData->usage),
+                    ]);
+                }
 
             }
         }
