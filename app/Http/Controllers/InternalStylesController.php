@@ -43,6 +43,16 @@ class InternalStylesController extends Controller
         ]);
     }
 
+    public function show(Style $style)
+    {
+        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
+        $styleDto = new StyleDto($style->toArray());
+
+        return Inertia::render('Styles/InternalStyles/Show', [
+            'styleData' => $styleDto,
+        ]);
+    }
+
     public function create(
         CustomerRepository $customerRepository,
         CategoryRepository $categoryRepository,
@@ -70,7 +80,6 @@ class InternalStylesController extends Controller
             $parent_style_code = Style::find($parent_id);
             $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
         }
-
 
         $style = new StyleDto([
             'sizes' => [],
