@@ -17,6 +17,9 @@ class UsersController extends Controller
 {
     public function index(Request $request)
     {
+        if (!auth()->user()->hasRole('Administrator')) {
+            return redirect()->route('dashboard')->with('message', 'You have no permissions for this action');
+        }
         $q = $request->get('q');
 
         $users = User::query()
@@ -34,6 +37,9 @@ class UsersController extends Controller
 
     public function create()
     {
+        if (!auth()->user()->hasRole('Administrator')) {
+            return redirect()->route('dashboard')->with('message', 'You have no permissions for this action');
+        }
         return Inertia::render('Users/UserAdd',
             [
                 'factories' => Factory::all()->toArray(),
@@ -44,6 +50,9 @@ class UsersController extends Controller
 
     public function store(StoreUserRequest $request)
     {
+        if (!auth()->user()->hasRole('Administrator')) {
+            return redirect()->route('dashboard')->with('message', 'You have no permissions for this action');
+        }
         try {
             $password = $this->generateRandomPassword();
             $user = User::create([
@@ -71,6 +80,9 @@ class UsersController extends Controller
 
     public function edit(User $user)
     {
+        if (!auth()->user()->hasRole('Administrator')) {
+            return redirect()->route('dashboard')->with('message', 'You have no permissions for this action');
+        }
         return Inertia::render(
             'Users/UserUpdate',
             [
@@ -83,6 +95,9 @@ class UsersController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
+        if (!auth()->user()->hasRole('Administrator')) {
+            return redirect()->route('dashboard')->with('message', 'You have no permissions for this action');
+        }
         try {
             $user->name = $request->input('name');
             $user->email = $request->input('email');
@@ -102,6 +117,9 @@ class UsersController extends Controller
 
     public function resetPassword(ResetPasswordRequest $request, User $user)
     {
+        if (!auth()->user()->hasRole('Administrator')) {
+            return redirect()->route('dashboard')->with('message', 'You have no permissions for this action');
+        }
         try {
             $user->password = $request->input('password');
             $user->save();
@@ -115,6 +133,9 @@ class UsersController extends Controller
 
     public function deactivateUser(\Illuminate\Http\Request $request)
     {
+        if (!auth()->user()->hasRole('Administrator')) {
+            return redirect()->route('dashboard')->with('message', 'You have no permissions for this action');
+        }
         $validated = $request->validate([
             'user_id' => 'required|integer'
         ]);
@@ -131,6 +152,9 @@ class UsersController extends Controller
 
     private function generateRandomPassword($passlength = 8): string
     {
+        if (!auth()->user()->hasRole('Administrator')) {
+            return redirect()->route('dashboard')->with('message', 'You have no permissions for this action');
+        }
         $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         $pass = array();
         $alphaLength = strlen($alphabet) - 1;
