@@ -15,7 +15,7 @@
                     </div>
                     <form>
                         <div class="shadow overflow-hidden sm:rounded-md">
-                            <div class="px-4 py-5 bg-white sm:p-6">
+                            <div class="md:px-4 md:pt-5 md:pb-40 bg-white p-6">
                                 <div class="grid grid-cols-6 gap-6">
                                     <div class="col-span-6 sm:col-span-3">
                                         <label for="full_name" class="block text-sm font-medium text-gray-700">Full
