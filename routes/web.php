@@ -177,6 +177,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/factory/create', [FactoryOrderController::class, 'create'])->name('factory.orders.create');
     Route::post('/factory/order', [FactoryOrderController::class, 'store'])->name('factory.orders.store');
     Route::get('/factory/order/show', [FactoryOrderController::class, 'show'])->name('factory.orders.show');
+    Route::get('/internal-styles/show/{style}', [InternalStylesController::class, 'show'])->name('style.internal.show');
     Route::get('/internal-styles/edit/{style}', [InternalStylesController::class, 'edit'])->name('style.internal.edit');
     Route::get('/internal-styles', [InternalStylesController::class, 'index'])->name('style.internal.index');
     Route::post('/internal-styles', [InternalStylesController::class, 'store'])->name('style.internal.store');
