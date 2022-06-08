@@ -170,6 +170,7 @@ export default {
         parentStyleCode: {
             type: Object
         },
+
         styleType: {
             type: String
         },
