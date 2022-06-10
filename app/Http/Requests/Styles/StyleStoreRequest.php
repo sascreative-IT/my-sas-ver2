@@ -16,7 +16,7 @@ class StyleStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //'code' => 'required|unique:styles,code',
+            'code' => 'required|unique:styles,code',
             'name' => 'required',
             'categories' => ['required', 'array'],
             'categories.*.ids' => 'exists:categories,id',

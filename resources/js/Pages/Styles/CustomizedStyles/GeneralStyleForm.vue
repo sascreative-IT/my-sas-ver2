@@ -105,7 +105,6 @@
                                         :filterable="true"
                                         :multiple="true"
                                         :options="sizes"
-                                        :all-removable="false"
                                         option-label="name"
                                         no-data-text="No Categories available"
                                         no-match-text="Category not found"
@@ -118,7 +117,6 @@
                                         Factory
                                     </label>
                                     <app-select
-                                        :all-removable="false"
                                         :filterable="true"
                                         :multiple="true"
                                         :options="factories"
