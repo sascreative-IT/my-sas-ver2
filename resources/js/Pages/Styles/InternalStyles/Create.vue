@@ -11,7 +11,15 @@
 
             </h2>
         </template>
+        <sweet-modal ref="errorModal" hide-close-button>
+            <div>
+                <div class="font-medium text-red-600">Whoops! Something went wrong.</div>
 
+                <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+                    <li v-for="(error, key) in errors" :key="key">{{ error }}</li>
+                </ul>
+            </div>
+        </sweet-modal>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="mb-5">
@@ -127,6 +135,7 @@ import DeleteButton from "@/UIElements/DeleteButton";
 import GeneralStyleForm from "@/Pages/Styles/InternalStyles/GeneralStyleForm";
 import CustomStyleForm from "@/Pages/Styles/InternalStyles/CustomStyleForm";
 import NewCustomStyleForm from "@/Pages/Styles/InternalStyles/NewCustomStyleForm";
+import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
 
 export default {
     name: "Create",
@@ -183,7 +192,8 @@ export default {
         DeleteButton,
         GeneralStyleForm,
         CustomStyleForm,
-        NewCustomStyleForm
+        NewCustomStyleForm,
+        SweetModal
     },
     data() {
         return {
@@ -224,6 +234,7 @@ export default {
         if (typeof(this.styleForm.parent_style) != 'undefined') {
             this.styleForm.parent_style_code = this.styleForm.parent_style.code;
         }
+
     },
     methods: {
         selectStyleType() {
@@ -255,7 +266,13 @@ export default {
             if (this.styleForm.id !== null) {
                 this.$inertia.put('/internal-styles/' + this.styleForm.id, this.styleForm)
             } else {
-                this.$inertia.post('/internal-styles', this.styleForm)
+                this.$inertia.post('/internal-styles', this.styleForm,{
+                    onFinish: () => {
+                        if (Object.keys(this.errors).length > 0) {
+                            this.$refs.errorModal.open()
+                        }
+                    },
+                })
             }
         },
         setSelectedStyleCode(value) {
