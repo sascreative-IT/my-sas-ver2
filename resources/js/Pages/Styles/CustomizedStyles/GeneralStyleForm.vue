@@ -70,6 +70,7 @@
                                         Item type
                                     </label>
                                     <app-select
+                                        :disabled="(styleCodeType == 'Customized')"
                                         :filterable="true"
                                         :multiple="false"
                                         :options="itemTypes"
@@ -88,6 +89,7 @@
                                         Production time
                                     </label>
                                     <input type="number"
+                                           :disabled="(styleCodeType == 'Customized')"
                                            v-model="form.production_time"
                                            id="production_time_general_style"
                                            name="production_time_general_style"
@@ -103,6 +105,7 @@
                                         :filterable="true"
                                         :multiple="true"
                                         :options="sizes"
+                                        :all-removable="false"
                                         option-label="name"
                                         no-data-text="No Categories available"
                                         no-match-text="Category not found"
@@ -115,6 +118,7 @@
                                         Factory
                                     </label>
                                     <app-select
+                                        :all-removable="false"
                                         :filterable="true"
                                         :multiple="true"
                                         :options="factories"
@@ -205,7 +209,7 @@
 
                             <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 pb-6">
                                 <form-button @handle-on-click="addPanel">
-                                    Add Panel
+                                    Update Panel
                                 </form-button>
                             </div>
                         </div>

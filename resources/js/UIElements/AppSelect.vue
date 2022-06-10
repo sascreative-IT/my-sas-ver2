@@ -4,6 +4,7 @@
             :disabled="disabled"
             class="w-full"
             @input="input"
+            @remove-tag="cleared"
             :value="preparedValue"
             :filterable=filterable
             :multiple="multiple"
@@ -32,6 +33,11 @@ export default {
         options: {
             required: true,
             type: Array
+        },
+        allRemovable: {
+            required: false,
+            default: true,
+            type: Boolean,
         },
         filterable: {
             required: false,
@@ -80,6 +86,11 @@ export default {
         }
     },
     methods: {
+        cleared(value){
+            if (!this.allRemovable) {
+                console.log('clicked clear'+value)
+            }
+        },
         getOptionObjectByID(selectedOptionId) {
             return this.options.filter((option) => {
                 return option[this.optionValue] === selectedOptionId
