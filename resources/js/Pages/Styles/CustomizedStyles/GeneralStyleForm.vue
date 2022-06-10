@@ -21,9 +21,12 @@
                                     <label for="style_code_general_style"
                                            class="block text-sm font-medium text-gray-700">
                                         Style code extension</label>
-                                    <el-input placeholder="Extension" v-model="customized_style_code" @change="styleCodeChange">
-                                        <template slot="prepend">{{form.parent_style_code}}</template>
-                                    </el-input>
+                                    <el-tooltip class="item" effect="dark" :content="'type the new extension to change the current extension - '+form.code" placement="top-start">
+                                        <el-input placeholder="Extension" v-model="customized_style_code" @change="styleCodeChange">
+                                            <template slot="prepend">{{form.parent_style_code}}</template>
+                                        </el-input>
+                                    </el-tooltip>
+                                    <p class="text-xs">current extension: {{form.code}}</p>
                                 </div>
                                 <div class="col-span-1 sm:col-span-1">
                                     <label for="style_name_general_style"
@@ -437,9 +440,16 @@ export default {
             this.show_panel_form = false;
         },
         handleEditPanelRow(dataRow) {
+            console.log(dataRow)
             this.show_panel_form = true;
             this.panel = dataRow;
-            this.panel.id = null;
+
+            if (this.form.id != null) {
+                this.panel.id = dataRow.id;
+            } else {
+                this.panel.id = null;
+            }
+
             this.component_materials = [];
             if (typeof this.panel.fabrics != 'undefined') {
                 this.panel.fabrics.forEach((item) => {

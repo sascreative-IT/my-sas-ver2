@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Domains\Styles\Actions\CreateStyle;
+use App\Domains\Styles\Actions\UpdateCustomStyle;
 use App\Domains\Styles\Actions\UpdateStyle;
 use App\Domains\Styles\Dto\Style as StyleDto;
 use App\Http\Requests\Styles\StyleStoreRequest;
@@ -71,6 +72,8 @@ class CustomizedStylesController extends Controller
             $parent_id = $request->get('parent_id');
             $parent_style_code = Style::find($parent_id);
             $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
+            $categories = $parent_style_code->categories;
+            $sizes = $parent_style_code->sizes;
         }
 
 
@@ -137,9 +140,9 @@ class CustomizedStylesController extends Controller
         return Inertia::render('Styles/CustomizedStyles/Create', [
             'styleData' => $styleDto,
             'customers' => $customers,
-            'categories' => $categories,
+            'categories' => $style->categories,
             'itemTypes' => $itemTypes,
-            'sizes' => $sizes,
+            'sizes' => $style->sizes,
             'factories' => $factories,
             'materials' => $materials,
             'colours' => $colours,
@@ -157,9 +160,9 @@ class CustomizedStylesController extends Controller
                 }
             }
 
-            resolve(UpdateStyle::class)->execute($style, $request->toDto());
+            resolve(UpdateCustomStyle::class)->execute($style, $request->toDto());
 
-            return Redirect::route('style.internal.edit', [$style->id])
+            return Redirect::route('style.customized.edit', [$style->id])
                 ->with(['message' => 'successfully updated']);
 
         } catch (\Exception $ex) {

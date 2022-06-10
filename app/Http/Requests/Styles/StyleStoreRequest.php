@@ -23,7 +23,7 @@ class StyleStoreRequest extends FormRequest
             'item_type' => 'required',
             'item_type.*.id' => 'exists:item_types,id',
             'customer' => 'nullable',
-//            'customer.*.id' => 'exists:customers,id',
+            'customer.id' => 'exists:customers,id',
             'parent_style' => 'nullable',
             'parent_style.*.id' => 'exists:styles,code',
             'production_time' => 'required|integer',

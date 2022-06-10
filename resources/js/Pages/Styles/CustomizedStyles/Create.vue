@@ -154,7 +154,12 @@
                         <!--                        </div>-->
                     </div>
                 </div>
-                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6" v-if="styleData.id">
+                    <form-button @handle-on-click="update">
+                        Update
+                    </form-button>
+                </div>
+                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6" v-else>
                     <form-button @handle-on-click="save">
                         save
                     </form-button>
@@ -302,13 +307,9 @@ export default {
             }
 
             this.$inertia.post('/customized-styles', this.styleForm)
-            /*
-            if (this.styleForm.id !== null) {
-                this.$inertia.put('/customized-styles/' + this.styleForm.id, this.styleForm)
-            } else {
-                this.$inertia.post('/customized-styles', this.styleForm)
-            }
-             */
+        },
+        update() {
+            this.$inertia.put('/customized-styles/' + this.styleForm.id, this.styleForm)
         },
         setSelectedStyleCode(value) {
             this.$inertia.visit(this.$inertia.page.url, {
