@@ -137,13 +137,16 @@ class CustomizedStylesController extends Controller
         $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle','panels.color']);
         $styleDto = new StyleDto($style->toArray());
 
+        $parent_style_code = Style::find($style->parent_style_id);
+        $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer']);
+
         return Inertia::render('Styles/CustomizedStyles/Create', [
             'styleData' => $styleDto,
-            'customers' => $customers,
-            'categories' => $style->categories,
-            'itemTypes' => $itemTypes,
-            'sizes' => $style->sizes,
-            'factories' => $factories,
+            'customers' => $parent_style_code->customer,
+            'categories' => $parent_style_code->categories,
+            'itemTypes' => $parent_style_code->itemType,
+            'sizes' => $parent_style_code->sizes,
+            'factories' => $parent_style_code->factories,
             'materials' => $materials,
             'colours' => $colours,
         ]);
