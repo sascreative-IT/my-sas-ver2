@@ -139,19 +139,6 @@
                                 :styleCodeType="styleForm.styles_type"
                             ></general-style-form>
                         </div>
-                        <!--                        <div v-show="show_customized_form && is_customized">-->
-                        <!--                            <custom-style-form-->
-                        <!--                                :chosen-style-code="payload.select_style_code"-->
-                        <!--                                @custom-style-data="save"-->
-                        <!--                                :reset-form="reset_forms"-->
-                        <!--                            ></custom-style-form>-->
-                        <!--                        </div>-->
-                        <!--                        <div v-show="show_new_customized_form && is_customized">-->
-                        <!--                            <new-custom-style-form-->
-                        <!--                                @new-style-data="save"-->
-                        <!--                                :reset-form="reset_forms"-->
-                        <!--                            ></new-custom-style-form>-->
-                        <!--                        </div>-->
                     </div>
                 </div>
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6" v-if="styleData.id">

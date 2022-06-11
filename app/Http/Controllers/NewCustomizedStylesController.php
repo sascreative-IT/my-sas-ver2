@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Domains\Styles\Actions\CreateStyle;
+use App\Domains\Styles\Actions\UpdateStyle;
 use App\Domains\Styles\Dto\Style as StyleDto;
 use App\Http\Requests\Styles\StyleStoreRequest;
+use App\Http\Requests\Styles\StyleUpdateRequest;
 use App\Models\Factory;
 use App\Models\Style;
 use App\Repositories\CategoryRepository;
@@ -56,11 +58,7 @@ class NewCustomizedStylesController extends Controller
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
         $styles = Style::all('id', 'code', 'name')->toArray();
-        /*
-        foreach ($styles as $style) {
-            print($style['id']."-".$style['code']."<BR/>");
-        }
-        */
+
         $parent_style_code = null;
 
         if ($request->has('parent_id')) {
@@ -102,10 +100,60 @@ class NewCustomizedStylesController extends Controller
             $request->merge(['style_image' => $image_path]);
             $style = resolve(CreateStyle::class)->execute($request->toDto());
 
-            return Redirect::route('style.new-customized.index')
+            return Redirect::route('style.new-customized.edit', [$style->id])
                 ->with(['message' => 'successfully updated']);
-//            return Redirect::route('style.internal.edit', [$style->id])
-//                ->with(['message' => 'successfully updated']);
+        } catch (\Exception $ex) {
+            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
+        }
+    }
+
+    public function edit(
+        CustomerRepository $customerRepository,
+        CategoryRepository $categoryRepository,
+        ItemTypeRepository $itemTypeRepository,
+        SizeRepository $sizeRepository,
+        MaterialRepository $materialRepository,
+        Style $style,
+        Request $request
+    )
+    {
+        $factories = Factory::all();
+        $customers = $customerRepository->getAll();
+        $categories = $categoryRepository->getAll();
+        $itemTypes = $itemTypeRepository->getAll();
+        $sizes = $sizeRepository->getAll();
+        $materials = $materialRepository->getAll();
+
+        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
+        $styleDto = new StyleDto($style->toArray());
+
+        return Inertia::render('Styles/NewCustomizedStyles/Create', [
+            'styleData' => $styleDto,
+            'customers' => $customers,
+            'categories' => $categories,
+            'itemTypes' => $itemTypes,
+            'sizes' => $sizes,
+            'factories' => $factories,
+            'materials' => $materials,
+        ]);
+    }
+
+    public function update(Style $style, StyleUpdateRequest $request)
+    {
+        try {
+            $image_path = '';
+            if ($request->hasFile('image')) {
+                $image_path = $request->file('image')->store('style_images', 'public');
+                if ($image_path != "") {
+                    $request->merge(['style_image' => $image_path]);
+                }
+            }
+
+            resolve(UpdateStyle::class)->execute($style, $request->toDto());
+
+            return Redirect::route('style.new-customized.edit', [$style->id])
+                ->with(['message' => 'successfully updated']);
+
         } catch (\Exception $ex) {
             return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
         }

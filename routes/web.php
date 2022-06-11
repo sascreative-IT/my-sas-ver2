@@ -192,6 +192,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/new-customized-styles', [NewCustomizedStylesController::class, 'index'])->name('style.new-customized.index');
     Route::get('/new-customized-styles/create', [NewCustomizedStylesController::class, 'create'])->name('style.new-customized.create');
     Route::post('/new-customized-styles', [NewCustomizedStylesController::class, 'store'])->name('style.new-customized.store');
+    Route::get('/new-customized-styles/edit/{style}', [NewCustomizedStylesController::class, 'edit'])->name('style.new-customized.edit');
+    Route::put('/new-customized-styles/{style}', [NewCustomizedStylesController::class, 'update'])->name('style.new-customized.update');
 
     Route::get('/external-styles/edit/{style}', [ExternalStylesController::class, 'edit'])->name('style.external.edit');
     Route::get('/external-styles', [ExternalStylesController::class, 'index'])->name('style.external.index');

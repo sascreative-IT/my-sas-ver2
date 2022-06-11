@@ -94,22 +94,14 @@
                                 :styleCodeType="styleForm.styles_type"
                             ></general-style-form>
                         </div>
-                        <!--                        <div v-show="show_customized_form && is_customized">-->
-                        <!--                            <custom-style-form-->
-                        <!--                                :chosen-style-code="payload.select_style_code"-->
-                        <!--                                @custom-style-data="save"-->
-                        <!--                                :reset-form="reset_forms"-->
-                        <!--                            ></custom-style-form>-->
-                        <!--                        </div>-->
-                        <!--                        <div v-show="show_new_customized_form && is_customized">-->
-                        <!--                            <new-custom-style-form-->
-                        <!--                                @new-style-data="save"-->
-                        <!--                                :reset-form="reset_forms"-->
-                        <!--                            ></new-custom-style-form>-->
-                        <!--                        </div>-->
                     </div>
                 </div>
-                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6" v-if="styleData.id">
+                    <form-button @handle-on-click="update">
+                        Update
+                    </form-button>
+                </div>
+                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6" v-else>
                     <form-button @handle-on-click="save">
                         save
                     </form-button>
@@ -252,11 +244,10 @@ export default {
                 this.styleForm.image = this.$refs.style_code_image.files[0];
             }
 
-            if (this.styleForm.id !== null) {
-                this.$inertia.put('/new-customized-styles/' + this.styleForm.id, this.styleForm)
-            } else {
-                this.$inertia.post('/new-customized-styles', this.styleForm)
-            }
+            this.$inertia.post('/new-customized-styles', this.styleForm)
+        },
+        update() {
+            this.$inertia.put('/new-customized-styles/' + this.styleForm.id, this.styleForm)
         },
         setSelectedStyleCode(value) {
             this.$inertia.visit(this.$inertia.page.url, {

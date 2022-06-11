@@ -42,7 +42,7 @@
                             <template #default="scope">
                                 <inertia-link
                                     class="inline-flex items-center px-4 py-1 border-gray-600 border hover:bg-gray-700 hover:border-transparent hover:text-white rounded-sm font-semibold text-xs text-black uppercase tracking-widest active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                                    :href="`/internal-styles/edit/${scope.row.id}`"
+                                    :href="`/new-customized-styles/edit/${scope.row.id}`"
                                 >
                                     Edit
                                 </inertia-link>
