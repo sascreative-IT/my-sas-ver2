@@ -57,10 +57,11 @@ class InternalStylesController extends Controller
         CustomerRepository $customerRepository,
         CategoryRepository $categoryRepository,
         ItemTypeRepository $itemTypeRepository,
-        SizeRepository $sizeRepository,
+        SizeRepository     $sizeRepository,
         MaterialRepository $materialRepository,
-        Request $request,
-    ) {
+        Request            $request,
+    )
+    {
         $factories = Factory::all();
         $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
@@ -123,11 +124,12 @@ class InternalStylesController extends Controller
         CustomerRepository $customerRepository,
         CategoryRepository $categoryRepository,
         ItemTypeRepository $itemTypeRepository,
-        SizeRepository $sizeRepository,
+        SizeRepository     $sizeRepository,
         MaterialRepository $materialRepository,
-        Style $style,
-        Request $request
-    ) {
+        Style              $style,
+        Request            $request
+    )
+    {
         $factories = Factory::all();
         $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
