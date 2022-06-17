@@ -3,10 +3,10 @@
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <template v-if="styleData.id">
-                Edit Style - {{styleData.code}}
+                    Edit Style - {{styleData.code}}
                 </template>
                 <template v-else>
-                    Add a new style
+                    Add a new - New customized style
                 </template>
 
             </h2>
@@ -70,51 +70,7 @@
 
                                 </div>
                             </div>
-                            <div>
-                                <div>
-                                    <div v-if="styleForm.styles_type !== 'General'">
-                                    <div class="pt-2 pb-4">
 
-                                        <label
-                                            for="customer_name"
-                                            class="block text-base font-medium text-gray-700"
-                                        >
-                                            Customer Name
-                                        </label>
-
-                                        <v-select
-                                            id="customer_name"
-                                            v-model="styleForm.customer"
-                                            label="name"
-                                            item-id="id"
-                                            :options="customers"
-                                            :reduce="customer => customer.id"
-                                            @input="setSelectedCustomerId"
-                                        ></v-select>
-                                    </div>
-                                    <div class="pt-2 pb-4" v-if="styleForm.styles_type === 'Customized'">
-                                        <div class="pt-2 pb-4">
-
-                                            <label for="parent_style_code"
-                                                   class="block text-base font-medium text-gray-700">
-                                                Extending Style Code Name
-                                            </label>
-
-                                            <v-select
-                                                :disabled="styleForm.styles_type === 'General'"
-                                                id="parent_style_code"
-                                                v-model="styleForm.parent_style"
-                                                :options="styles"
-                                                label="name"
-                                                item-id="id"
-                                                @input="setSelectedStyleCode"
-                                            ></v-select>
-                                        </div>
-                                    </div>
-
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,7 +88,6 @@
                                 :materials="materials"
                                 :item-types="itemTypes"
                                 :sizes="sizes"
-                                :colours="colours"
                                 :factories="factories"
                                 v-model="styleForm"
                                 :errors="errors"
@@ -161,9 +116,9 @@
 import FormButton from "@/UIElements/FormButton";
 import EditButton from "@/UIElements/EditButton";
 import DeleteButton from "@/UIElements/DeleteButton";
-import GeneralStyleForm from "@/Pages/Styles/CustomizedStyles/GeneralStyleForm";
-import CustomStyleForm from "@/Pages/Styles/CustomizedStyles/CustomStyleForm";
-import NewCustomStyleForm from "@/Pages/Styles/CustomizedStyles/NewCustomStyleForm";
+import GeneralStyleForm from "@/Pages/Styles/InternalStyles/GeneralStyleForm";
+import CustomStyleForm from "@/Pages/Styles/InternalStyles/CustomStyleForm";
+import NewCustomStyleForm from "@/Pages/Styles/InternalStyles/NewCustomStyleForm";
 
 export default {
     name: "Create",
@@ -212,10 +167,6 @@ export default {
         },
         customer: {
             type: String
-        },
-        colours: {
-            type: Array,
-            required: true,
         }
     },
     components: {
@@ -293,10 +244,10 @@ export default {
                 this.styleForm.image = this.$refs.style_code_image.files[0];
             }
 
-            this.$inertia.post('/customized-styles', this.styleForm)
+            this.$inertia.post('/new-customized-styles', this.styleForm)
         },
         update() {
-            this.$inertia.put('/customized-styles/' + this.styleForm.id, this.styleForm)
+            this.$inertia.put('/new-customized-styles/' + this.styleForm.id, this.styleForm)
         },
         setSelectedStyleCode(value) {
             this.$inertia.visit(this.$inertia.page.url, {

@@ -8,8 +8,12 @@ use App\Models\StylePanel;
 
 class AttachFabricToPanel
 {
-    public function execute(StylePanel $panel, Fabric $fabricDto)
+    public function execute(StylePanel $panel, Fabric $fabricDto, $customStyle = false)
     {
-        $panel->fabrics()->syncWithoutDetaching([$fabricDto->id]);
+        if ($customStyle) {
+            $panel->fabrics()->sync([$fabricDto->id]);
+        } else {
+            $panel->fabrics()->syncWithoutDetaching([$fabricDto->id]);
+        }
     }
 }

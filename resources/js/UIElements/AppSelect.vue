@@ -7,6 +7,7 @@
             :value="preparedValue"
             :filterable=filterable
             :multiple="multiple"
+            :multiple-limit="multipleLimit"
             :placeholder="placeholder"
             :no-data-text="noDataText"
             :no-match-text="noMatchText"
@@ -42,6 +43,11 @@ export default {
             required: false,
             default: false,
             type: Boolean,
+        },
+        multipleLimit: {
+            required: false,
+            default: 0,
+            type: Number,
         },
         placeholder: {
             required: false,

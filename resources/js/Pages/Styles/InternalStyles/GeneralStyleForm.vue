@@ -169,6 +169,7 @@
                                                 v-model="panel.fabrics"
                                                 filterable
                                                 multiple
+                                                :multiple-limit="styleCodeType === 'New-Customized' ? 1 : 0"
                                                 placeholder="Select Fabric"
                                                 :options="materials"
                                                 option-label="name"

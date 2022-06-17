@@ -1,28 +1,27 @@
 <?php
-declare(strict_types=1);
-
 namespace App\Domains\Styles\Actions;
 
+use App\Domains\Styles\Dto\Factories;
 use App\Domains\Styles\Dto\Style;
 use App\Models\Style as StyleModel;
 
-class UpdateStyle
+class UpdateCustomStyle
 {
-    private AttachSizeToStyle $attachSizeToStyle;
-    private AttachCategoryToStyle $attachCategoryToStyle;
-    private AttachFactoriesToStyle $attachFactoriesToStyle;
+    private AttachSizeToCustomStyle $attachSizeToCustomStyle;
+    private AttachCategoryToCustomStyle $attachCategoryToCustomStyle;
+    private AttachFactoriesToCustomStyle $attachFactoriesToCustomStyle;
     private AttachPanelToStyle $attachPanelToStyle;
 
     public function __construct(
-        AttachSizeToStyle      $attachSizeToStyle,
-        AttachCategoryToStyle  $attachCategoryToStyle,
-        AttachFactoriesToStyle $attachFactoriesToStyle,
+        AttachSizeToCustomStyle      $attachSizeToCustomStyle,
+        AttachCategoryToCustomStyle  $attachCategoryToCustomStyle,
+        AttachFactoriesToCustomStyle $attachFactoriesToStyle,
         AttachPanelToStyle     $attachPanelToStyle,
     )
     {
-        $this->attachSizeToStyle = $attachSizeToStyle;
-        $this->attachCategoryToStyle = $attachCategoryToStyle;
-        $this->attachFactoriesToStyle = $attachFactoriesToStyle;
+        $this->attachSizeToCustomStyle = $attachSizeToCustomStyle;
+        $this->attachCategoryToCustomStyle = $attachCategoryToCustomStyle;
+        $this->attachFactoriesToCustomStyle = $attachFactoriesToStyle;
         $this->attachPanelToStyle = $attachPanelToStyle;
     }
 
@@ -48,18 +47,9 @@ class UpdateStyle
                 ['style_image' => $styleDto->style_image]
             );
         }
-
-        foreach ($styleDto->sizes as $size) {
-            $this->attachSizeToStyle->execute($style, $size);
-        }
-
-        foreach ($styleDto->categories as $category) {
-            $this->attachCategoryToStyle->execute($style, $category);
-        }
-
-        foreach ($styleDto->factories as $factory) {
-            $this->attachFactoriesToStyle->execute($style, $factory);
-        }
+        $this->attachSizeToCustomStyle->execute($style, $styleDto->sizes);
+        $this->attachCategoryToCustomStyle->execute($style, $styleDto->categories);
+        $this->attachFactoriesToCustomStyle->execute($style, $styleDto->factories);
 
         foreach ($styleDto->panels as $panel) {
             $this->attachPanelToStyle->execute($style, $panel);
