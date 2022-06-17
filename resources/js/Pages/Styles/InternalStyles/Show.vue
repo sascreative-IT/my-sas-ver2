@@ -96,10 +96,10 @@
                                             <label class="block text-sm font-medium text-gray-700">
                                                 Sizes
                                             </label>
-                                            <div class="flex flex-row">
+                                            <div class="flex flex-wrap">
                                                 <div v-for="size in form.sizes" class="mt-1 pr-1">
                                                     <div class="border border-gray-400 h-8 w-24 mb-4 md:mb-0 rounded-md inline-flex items-center justify-center">
-                                                        <div tabindex="0" aria-label="gray border badge" class="focus:outline-none flex items-center">
+                                                        <div class="focus:outline-none">
                                                             <span class="text-sm text-gray-700 dark:text-gray-100 font-normal">{{size.name}}</span>
                                                         </div>
                                                     </div>
@@ -110,7 +110,7 @@
                                             <label class="block text-sm font-medium text-gray-700">
                                                 Factory
                                             </label>
-                                            <div class="flex flex-row">
+                                            <div class="flex flex-wrap">
                                                 <div v-for="factory in form.factories" class="mt-1 pr-1">
                                                     <div class="border border-gray-400 h-8 w-24 mb-4 md:mb-0 rounded-md inline-flex items-center justify-center">
                                                         <div tabindex="0" aria-label="gray border badge" class="focus:outline-none flex items-center">
