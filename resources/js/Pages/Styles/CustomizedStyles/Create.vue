@@ -97,7 +97,7 @@
 
                                             <label for="parent_style_code"
                                                    class="block text-base font-medium text-gray-700">
-                                                Extending Style Code Name
+                                                Extending Parent Style Code
                                             </label>
 
                                             <v-select
@@ -105,7 +105,7 @@
                                                 id="parent_style_code"
                                                 v-model="styleForm.parent_style"
                                                 :options="styles"
-                                                label="name"
+                                                label="code"
                                                 item-id="id"
                                                 @input="setSelectedStyleCode"
                                             ></v-select>
@@ -275,9 +275,11 @@ export default {
 
         this.url = "/" + this.styleForm.style_image;
 
-        if (typeof(this.styleForm.parent_style) != 'undefined') {
+        if (typeof(this.styleForm.parent_style) != 'undefined' && this.styleForm.parent_style != null) {
             this.styleForm.parent_style_code = this.styleForm.parent_style.code;
         }
+        // console.log(this.styleForm.parent_style)
+
     },
     methods: {
         selectStyleType() {
@@ -329,6 +331,7 @@ export default {
                         this.styleForm.parent_style = {
                             'id' : value.id,
                             'name' : value.name,
+                            'code' : value.code
                         };
 
                         if (this.styleType != null) {

@@ -26,7 +26,7 @@
                                             <template slot="prepend">{{form.parent_style_code}}</template>
                                         </el-input>
                                     </el-tooltip>
-                                    <p class="text-xs">current extension: {{form.code}}</p>
+                                    <p class="text-xs">Customized style code: {{form.code}}</p>
                                 </div>
                                 <div class="col-span-1 sm:col-span-1">
                                     <label for="style_name_general_style"
@@ -383,7 +383,7 @@ export default {
     },
     methods: {
         styleCodeChange(code) {
-            this.form.code = this.form.parent_style_code+'_'+code
+            this.form.code = this.form.parent_style_code+' '+code
         },
         defaultPanel() {
             return {

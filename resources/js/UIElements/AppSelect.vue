@@ -4,6 +4,7 @@
             :disabled="disabled"
             class="w-full"
             @input="input"
+            @change="change"
             @remove-tag="cleared"
             :value="preparedValue"
             :filterable=filterable
@@ -109,6 +110,9 @@ export default {
 
             this.$emit('input', objectifiedSelectedOptions)
             this.$emit('changed', objectifiedSelectedOptions)
+        },
+        change(value){
+            this.$emit('change', value)
         }
     },
     computed: {
