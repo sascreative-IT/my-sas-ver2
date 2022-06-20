@@ -522,6 +522,7 @@ export default {
                 this.invoiceItem.material = this.material;
 
                 this.invoice.items.push(this.invoiceItem);
+                this.calculateTotal();
                 this.resetInvoiceItems();
             }
         },
