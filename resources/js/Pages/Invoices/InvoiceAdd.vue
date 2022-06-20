@@ -130,126 +130,7 @@
                 </div>
                 <div class="mt-5 bg-white overflow-hidden shadow-xl sm:rounded-lg mt-5">
                     <div class="bg-gray-500 pl-5 pt-2 pb-2 text-white">
-                        <h4>Add invoice items</h4>
-                    </div>
-                    <div class="p-5 h-64 relative">
-                        <form class="">
-                            <div class="shadow overflow-hidden sm:rounded-md">
-                                <div class="px-4 py-5 bg-white sm:p-6 h-32">
-                                    <div class="flex justify-evenly px-4">
-                                        <div class="w-48">
-                                            <div class="">
-                                                <label for="material_name"
-                                                       class="block text-sm font-medium text-gray-700">
-                                                    Material Name</label>
-
-                                                <app-select
-                                                    class="w-48"
-                                                    placeholder="Select Material"
-                                                    option-label="name"
-                                                    option-value="id"
-                                                    :filterable="true"
-                                                    :options="materials"
-                                                    v-model="material"
-                                                    @input="setSelectedMaterial"
-                                                ></app-select>
-                                            </div>
-                                        </div>
-                                        <div class="w-48">
-                                            <div class="">
-                                                <label for="colour" class="block text-sm font-medium text-gray-700">
-                                                    Colour</label>
-                                                <app-select
-                                                    placeholder="Select Colour"
-                                                    option-label="name"
-                                                    option-value="id"
-                                                    :filterable="true"
-                                                    :options="colours"
-                                                    v-model="invoiceItem.color"
-                                                    @input="setSelectedColour"
-                                                ></app-select>
-                                            </div>
-                                        </div>
-                                        <div class="w-48">
-                                            <div class="">
-                                                <label for="unit_price-value"
-                                                       class="block text-sm font-medium text-gray-700">
-                                                    Unit Price
-                                                    <template v-if="material">
-                                                        ({{ material.unit.toUpperCase() }})
-                                                    </template>
-                                                </label>
-                                                <div class="absolute">
-                                                    <div class="flex flex-wrap items-stretch w-full mb-4 relative">
-                                                        <div class="flex -mr-px">
-                                                            <span
-                                                                class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
-                                                                {{ selectedCurrency }}
-                                                            </span>
-                                                        </div>
-                                                        <input type="text"
-                                                               class="flex-shrink flex-grow flex-auto leading-normal w-32 flex-1 h-10 border-gray-300 rounded-md rounded-l-none focus:ring-indigo-500 focus:border-indigo-500 px-3 relative"
-                                                               placeholder="0.00"
-                                                               id="sub_total-value"
-                                                               v-model="invoiceItem.unit_price"
-                                                               v-on:change="fixUnitPrice">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="w-48">
-                                            <div class="">
-                                                <label for="quantity-value"
-                                                       class="block text-sm font-medium text-gray-700">
-                                                    Quantity</label>
-                                                <div class="absolute">
-                                                    <input
-                                                        v-model="invoiceItem.quantity"
-                                                        class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                        id="quantity-value"
-                                                        type="text"
-                                                        v-on:change="calculateSubTotal">
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="w-48">
-                                            <div class="">
-                                                <label for="sub_total-value"
-                                                       class="block text-sm font-medium text-gray-700">
-                                                    Sub Total</label>
-                                                <div class="absolute">
-                                                    <div class="flex flex-wrap items-stretch w-full mb-4 relative">
-                                                        <div class="flex -mr-px">
-                                                            <span
-                                                                class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
-                                                                {{ selectedCurrency }}
-                                                            </span>
-                                                        </div>
-                                                        <input type="text"
-                                                               class="flex-shrink flex-grow flex-auto leading-normal w-32 flex-1 h-10 border-gray-300 rounded-md rounded-l-none focus:ring-indigo-500 focus:border-indigo-500 px-3 relative"
-                                                               placeholder="0.00"
-                                                               id="sub_total-value"
-                                                               v-model="invoiceItem.sub_total">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-                                </div>
-                                <div class="flex justify-end px-4 py-3 bg-gray-50 sm:px-6">
-                                    <p v-if="invoice_item_has_error" @click="handleCloseErrorMessage" class="error-msg">
-                                        {{error_message}}
-                                    </p>
-                                    <form-button type="button" @handle-on-click="handleAddInvoiceItems">
-                                        Add item
-                                    </form-button>
-                                </div>
-                            </div>
-                        </form>
+                        <h4>Edit invoice items</h4>
                     </div>
                     <div class="p-5">
                         <table class="min-w-full divide-y divide-gray-200">
@@ -312,7 +193,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap flex flex-row">
-                                    <div class="text-sm font-medium" v-on:click="deleteItemHandler(index)">
+                                    <div v-if="invoice.items.length >= 2" class="text-sm font-medium" v-on:click="deleteItemHandler(index)">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
                                              fill="currentColor">
                                             <path fill-rule="evenodd"
@@ -345,7 +226,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{defaultCurrency.name}} {{total_amount}}
+                                        {{defaultCurrency && defaultCurrency.name}} {{total_amount}}
                                     </div>
                                 </td>
 
@@ -356,6 +237,108 @@
                             </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="p-5 h-64 relative">
+                        <form class="">
+                            <div class="shadow overflow-hidden sm:rounded-md">
+                                <div class="px-4 py-5 bg-white sm:p-6 h-32">
+                                    <div class="flex justify-evenly px-4">
+                                        <div class="w-48">
+                                            <div class="">
+                                                <label for="material_name"
+                                                       class="block text-sm font-medium text-gray-700">
+                                                    Material Name</label>
+                                                <input type="text" v-model="invoiceItem.material_name" disabled class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                        </div>
+                                        <div class="w-48">
+                                            <div class="">
+                                                <label for="colour" class="block text-sm font-medium text-gray-700">
+                                                    Colour</label>
+                                                <input type="text" v-model="invoiceItem.colour.name" disabled class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                        </div>
+                                        <div class="w-48">
+                                            <div class="">
+                                                <label for="unit_price-value"
+                                                       class="block text-sm font-medium text-gray-700">
+                                                    Unit Price
+                                                    <template v-if="material">
+                                                        ({{ material.unit.toUpperCase() }})
+                                                    </template>
+                                                </label>
+                                                <div class="absolute">
+                                                    <div class="flex flex-wrap items-stretch w-full mb-4 relative">
+                                                        <div class="flex -mr-px">
+                                                            <span
+                                                                class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
+                                                                {{ selectedCurrency }}
+                                                            </span>
+                                                        </div>
+                                                        <input type="text"
+                                                               disabled
+                                                               class="flex-shrink flex-grow flex-auto leading-normal w-32 flex-1 h-10 border-gray-300 rounded-md rounded-l-none focus:ring-indigo-500 focus:border-indigo-500 px-3 relative"
+                                                               placeholder="0.00"
+                                                               id="sub_total-value"
+                                                               v-model="invoiceItem.unit_price"
+                                                               v-on:change="fixUnitPrice">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-48">
+                                            <div class="">
+                                                <label for="quantity-value"
+                                                       class="block text-sm font-medium text-gray-700">
+                                                    Quantity</label>
+                                                <div class="absolute">
+                                                    <input
+                                                        v-model="invoiceItem.quantity"
+                                                        class="text-right mb-1 focus:ring-indigo-500 focus:border-indigo-500 block w-48 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        id="quantity-value"
+                                                        type="text"
+                                                        v-on:change="calculateSubTotal">
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="w-48">
+                                            <div class="">
+                                                <label for="sub_total-value"
+                                                       class="block text-sm font-medium text-gray-700">
+                                                    Sub Total</label>
+                                                <div class="absolute">
+                                                    <div class="flex flex-wrap items-stretch w-full mb-4 relative">
+                                                        <div class="flex -mr-px">
+                                                            <span
+                                                                class="flex items-center leading-normal bg-grey-lighter rounded rounded-r-none border border-r-0 border-grey-light px-3 whitespace-no-wrap text-grey-dark text-sm">
+                                                                {{ selectedCurrency }}
+                                                            </span>
+                                                        </div>
+                                                        <input type="text"
+                                                               class="flex-shrink flex-grow flex-auto leading-normal w-32 flex-1 h-10 border-gray-300 rounded-md rounded-l-none focus:ring-indigo-500 focus:border-indigo-500 px-3 relative"
+                                                               placeholder="0.00"
+                                                               id="sub_total-value"
+                                                               v-model="invoiceItem.sub_total">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                                <div class="flex justify-end px-4 py-3 bg-gray-50 sm:px-6">
+                                    <p v-if="invoice_item_has_error" @click="handleCloseErrorMessage" class="error-msg">
+                                        {{error_message}}
+                                    </p>
+                                    <form-button type="button" @handle-on-click="handleAddInvoiceItems">
+                                        Update item
+                                    </form-button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div class="flex justify-start py-10 px-5">
                         <button
@@ -459,7 +442,9 @@ export default {
     mounted() {
         this.extractFactoryName(this.factories);
         this.defaultCurrency = this.currencies[Object.keys(this.currencies)[0]];
-        this.selectedCurrency = this.defaultCurrency.name;
+        if (this.defaultCurrency !== typeof 'undefined') {
+            this.selectedCurrency = this.defaultCurrency.name;
+        }
 
         this.copyMaterialPurchaseOrderToInvoice();
         this.invoice.invoiced_date = new Date();
@@ -513,6 +498,7 @@ export default {
         },
         resetInvoiceItems() {
             this.invoiceItem = {
+                colour: '',
                 material_name_id: null,
                 material: '',
                 material_name: '',
@@ -528,6 +514,9 @@ export default {
         },
         handleAddInvoiceItems() {
             if (this.isValidInvoiceItem()) {
+                if (this.error_message !== '') {
+                    this.error_message = ''
+                }
                 this.invoiceItem.currency = this.selectedCurrency;
                 this.invoiceItem.unit = this.material.unit;
                 this.invoiceItem.material = this.material;
@@ -542,10 +531,18 @@ export default {
             }
         },
         getMaterialById(material_id) {
-            return this.materials.[material_id];
+            // return this.materials.[material_id];
+            let result;
+            return result = this.materials.filter(material => {
+                return material.id === material_id
+            })
         },
         getMaterialColorById(color_id) {
-            return this.colours.[color_id];
+            // return this.colours.[color_id];
+            let result;
+            return result = this.colours.filter(colour => {
+                return colour.id === color_id
+            })
         },
         copyMaterialPurchaseOrderToInvoice() {
             if (this.materialPurchaseOrder != null) {
@@ -561,24 +558,25 @@ export default {
                 }
 
                 if (typeof this.materialPurchaseOrder.items != 'undefined') {
-                    for (let item of this.materialPurchaseOrder.items) {
-                        let material = this.getMaterialById(item.variation.material_id);
-                        let color = this.getMaterialColorById(item.variation.colour_id);
+                    for (let item in this.materialPurchaseOrder.items) {
+                        let purchaseOrderItem = this.materialPurchaseOrder.items[item];
+                        let material = this.getMaterialById(purchaseOrderItem.variation.material_id);
+                        let color = this.getMaterialColorById(purchaseOrderItem.variation.colour_id);
 
                         this.invoice.items.push({
-                            material_name_id: item.variation.material_id,
-                            material: material,
-                            material_name: material.name,
-                            material_colour_id: item.variation.colour_id,
-                            material_colour: color.name,
-                            colour: color,
-                            unit: item.unit,
-                            unit_price: item.unit_price,
-                            quantity: item.quantity,
-                            sub_total: item.sub_total,
-                            currency: item.currency,
+                            material_name_id: purchaseOrderItem.variation.material_id,
+                            material: material[0],
+                            material_name: material[0].name,
+                            material_colour_id: purchaseOrderItem.variation.colour_id,
+                            material_colour: color[0].name,
+                            colour: color[0],
+                            unit: purchaseOrderItem.unit,
+                            unit_price: purchaseOrderItem.unit_price,
+                            quantity: purchaseOrderItem.quantity,
+                            sub_total: purchaseOrderItem.sub_total,
+                            currency: purchaseOrderItem.currency,
                         });
-                        this.selectedCurrency = item.currency;
+                        this.selectedCurrency = purchaseOrderItem.currency;
                     }
                 }
 
@@ -604,10 +602,15 @@ export default {
             this.calculateSubTotal();
         },
         deleteItemHandler(index) {
-            this.invoice.items.splice(index, 1);
-            if (this.invoice.items.length == 0) {
-                this.unSetItemsReadOnly();
+            if (this.invoice.items <= 2) {
+                this.error_message = 'Invoice items cannot be empty';
+            } else {
+                this.invoice.items.splice(index, 1);
+                if (this.invoice.items.length == 0) {
+                    this.unSetItemsReadOnly();
+                }
             }
+
         },
         editItemHandler(index) {
             this.invoiceItem = this.invoice.items[index];
