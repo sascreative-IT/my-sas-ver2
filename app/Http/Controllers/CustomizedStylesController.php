@@ -18,6 +18,7 @@ use App\Repositories\MaterialRepository;
 use App\Repositories\SizeRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -74,8 +75,25 @@ class CustomizedStylesController extends Controller
             $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
             $categories = $parent_style_code->categories;
             $sizes = $parent_style_code->sizes;
-        }
 
+            $material_ids = [];
+            foreach($parent_style_code->panels as $panel){
+                $material_ids[] = $panel->fabrics[0]->id;
+            }
+
+            $avail_materials_colours = DB::table('material_variations')
+                ->join('material_inventories', function ($join) use ($material_ids) {
+                    $join->on('material_variations.id', '=', 'material_inventories.material_variation_id')
+                        ->whereIn('material_variations.material_id', $material_ids);
+                })
+                ->join('colours', 'material_variations.colour_id', '=', 'colours.id')
+                ->groupBy('colours.id')
+                ->select('colours.*')
+                ->get();
+
+            $colours = $avail_materials_colours;
+
+        }
 
         $style = new StyleDto([
             'sizes' => [],
@@ -109,7 +127,7 @@ class CustomizedStylesController extends Controller
             }
             $request->merge(['style_image' => $image_path]);
             $style = resolve(CreateStyle::class)->execute($request->toDto());
-            return Redirect::route('style.customized.edit', [$style->id])
+            return Redirect::route('style.customized.index', [$style->id])
                 ->with(['message' => 'successfully updated']);
         } catch (\Exception $ex) {
             return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
@@ -137,13 +155,33 @@ class CustomizedStylesController extends Controller
         $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle','panels.color']);
         $styleDto = new StyleDto($style->toArray());
 
+        $parent_style_code = Style::find($style->parent_style_id);
+        $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer']);
+
+        $material_ids = [];
+        foreach($parent_style_code->panels as $panel){
+            $material_ids[] = $panel->fabrics[0]->id;
+        }
+
+        $avail_materials_colours = DB::table('material_variations')
+            ->join('material_inventories', function ($join) use ($material_ids) {
+                $join->on('material_variations.id', '=', 'material_inventories.material_variation_id')
+                    ->whereIn('material_variations.material_id', $material_ids);
+            })
+            ->join('colours', 'material_variations.colour_id', '=', 'colours.id')
+            ->groupBy('colours.id')
+            ->select('colours.*')
+            ->get();
+
+        $colours = $avail_materials_colours;
+
         return Inertia::render('Styles/CustomizedStyles/Create', [
             'styleData' => $styleDto,
-            'customers' => $customers,
-            'categories' => $style->categories,
-            'itemTypes' => $itemTypes,
-            'sizes' => $style->sizes,
-            'factories' => $factories,
+            'customers' => $parent_style_code->customer,
+            'categories' => $parent_style_code->categories,
+            'itemTypes' => $parent_style_code->itemType,
+            'sizes' => $parent_style_code->sizes,
+            'factories' => $parent_style_code->factories,
             'materials' => $materials,
             'colours' => $colours,
         ]);

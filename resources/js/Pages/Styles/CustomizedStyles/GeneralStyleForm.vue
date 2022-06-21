@@ -26,7 +26,7 @@
                                             <template slot="prepend">{{form.parent_style_code}}</template>
                                         </el-input>
                                     </el-tooltip>
-                                    <p class="text-xs">current extension: {{form.code}}</p>
+                                    <p class="text-xs">Customized style code: {{form.code}}</p>
                                 </div>
                                 <div class="col-span-1 sm:col-span-1">
                                     <label for="style_name_general_style"
@@ -70,6 +70,7 @@
                                         Item type
                                     </label>
                                     <app-select
+                                        :disabled="(styleCodeType == 'Customized')"
                                         :filterable="true"
                                         :multiple="false"
                                         :options="itemTypes"
@@ -88,6 +89,7 @@
                                         Production time
                                     </label>
                                     <input type="number"
+                                           :disabled="(styleCodeType == 'Customized')"
                                            v-model="form.production_time"
                                            id="production_time_general_style"
                                            name="production_time_general_style"
@@ -132,87 +134,6 @@
             </div>
             <el-divider content-position="left"><h3 class="text-lg font-bold">Panels</h3></el-divider>
             <div class="py-4">
-                <!-- Panel Add form -->
-                <Transition
-                    enter-active-class="duration-500 ease-out"
-                    enter-class="translate-x-full opacity-0"
-                    enter-to-class="translate-x-0 opacity-100"
-                    leave-active-class="duration-500 ease-in"
-                    leave-class="translate-x-0 opacity-100"
-                    leave-to-class="translate-x-full opacity-0"
-                >
-                <div v-show="show_panel_form">
-                    <div class="shadow overflow-hidden sm:rounded-md">
-                        <div class="px-4 py-5 bg-white sm:p-6">
-                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 pb-6">
-                                <label class="block text-sm text-gray-700 mb-2" for="grid-first-name">
-                                    Component Name
-                                </label>
-                                <input
-                                    class="appearance-none block w-full text-gray-700 border rounded leading-tight focus:outline-none focus:bg-white"
-                                    id="grid-first-name"
-                                    type="text"
-                                    v-model="panel.name"
-                                >
-                            </div>
-
-                            <div class="w-full px-3 mb-6 md:mb-0 pb-6">
-                                <label class="block text-gray-700 text-sm mb-2" for="grid-first-name">
-                                    Fabrics
-                                </label>
-
-                                <div>
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <app-select
-                                                v-model="panel.fabrics"
-                                                filterable
-                                                multiple
-                                                placeholder="Select Fabric"
-                                                :options="component_materials"
-                                                option-label="name"
-                                                option-value="id"
-                                            ></app-select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="w-full px-3 mb-6 md:mb-0 pb-6">
-                                <label class="block text-gray-700 text-sm mb-2" for="grid-first-name">
-                                    Color
-                                </label>
-
-                                <div>
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <app-select
-                                                v-model="panel.color"
-                                                filterable
-                                                placeholder="Select Default Fabric"
-                                                no-data-text="No Fabrics Selected"
-                                                no-match-text="No Result"
-                                                :options="colours"
-                                                option-label="name"
-                                                option-value="id"
-                                            ></app-select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 pb-6">
-                                <form-button @handle-on-click="addPanel">
-                                    Add Panel
-                                </form-button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </Transition>
-
                 <!-- Panel Table -->
                 <div class="p-5 border-2 border-gray-200">
                     <el-table
@@ -264,6 +185,86 @@
 
                     </el-table>
                 </div>
+                <!-- Panel Add form -->
+                <Transition
+                    enter-active-class="duration-500 ease-out"
+                    enter-class="translate-x-full opacity-0"
+                    enter-to-class="translate-x-0 opacity-100"
+                    leave-active-class="duration-500 ease-in"
+                    leave-class="translate-x-0 opacity-100"
+                    leave-to-class="translate-x-full opacity-0"
+                >
+                    <div v-show="show_panel_form">
+                        <div class="shadow overflow-hidden sm:rounded-md">
+                            <div class="px-4 py-5 bg-white sm:p-6">
+                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 pb-6">
+                                    <label class="block text-sm text-gray-700 mb-2" for="grid-first-name">
+                                        Component Name
+                                    </label>
+                                    <input
+                                        class="appearance-none block w-full text-gray-700 border rounded leading-tight focus:outline-none focus:bg-white"
+                                        id="grid-first-name"
+                                        type="text"
+                                        v-model="panel.name"
+                                    >
+                                </div>
+
+                                <div class="w-full px-3 mb-6 md:mb-0 pb-6">
+                                    <label class="block text-gray-700 text-sm mb-2" for="grid-first-name">
+                                        Fabrics
+                                    </label>
+
+                                    <div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <app-select
+                                                    v-model="panel.fabrics"
+                                                    filterable
+                                                    multiple
+                                                    placeholder="Select Fabric"
+                                                    :options="component_materials"
+                                                    option-label="name"
+                                                    option-value="id"
+                                                ></app-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="w-full px-3 mb-6 md:mb-0 pb-6">
+                                    <label class="block text-gray-700 text-sm mb-2" for="grid-first-name">
+                                        Color
+                                    </label>
+
+                                    <div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <app-select
+                                                    v-model="panel.color"
+                                                    filterable
+                                                    placeholder="Select Default Fabric"
+                                                    no-data-text="No Fabrics Selected"
+                                                    no-match-text="No Result"
+                                                    :options="colours"
+                                                    option-label="name"
+                                                    option-value="id"
+                                                ></app-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 pb-6">
+                                    <form-button @handle-on-click="addPanel">
+                                        Update Panel
+                                    </form-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Transition>
             </div>
             <el-divider content-position="left"><h3 class="text-lg font-bold">Trims / Accessories</h3></el-divider>
             <div class="py-4">
@@ -381,7 +382,7 @@ export default {
     },
     methods: {
         styleCodeChange(code) {
-            this.form.code = this.form.parent_style_code+'_'+code
+            this.form.code = this.form.parent_style_code+' '+code
         },
         defaultPanel() {
             return {
