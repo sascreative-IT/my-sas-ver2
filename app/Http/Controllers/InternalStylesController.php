@@ -59,9 +59,12 @@ class InternalStylesController extends Controller
         ItemTypeRepository $itemTypeRepository,
         SizeRepository     $sizeRepository,
         MaterialRepository $materialRepository,
-        Request            $request,
-    )
-    {
+        Request $request,
+    ) {
+        if (!$request->user()->hasRole('Administrator')) {
+            return redirect()->route('style.internal.index')->with('message', 'You have no permissions for this action');
+        }
+
         $factories = Factory::all();
         $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
@@ -76,31 +79,31 @@ class InternalStylesController extends Controller
         */
         $parent_style_code = null;
 
-        if ($request->has('parent_id')) {
-            $parent_id = $request->get('parent_id');
-            $parent_style_code = Style::find($parent_id);
-            $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
-        }
+            if ($request->has('parent_id')) {
+                $parent_id = $request->get('parent_id');
+                $parent_style_code = Style::find($parent_id);
+                $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
+            }
 
-        $style = new StyleDto([
-            'sizes' => [],
-            'panels' => [],
-            'belongs_to' => 'internal'
-        ]);
+            $style = new StyleDto([
+                'sizes' => [],
+                'panels' => [],
+                'belongs_to' => 'internal'
+            ]);
 
-        return Inertia::render('Styles/InternalStyles/Create', [
-            'styleData' => $style,
-            'customers' => $customers,
-            'categories' => $categories,
-            'itemTypes' => $itemTypes,
-            'sizes' => $sizes,
-            'factories' => $factories,
-            'materials' => $materials,
-            'styles' => $styles,
-            'parentStyleCode' => $parent_style_code,
-            'styleType' => 'General',
-            'customer' => $request->get('customer'),
-        ]);
+            return Inertia::render('Styles/InternalStyles/Create', [
+                'styleData' => $style,
+                'customers' => $customers,
+                'categories' => $categories,
+                'itemTypes' => $itemTypes,
+                'sizes' => $sizes,
+                'factories' => $factories,
+                'materials' => $materials,
+                'styles' => $styles,
+                'parentStyleCode' => $parent_style_code,
+                'styleType' => 'General',
+                'customer' => $request->get('customer'),
+            ]);
     }
 
     public function store(StyleStoreRequest $request)
@@ -126,10 +129,12 @@ class InternalStylesController extends Controller
         ItemTypeRepository $itemTypeRepository,
         SizeRepository     $sizeRepository,
         MaterialRepository $materialRepository,
-        Style              $style,
-        Request            $request
-    )
-    {
+        Style $style,
+        Request $request
+    ) {
+        if (!$request->user()->hasRole('Administrator')) {
+            return redirect()->route('style.internal.index')->with('message', 'You have no permissions for this action');
+        }
         $factories = Factory::all();
         $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
@@ -138,8 +143,8 @@ class InternalStylesController extends Controller
         $materials = $materialRepository->getAll();
 
 
-        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
-        $styleDto = new StyleDto($style->toArray());
+            $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
+            $styleDto = new StyleDto($style->toArray());
 
         return Inertia::render('Styles/InternalStyles/Create', [
             'styleData' => $styleDto,
