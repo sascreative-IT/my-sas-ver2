@@ -48,16 +48,6 @@ class SettingsColourController extends Controller
 
     public function store(StoreColourRequest $request)
     {
-        $request->validate([
-            'name' => [
-                'required',
-                Rule::unique('colours')
-                    ->where('type', $request->get('type'))
-                    ->where(function ($query) use ($request){
-                        return $query->where('name', $request->get('name'));
-                    })
-            ]
-        ]);
         $validated = $request->validated();
         Colour::create($validated);
 
