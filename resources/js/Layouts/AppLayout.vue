@@ -122,6 +122,10 @@
                                                 Customized styles
                                             </jet-dropdown-link>
 
+                                            <jet-dropdown-link :href="route('style.new-customized.index')">
+                                                New Customized styles
+                                            </jet-dropdown-link>
+
                                         </template>
                                     </menu-dropdown>
                                 </div>

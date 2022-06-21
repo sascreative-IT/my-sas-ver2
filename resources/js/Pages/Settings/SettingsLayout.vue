@@ -48,6 +48,7 @@
                 </div>
 
                 <div class="w-10/12">
+                    <jet-validation-errors class="mb-4" />
                     <slot></slot>
                 </div>
             </div>
@@ -57,11 +58,13 @@
 
 <script>
 import JetNavLink from '@/Jetstream/NavLink'
+import JetValidationErrors from '@/Jetstream/ValidationErrors'
 
 export default {
     name: "SettingsLayout",
     components: {
-        JetNavLink
+        JetNavLink,
+        JetValidationErrors
     },
     data() {
         return {

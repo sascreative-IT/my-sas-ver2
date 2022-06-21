@@ -11,6 +11,7 @@ use App\Http\Controllers\InventoryAdjustmentController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\MaterialSupplierController;
+use App\Http\Controllers\NewCustomizedStylesController;
 use App\Http\Controllers\SettingsColourController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SettingsCurrencyController;
@@ -184,10 +185,16 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::put('/internal-styles/{style}', [InternalStylesController::class, 'update'])->name('style.internal.update');
 
     Route::get('/customized-styles', [CustomizedStylesController::class, 'index'])->name('style.customized.index');
-    Route::get('/customized-styles/create', [CustomizedStylesController::class, 'create'])->name('style.internal.create');
-    Route::post('/customized-styles', [CustomizedStylesController::class, 'store'])->name('style.internal.store');
+    Route::get('/customized-styles/create', [CustomizedStylesController::class, 'create'])->name('style.customized.create');
+    Route::post('/customized-styles', [CustomizedStylesController::class, 'store'])->name('style.customized.store');
     Route::get('/customized-styles/edit/{style}', [CustomizedStylesController::class, 'edit'])->name('style.customized.edit');
+    Route::put('/customized-styles/{style}', [CustomizedStylesController::class, 'update'])->name('style.customized.update');
 
+    Route::get('/new-customized-styles', [NewCustomizedStylesController::class, 'index'])->name('style.new-customized.index');
+    Route::get('/new-customized-styles/create', [NewCustomizedStylesController::class, 'create'])->name('style.new-customized.create');
+    Route::post('/new-customized-styles', [NewCustomizedStylesController::class, 'store'])->name('style.new-customized.store');
+    Route::get('/new-customized-styles/edit/{style}', [NewCustomizedStylesController::class, 'edit'])->name('style.new-customized.edit');
+    Route::put('/new-customized-styles/{style}', [NewCustomizedStylesController::class, 'update'])->name('style.new-customized.update');
 
     Route::get('/external-styles/edit/{style}', [ExternalStylesController::class, 'edit'])->name('style.external.edit');
     Route::get('/external-styles', [ExternalStylesController::class, 'index'])->name('style.external.index');

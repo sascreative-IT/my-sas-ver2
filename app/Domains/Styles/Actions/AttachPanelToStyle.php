@@ -44,7 +44,8 @@ class AttachPanelToStyle
         $stylePanel = StylePanel::find($panel->id);
         $stylePanel->update([
             'name' => $panel->name,
-            'default_fabric_id' => optional($panel->default_fabric)->id
+            'default_fabric_id' => optional($panel->default_fabric)->id,
+            'color_id' => optional($panel->color)->id,
         ]);
         $stylePanel->refresh();
         return $stylePanel;

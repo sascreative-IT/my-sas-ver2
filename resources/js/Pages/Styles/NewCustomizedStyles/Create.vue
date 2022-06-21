@@ -3,23 +3,15 @@
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <template v-if="styleData.id">
-                Edit Style - {{styleData.code}}
+                    Edit Style - {{styleData.code}}
                 </template>
                 <template v-else>
-                    Add a new style
+                    Add a new - New customized style
                 </template>
 
             </h2>
         </template>
-        <sweet-modal ref="errorModal" hide-close-button>
-            <div>
-                <div class="font-medium text-red-600">Whoops! Something went wrong.</div>
 
-                <ul class="mt-3 list-disc list-inside text-sm text-red-600">
-                    <li v-for="(error, key) in errors" :key="key">{{ error }}</li>
-                </ul>
-            </div>
-        </sweet-modal>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="mb-5">
@@ -102,22 +94,14 @@
                                 :styleCodeType="styleForm.styles_type"
                             ></general-style-form>
                         </div>
-                        <!--                        <div v-show="show_customized_form && is_customized">-->
-                        <!--                            <custom-style-form-->
-                        <!--                                :chosen-style-code="payload.select_style_code"-->
-                        <!--                                @custom-style-data="save"-->
-                        <!--                                :reset-form="reset_forms"-->
-                        <!--                            ></custom-style-form>-->
-                        <!--                        </div>-->
-                        <!--                        <div v-show="show_new_customized_form && is_customized">-->
-                        <!--                            <new-custom-style-form-->
-                        <!--                                @new-style-data="save"-->
-                        <!--                                :reset-form="reset_forms"-->
-                        <!--                            ></new-custom-style-form>-->
-                        <!--                        </div>-->
                     </div>
                 </div>
-                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6" v-if="styleData.id">
+                    <form-button @handle-on-click="update">
+                        Update
+                    </form-button>
+                </div>
+                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6" v-else>
                     <form-button @handle-on-click="save">
                         save
                     </form-button>
@@ -135,7 +119,6 @@ import DeleteButton from "@/UIElements/DeleteButton";
 import GeneralStyleForm from "@/Pages/Styles/InternalStyles/GeneralStyleForm";
 import CustomStyleForm from "@/Pages/Styles/InternalStyles/CustomStyleForm";
 import NewCustomStyleForm from "@/Pages/Styles/InternalStyles/NewCustomStyleForm";
-import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
 
 export default {
     name: "Create",
@@ -179,7 +162,6 @@ export default {
         parentStyleCode: {
             type: Object
         },
-
         styleType: {
             type: String
         },
@@ -193,8 +175,7 @@ export default {
         DeleteButton,
         GeneralStyleForm,
         CustomStyleForm,
-        NewCustomStyleForm,
-        SweetModal
+        NewCustomStyleForm
     },
     data() {
         return {
@@ -235,7 +216,6 @@ export default {
         if (typeof(this.styleForm.parent_style) != 'undefined') {
             this.styleForm.parent_style_code = this.styleForm.parent_style.code;
         }
-
     },
     methods: {
         selectStyleType() {
@@ -264,17 +244,10 @@ export default {
                 this.styleForm.image = this.$refs.style_code_image.files[0];
             }
 
-            if (this.styleForm.id !== null) {
-                this.$inertia.put('/internal-styles/' + this.styleForm.id, this.styleForm)
-            } else {
-                this.$inertia.post('/internal-styles', this.styleForm,{
-                    onFinish: () => {
-                        if (Object.keys(this.errors).length > 0) {
-                            this.$refs.errorModal.open()
-                        }
-                    },
-                })
-            }
+            this.$inertia.post('/new-customized-styles', this.styleForm)
+        },
+        update() {
+            this.$inertia.put('/new-customized-styles/' + this.styleForm.id, this.styleForm)
         },
         setSelectedStyleCode(value) {
             this.$inertia.visit(this.$inertia.page.url, {

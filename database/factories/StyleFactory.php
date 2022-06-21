@@ -18,7 +18,7 @@ class StyleFactory extends Factory
         return [
             'code' => 'code-' . $randomId ,
             'name' => 'name ' . $randomId,
-            'type_id' => ItemType::factory(),
+            'item_type_id' => ItemType::factory(),
             'description' => $this->faker->paragraph,
             'belongs_to' => Arr::random(['internal', 'external']),
             'status' => 'active',

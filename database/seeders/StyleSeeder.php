@@ -30,7 +30,7 @@ class StyleSeeder extends Seeder
         $style = Style::factory()->create([
             'code' => 'TEE 01',
             'name' => 'Original Tee',
-            'type_id' => $itemType->id,
+            'item_type_id' => $itemType->id,
             'belongs_to' => Style::INTERNAL,
         ]);
 
@@ -52,7 +52,7 @@ class StyleSeeder extends Seeder
         $style2 = Style::factory()->create([
             'code' => 'TOP 222SW FB SCP',
             'name' => 'Women\'s Sublimated Training Singlet (TOP 222SW FB SCP)',
-            'type_id' => $itemType->id,
+            'item_type_id' => $itemType->id,
             'customer_id' => $customer->id,
             'production_time' => 120,
             'belongs_to' => Style::INTERNAL,
