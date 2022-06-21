@@ -9,6 +9,8 @@ use App\Models\Colour;
 use App\Models\MaterialType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class SettingsColourController extends Controller
@@ -46,14 +48,10 @@ class SettingsColourController extends Controller
 
     public function store(StoreColourRequest $request)
     {
-        try {
-            $validated = $request->validated();
-            Colour::create($validated);
+        $validated = $request->validated();
+        Colour::create($validated);
 
-            return Redirect::route('settings.colours.index');
-        } catch (\Exception $ex) {
-            return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
-        }
+        return Redirect::route('settings.colours.index');
     }
 
     public function edit(Colour $colour)

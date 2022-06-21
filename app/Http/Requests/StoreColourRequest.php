@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 
 class StoreColourRequest extends FormRequest
 {
@@ -23,8 +25,19 @@ class StoreColourRequest extends FormRequest
      */
     public function rules()
     {
+        $request = $this;
         return [
-            'name' => 'required|string|min:2|max:100',
+            'name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:100',
+                Rule::unique('colours')
+                    ->where('type', $request->get('type'))
+                    ->where(function ($query) use ($request){
+                        return $query->where('name', $request->get('name'));
+                    })
+            ],
             'type' => 'required|string',
             'is_active' => 'required|boolean'
         ];
@@ -34,6 +47,7 @@ class StoreColourRequest extends FormRequest
     {
         return [
             'name.required' => 'Name field is required!',
+            'name.unique' => 'Colour Already Exist',
             'type.required' => 'type field is required!',
             'is_active.required' => 'Active field is required!',
         ];
