@@ -166,9 +166,12 @@ class CustomizedStylesController extends Controller
         $avail_materials_colours = DB::table('material_variations')
             ->join('material_inventories', function ($join) use ($material_ids) {
                 $join->on('material_variations.id', '=', 'material_inventories.material_variation_id')
-                    ->whereIn('material_variations.material_id', $material_ids);})
+                    ->whereIn('material_variations.material_id', $material_ids);
+            })
             ->join('colours', 'material_variations.colour_id', '=', 'colours.id')
-            ->select('colours.*')->get();
+            ->groupBy('colours.id')
+            ->select('colours.*')
+            ->get();
 
         $colours = $avail_materials_colours;
 
