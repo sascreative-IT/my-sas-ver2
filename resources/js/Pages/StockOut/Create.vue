@@ -90,7 +90,7 @@
                                                 </label>
                                                 <app-select
                                                     placeholder="Select Style code"
-                                                    option-label="name"
+                                                    option-label="code"
                                                     option-value="id"
                                                     :filterable="true"
                                                     :options="styles"
@@ -107,6 +107,7 @@
                                                 </label>
                                                 <app-select
                                                     placeholder="Select Style code"
+                                                    clearable
                                                     option-label="name"
                                                     option-value="id"
                                                     :filterable="true"
@@ -120,27 +121,11 @@
                                         <div class="w-1/6 pr-5">
                                             <div class="">
                                                 <label class="text-base font-medium text-gray-700">
-                                                    Supplier
-                                                </label>
-                                                <app-select
-                                                    placeholder="Select Supplier"
-                                                    option-label="name"
-                                                    option-value="id"
-                                                    :filterable="true"
-                                                    :options="suppliers"
-                                                    v-model="stockOutItem.supplier"
-                                                    @input="setSelectedSupplier"
-                                                ></app-select>
-                                            </div>
-                                        </div>
-
-                                        <div class="w-1/6 pr-5">
-                                            <div class="">
-                                                <label class="text-base font-medium text-gray-700">
                                                     Material
                                                 </label>
                                                 <app-select
                                                     placeholder="Select Material"
+                                                    clearable
                                                     option-label="name"
                                                     option-value="id"
                                                     :filterable="true"
@@ -164,6 +149,23 @@
                                                     :options="colours"
                                                     v-model="stockOutItem.color"
                                                     @input="setSelectedColor"
+                                                ></app-select>
+                                            </div>
+                                        </div>
+
+                                        <div class="w-1/6 pr-5">
+                                            <div class="">
+                                                <label class="text-base font-medium text-gray-700">
+                                                    Supplier
+                                                </label>
+                                                <app-select
+                                                    placeholder="Select Supplier"
+                                                    option-label="name"
+                                                    option-value="id"
+                                                    :filterable="true"
+                                                    :options="suppliers"
+                                                    v-model="stockOutItem.supplier"
+                                                    @input="setSelectedSupplier"
                                                 ></app-select>
                                             </div>
                                         </div>
@@ -330,6 +332,10 @@ export default {
         styles: {
             required: true,
             type: Array
+        },
+        style_type: {
+            required: true,
+            type: String
         },
         style_panels: {
             required: true,

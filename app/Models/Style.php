@@ -23,7 +23,8 @@ class Style extends Model implements Auditable
 {
     const INTERNAL = 'internal';
     const EXTERNAL = 'external';
-
+    const GENERAL = 'General';
+    const CUSTOMIZED = 'Customized';
 
     use HasFactory, SoftDeletes;
     use \OwenIt\Auditing\Auditable;
