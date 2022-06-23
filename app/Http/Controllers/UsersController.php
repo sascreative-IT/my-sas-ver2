@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeactivateUserRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UserIndexRequest;
 use App\Jobs\SendWelcomeEmailToUser;
 use App\Models\ErpUserDetail;
 use App\Models\Factory;
@@ -15,7 +17,7 @@ use Inertia\Inertia;
 
 class UsersController extends Controller
 {
-    public function index(Request $request)
+    public function index(UserIndexRequest $request)
     {
         $q = $request->get('q');
 
@@ -113,11 +115,9 @@ class UsersController extends Controller
         }
     }
 
-    public function deactivateUser(\Illuminate\Http\Request $request)
+    public function deactivateUser(DeactivateUserRequest $request)
     {
-        $validated = $request->validate([
-            'user_id' => 'required|integer'
-        ]);
+        $validated = $request->validated();
 
         $user = User::find($validated['user_id']);
 

@@ -16,14 +16,14 @@ class StyleStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //'code' => 'required|unique:styles,code',
+            'code' => 'required|unique:styles,code',
             'name' => 'required',
             'categories' => ['required', 'array'],
             'categories.*.ids' => 'exists:categories,id',
             'item_type' => 'required',
             'item_type.*.id' => 'exists:item_types,id',
             'customer' => 'nullable',
-            'customer.*.id' => 'exists:customers,id',
+            'customer.id' => 'exists:customers,id',
             'parent_style' => 'nullable',
             'parent_style.*.id' => 'exists:styles,code',
             'production_time' => 'required|integer',
@@ -39,7 +39,7 @@ class StyleStoreRequest extends FormRequest
     {
         return [
             'code.required' => 'Please enter a style code',
-            'code.unique' => 'This style code is already been used',
+            'code.unique' => 'This style code is already been used. Please use another one',
             'name.unique' => 'Please enter a style name',
             'category_ids.required' => 'Please select a category',
             'category_ids.exists' => 'Trying to select a category that doesnt exists',

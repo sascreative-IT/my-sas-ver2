@@ -97,7 +97,7 @@
 
                                             <label for="parent_style_code"
                                                    class="block text-base font-medium text-gray-700">
-                                                Extending Style Code Name
+                                                Extending Parent Style Code
                                             </label>
 
                                             <v-select
@@ -105,7 +105,7 @@
                                                 id="parent_style_code"
                                                 v-model="styleForm.parent_style"
                                                 :options="styles"
-                                                label="name"
+                                                label="code"
                                                 item-id="id"
                                                 @input="setSelectedStyleCode"
                                             ></v-select>
@@ -139,22 +139,14 @@
                                 :styleCodeType="styleForm.styles_type"
                             ></general-style-form>
                         </div>
-                        <!--                        <div v-show="show_customized_form && is_customized">-->
-                        <!--                            <custom-style-form-->
-                        <!--                                :chosen-style-code="payload.select_style_code"-->
-                        <!--                                @custom-style-data="save"-->
-                        <!--                                :reset-form="reset_forms"-->
-                        <!--                            ></custom-style-form>-->
-                        <!--                        </div>-->
-                        <!--                        <div v-show="show_new_customized_form && is_customized">-->
-                        <!--                            <new-custom-style-form-->
-                        <!--                                @new-style-data="save"-->
-                        <!--                                :reset-form="reset_forms"-->
-                        <!--                            ></new-custom-style-form>-->
-                        <!--                        </div>-->
                     </div>
                 </div>
-                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6" v-if="styleData.id">
+                    <form-button @handle-on-click="update">
+                        Update
+                    </form-button>
+                </div>
+                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6" v-else>
                     <form-button @handle-on-click="save">
                         save
                     </form-button>
@@ -270,9 +262,11 @@ export default {
 
         this.url = "/" + this.styleForm.style_image;
 
-        if (typeof(this.styleForm.parent_style) != 'undefined') {
+        if (typeof(this.styleForm.parent_style) != 'undefined' && this.styleForm.parent_style != null) {
             this.styleForm.parent_style_code = this.styleForm.parent_style.code;
         }
+        // console.log(this.styleForm.parent_style)
+
     },
     methods: {
         selectStyleType() {
@@ -302,13 +296,9 @@ export default {
             }
 
             this.$inertia.post('/customized-styles', this.styleForm)
-            /*
-            if (this.styleForm.id !== null) {
-                this.$inertia.put('/customized-styles/' + this.styleForm.id, this.styleForm)
-            } else {
-                this.$inertia.post('/customized-styles', this.styleForm)
-            }
-             */
+        },
+        update() {
+            this.$inertia.put('/customized-styles/' + this.styleForm.id, this.styleForm)
         },
         setSelectedStyleCode(value) {
             this.$inertia.visit(this.$inertia.page.url, {
@@ -328,6 +318,7 @@ export default {
                         this.styleForm.parent_style = {
                             'id' : value.id,
                             'name' : value.name,
+                            'code' : value.code
                         };
 
                         if (this.styleType != null) {

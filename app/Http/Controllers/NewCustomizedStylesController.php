@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
-class InternalStylesController extends Controller
+class NewCustomizedStylesController extends Controller
 {
     public function index(Request $request)
     {
@@ -29,7 +29,7 @@ class InternalStylesController extends Controller
         $internalStyles = Style::query()
             ->internal()
             ->with('itemType')
-            ->where('styles_type', "General")
+            ->where('styles_type', "New-Customized")
             ->when($q, function ($query, $q) {
                 return $query
                     ->where('code', 'like', "%{$q}%")
@@ -38,18 +38,8 @@ class InternalStylesController extends Controller
             ->paginate()
             ->withQueryString();
 
-        return Inertia::render('Styles/InternalStyles/Index', [
+        return Inertia::render('Styles/NewCustomizedStyles/Index', [
             'internal-styles' => $internalStyles
-        ]);
-    }
-
-    public function show(Style $style)
-    {
-        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
-        $styleDto = new StyleDto($style->toArray());
-
-        return Inertia::render('Styles/InternalStyles/Show', [
-            'styleData' => $styleDto,
         ]);
     }
 
@@ -57,14 +47,10 @@ class InternalStylesController extends Controller
         CustomerRepository $customerRepository,
         CategoryRepository $categoryRepository,
         ItemTypeRepository $itemTypeRepository,
-        SizeRepository     $sizeRepository,
+        SizeRepository $sizeRepository,
         MaterialRepository $materialRepository,
         Request $request,
     ) {
-        if (!$request->user()->hasRole('Administrator')) {
-            return redirect()->route('style.internal.index')->with('message', 'You have no permissions for this action');
-        }
-
         $factories = Factory::all();
         $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
@@ -72,38 +58,35 @@ class InternalStylesController extends Controller
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
         $styles = Style::all('id', 'code', 'name')->toArray();
-        /*
-        foreach ($styles as $style) {
-            print($style['id']."-".$style['code']."<BR/>");
-        }
-        */
+
         $parent_style_code = null;
 
-            if ($request->has('parent_id')) {
-                $parent_id = $request->get('parent_id');
-                $parent_style_code = Style::find($parent_id);
-                $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
-            }
+        if ($request->has('parent_id')) {
+            $parent_id = $request->get('parent_id');
+            $parent_style_code = Style::find($parent_id);
+            $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
+        }
 
-            $style = new StyleDto([
-                'sizes' => [],
-                'panels' => [],
-                'belongs_to' => 'internal'
-            ]);
 
-            return Inertia::render('Styles/InternalStyles/Create', [
-                'styleData' => $style,
-                'customers' => $customers,
-                'categories' => $categories,
-                'itemTypes' => $itemTypes,
-                'sizes' => $sizes,
-                'factories' => $factories,
-                'materials' => $materials,
-                'styles' => $styles,
-                'parentStyleCode' => $parent_style_code,
-                'styleType' => 'General',
-                'customer' => $request->get('customer'),
-            ]);
+        $style = new StyleDto([
+            'sizes' => [],
+            'panels' => [],
+            'belongs_to' => 'internal'
+        ]);
+
+        return Inertia::render('Styles/NewCustomizedStyles/Create', [
+            'styleData' => $style,
+            'customers' => $customers,
+            'categories' => $categories,
+            'itemTypes' => $itemTypes,
+            'sizes' => $sizes,
+            'factories' => $factories,
+            'materials' => $materials,
+            'styles' => $styles,
+            'parentStyleCode' => $parent_style_code,
+            'styleType' => 'New-Customized',
+            'customer' => $request->get('customer'),
+        ]);
     }
 
     public function store(StyleStoreRequest $request)
@@ -116,7 +99,8 @@ class InternalStylesController extends Controller
             }
             $request->merge(['style_image' => $image_path]);
             $style = resolve(CreateStyle::class)->execute($request->toDto());
-            return Redirect::route('style.internal.edit', [$style->id])
+
+            return Redirect::route('style.new-customized.edit', [$style->id])
                 ->with(['message' => 'successfully updated']);
         } catch (\Exception $ex) {
             return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
@@ -127,14 +111,12 @@ class InternalStylesController extends Controller
         CustomerRepository $customerRepository,
         CategoryRepository $categoryRepository,
         ItemTypeRepository $itemTypeRepository,
-        SizeRepository     $sizeRepository,
+        SizeRepository $sizeRepository,
         MaterialRepository $materialRepository,
         Style $style,
         Request $request
-    ) {
-        if (!$request->user()->hasRole('Administrator')) {
-            return redirect()->route('style.internal.index')->with('message', 'You have no permissions for this action');
-        }
+    )
+    {
         $factories = Factory::all();
         $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
@@ -142,11 +124,10 @@ class InternalStylesController extends Controller
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
 
+        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
+        $styleDto = new StyleDto($style->toArray());
 
-            $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
-            $styleDto = new StyleDto($style->toArray());
-
-        return Inertia::render('Styles/InternalStyles/Create', [
+        return Inertia::render('Styles/NewCustomizedStyles/Create', [
             'styleData' => $styleDto,
             'customers' => $customers,
             'categories' => $categories,
@@ -170,7 +151,7 @@ class InternalStylesController extends Controller
 
             resolve(UpdateStyle::class)->execute($style, $request->toDto());
 
-            return Redirect::route('style.internal.edit', [$style->id])
+            return Redirect::route('style.new-customized.edit', [$style->id])
                 ->with(['message' => 'successfully updated']);
 
         } catch (\Exception $ex) {

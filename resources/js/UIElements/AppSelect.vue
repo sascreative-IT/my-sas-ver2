@@ -4,9 +4,12 @@
             :disabled="disabled"
             class="w-full"
             @input="input"
+            @change="change"
+            @remove-tag="cleared"
             :value="preparedValue"
             :filterable=filterable
             :multiple="multiple"
+            :multiple-limit="multipleLimit"
             :placeholder="placeholder"
             :no-data-text="noDataText"
             :no-match-text="noMatchText"
@@ -33,6 +36,11 @@ export default {
             required: true,
             type: Array
         },
+        allRemovable: {
+            required: false,
+            default: true,
+            type: Boolean,
+        },
         filterable: {
             required: false,
             default: false,
@@ -42,6 +50,11 @@ export default {
             required: false,
             default: false,
             type: Boolean,
+        },
+        multipleLimit: {
+            required: false,
+            default: 0,
+            type: Number,
         },
         placeholder: {
             required: false,
@@ -80,6 +93,11 @@ export default {
         }
     },
     methods: {
+        cleared(value){
+            if (!this.allRemovable) {
+                console.log('clicked clear'+value)
+            }
+        },
         getOptionObjectByID(selectedOptionId) {
             return this.options.filter((option) => {
                 return option[this.optionValue] === selectedOptionId
@@ -98,6 +116,9 @@ export default {
 
             this.$emit('input', objectifiedSelectedOptions)
             this.$emit('changed', objectifiedSelectedOptions)
+        },
+        change(value){
+            this.$emit('change', value)
         }
     },
     computed: {
