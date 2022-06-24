@@ -143,6 +143,7 @@
                                                 </label>
                                                 <app-select
                                                     placeholder="Select Style code"
+                                                    clearable
                                                     option-label="name"
                                                     option-value="id"
                                                     :filterable="true"

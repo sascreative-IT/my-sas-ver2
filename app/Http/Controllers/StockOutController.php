@@ -18,6 +18,7 @@ use App\Models\Factory;
 use App\Models\MaterialInventory;
 use App\Models\MaterialInvoice;
 use App\Models\Materials;
+use App\Models\MaterialSupplier;
 use App\Models\MaterialVariation;
 use App\Models\Order;
 use App\Models\Style;
@@ -88,6 +89,23 @@ class StockOutController extends Controller
             if ($styleType == Style::CUSTOMIZED) {
                 if (!$request->filled('style_panel_id')) { $colours = []; }
                 $colours = Colour::query()->where('id', $style_panel->color_id)->get();
+            }
+
+            if($request->filled('colour_id')){
+                $requestColorId = $request->get('colour_id');
+
+                $materialVariation = MaterialVariation::query()
+                    ->where('material_id', $materialId)
+                    ->where('colour_id', $requestColorId)
+                    ->first();
+
+                $material_suppliers_arr = collect(
+                    MaterialSupplier::query()
+                        ->where('variation_id', $materialVariation->id)
+                        ->get()
+                )->pluck('supplier_id')->toArray();
+
+                $suppliers = Supplier::query()->whereIn('id', $material_suppliers_arr)->get();
             }
 
         }
