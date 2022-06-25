@@ -119,7 +119,6 @@ class CustomizedStylesController extends Controller
 
     public function store(StyleStoreRequest $request)
     {
-        dd($request->getContent());
         try {
             $image_path = '';
 

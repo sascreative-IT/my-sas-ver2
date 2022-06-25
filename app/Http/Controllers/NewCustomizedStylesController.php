@@ -18,6 +18,7 @@ use App\Repositories\MaterialRepository;
 use App\Repositories\SizeRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -137,8 +138,24 @@ class NewCustomizedStylesController extends Controller
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
 
-        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
+        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle', 'panels.color']);
         $styleDto = new StyleDto($style->toArray());
+
+        $material_ids = [];
+
+        foreach($style->panels as $panel){
+            $material_ids[] = $panel->fabrics[0]->id;
+        }
+
+        $avail_materials_colours = DB::table('material_variations')
+            ->join('material_inventories', function ($join) use ($material_ids) {
+                $join->on('material_variations.id', '=', 'material_inventories.material_variation_id')
+                    ->whereIn('material_variations.material_id', $material_ids);
+            })
+            ->join('colours', 'material_variations.colour_id', '=', 'colours.id')
+            ->groupBy('colours.id')
+            ->select('colours.*')
+            ->get();
 
         return Inertia::render('Styles/NewCustomizedStyles/Create', [
             'styleData' => $styleDto,
@@ -148,6 +165,7 @@ class NewCustomizedStylesController extends Controller
             'sizes' => $sizes,
             'factories' => $factories,
             'materials' => $materials,
+            'colours' => $avail_materials_colours,
         ]);
     }
 

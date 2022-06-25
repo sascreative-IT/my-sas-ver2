@@ -346,7 +346,10 @@ export default {
     },
     data() {
         return {
-            form: {sizes: [], panels: []},
+            form: {
+                sizes: [],
+                panels: []
+            },
             panel: this.defaultPanel()
         }
     },
