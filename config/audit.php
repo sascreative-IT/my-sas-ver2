@@ -6,6 +6,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Empty Values
+    |--------------------------------------------------------------------------
+    |
+    | Should Audit records be stored when the recorded old_values & new_values
+    | are both empty?
+    |
+    | Some events may be empty on purpose. Use allowed_empty_values to exclude
+    | those from the empty values check. For example when auditing
+    | model retrieved events which will never have new and old values
+    |
+    */
+
+    'empty_values'         => true,
+    'allowed_empty_values' => [
+        'retrieved'
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Audit Implementation
     |--------------------------------------------------------------------------
     |
@@ -30,6 +49,7 @@ return [
             'web',
             'api',
         ],
+        'resolver' => OwenIt\Auditing\Resolvers\UserResolver::class
     ],
 
     /*
@@ -41,7 +61,7 @@ return [
     |
     */
     'resolver' => [
-        'user'       => OwenIt\Auditing\Resolvers\UserResolver::class,
+//        'user'       => OwenIt\Auditing\Resolvers\UserResolver::class,
         'ip_address' => OwenIt\Auditing\Resolvers\IpAddressResolver::class,
         'user_agent' => OwenIt\Auditing\Resolvers\UserAgentResolver::class,
         'url'        => OwenIt\Auditing\Resolvers\UrlResolver::class,
