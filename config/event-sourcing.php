@@ -87,7 +87,11 @@ return [
      * event class. This allows you to change the namespace or class names
      * of your events but still handle older events correctly.
      */
-    'event_class_map' => [],
+    'event_class_map' => [
+        'inventory_material_added' => \App\Domains\Inventory\Events\Internal\InventoryMaterialAdded::class,
+        'inventory_stock_added' => \App\Domains\Inventory\Events\Internal\StockAdded::class,
+        'inventory_stock_removed' => \App\Domains\Inventory\Events\Internal\StockRemoved::class,
+    ],
 
     /*
      * This class is responsible for serializing events. By default an event will be serialized
