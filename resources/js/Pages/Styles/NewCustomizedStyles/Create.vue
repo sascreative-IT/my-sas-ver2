@@ -86,6 +86,7 @@
                                 :reset-form="reset_forms"
                                 :categories="categories"
                                 :materials="materials"
+                                :colours="colours"
                                 :item-types="itemTypes"
                                 :sizes="sizes"
                                 :factories="factories"
@@ -116,7 +117,7 @@
 import FormButton from "@/UIElements/FormButton";
 import EditButton from "@/UIElements/EditButton";
 import DeleteButton from "@/UIElements/DeleteButton";
-import GeneralStyleForm from "@/Pages/Styles/InternalStyles/GeneralStyleForm";
+import GeneralStyleForm from "@/Pages/Styles/NewCustomizedStyles/GeneralStyleForm";
 import CustomStyleForm from "@/Pages/Styles/InternalStyles/CustomStyleForm";
 import NewCustomStyleForm from "@/Pages/Styles/InternalStyles/NewCustomStyleForm";
 
@@ -167,6 +168,9 @@ export default {
         },
         customer: {
             type: String
+        },
+        colours:{
+            type: Array
         }
     },
     components: {

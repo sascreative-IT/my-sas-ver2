@@ -7,7 +7,9 @@ use App\Domains\Styles\Actions\UpdateStyle;
 use App\Domains\Styles\Dto\Style as StyleDto;
 use App\Http\Requests\Styles\StyleStoreRequest;
 use App\Http\Requests\Styles\StyleUpdateRequest;
+use App\Models\Colour;
 use App\Models\Factory;
+use App\Models\MaterialVariation;
 use App\Models\Style;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CustomerRepositoryInterface as CustomerRepository;
@@ -58,13 +60,24 @@ class NewCustomizedStylesController extends Controller
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
         $styles = Style::all('id', 'code', 'name')->toArray();
+        $colours = '';
 
         $parent_style_code = null;
 
-        if ($request->has('parent_id')) {
-            $parent_id = $request->get('parent_id');
-            $parent_style_code = Style::find($parent_id);
-            $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
+//        if ($request->has('parent_id')) {
+//            $parent_id = $request->get('parent_id');
+//            $parent_style_code = Style::find($parent_id);
+//            $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
+//        }
+
+        if ($request->filled('material_id')) {
+            $material_id = $request->get('material_id');
+            $colourIds = collect(
+                MaterialVariation::query()
+                    ->where('material_id', $material_id)
+                    ->get()
+            )->pluck('colour_id')->toArray();
+            $colours = Colour::query()->whereIn('id', $colourIds)->get();
         }
 
 
@@ -83,9 +96,9 @@ class NewCustomizedStylesController extends Controller
             'factories' => $factories,
             'materials' => $materials,
             'styles' => $styles,
-            'parentStyleCode' => $parent_style_code,
             'styleType' => 'New-Customized',
             'customer' => $request->get('customer'),
+            'colours' => $colours
         ]);
     }
 
