@@ -170,7 +170,8 @@ export default {
             type: String
         },
         colours:{
-            type: Array
+            type: Array,
+            required: true,
         }
     },
     components: {

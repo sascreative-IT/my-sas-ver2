@@ -350,7 +350,8 @@ export default {
                 sizes: [],
                 panels: []
             },
-            panel: this.defaultPanel()
+            panel: this.defaultPanel(),
+            component_materials : [],
         }
     },
     mounted() {
@@ -442,7 +443,24 @@ export default {
             }
         },
         handleEditPanelRow(dataRow) {
+            console.log(dataRow)
             this.panel = dataRow;
+
+            if (this.form.id != null) {
+                this.panel.id = dataRow.id;
+            } else {
+                this.panel.id = null;
+            }
+            this.component_materials = [];
+            if (typeof this.panel.fabrics != 'undefined') {
+                this.panel.fabrics.forEach((item) => {
+                    this.component_materials.push({
+                        id: item.id,
+                        name: item.name
+                    });
+                });
+            }
+
             for (let [index, val] of this.form.panels.entries()) {
                 if (dataRow.name == val.name) {
                     this.form.panels.splice(index, 1);
