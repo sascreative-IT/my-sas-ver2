@@ -86,7 +86,7 @@ class StockOutController extends Controller
                 $colours = Colour::whereIn('id', $colorIds)->get();
             }
 
-            if ($styleType == Style::CUSTOMIZED) {
+            if ($styleType == Style::CUSTOMIZED || $styleType == Style::NEWCUSTOMIZED) {
                 if (!$request->filled('style_panel_id')) { $colours = []; }
                 $colours = Colour::query()->where('id', $style_panel->color_id)->get();
             }
