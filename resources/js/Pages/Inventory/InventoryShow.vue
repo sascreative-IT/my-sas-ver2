@@ -11,176 +11,161 @@
 
                 <div class="flex flex-row justify-between">
                     <div class="bg-white shadow-xl p-5 rounded-md">
-                        <h4 class="text-xl text-blue-700">Available Quantity</h4>
+                        <h4 class="text-xl text-blue-700">Total Quantity</h4>
                         <div class="text-gray-600">{{ inventory.available_quantity }} {{ inventory.unit }}</div>
-                    </div>
-
-                    <div class="bg-white shadow-xl p-5 rounded-md">
-                        <h4 class="text-xl text-blue-700">Allocated Quantity</h4>
-                        <div class="text-gray-600">{{ inventory.allocated_quantity }} {{ inventory.unit }}</div>
-                    </div>
-
-                    <div class="bg-white shadow-xl p-5 rounded-md">
-                        <h4 class="text-xl text-green-700">Usable Quantity</h4>
-                        <div class="text-gray-600">{{ inventory.usable_quantity }} {{ inventory.unit }}</div>
                     </div>
                 </div>
 
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-5 p-5">
                     <el-tabs type="card">
-                        <el-tab-pane label="Stock In History">
-                            <div class="px-6 flex justify-between">
-                                <h3 class="text-lg">Stock In History</h3>
-                                <button
-                                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
-                                    @click="showAdjestmentWindow = true"
-                                >
-                                    Stock Adjustment
-                                </button>
-                            </div>
+                        <div class="px-6 flex justify-between">
+                            <h3 class="text-lg">Inventory Log</h3>
+                            <button
+                                class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150"
+                                @click="showAdjestmentWindow = true"
+                            >
+                                Stock Adjustment
+                            </button>
+                        </div>
 
-                            <table class="mt-5 min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Date and Time
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Invoice ID
-                                    </th>
+                        <table class="mt-5 min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Date and Time
+                                </th>
 
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Other Reason
-                                    </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Unit
+                                </th>
 
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Quantity
-                                    </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    In
+                                </th>
 
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Price
-                                    </th>
-                                </tr>
-                                </thead>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Out
+                                </th>
 
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="stock in stockIn.data">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ stock.created_at }}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            <div v-if="stock.invoice">
-                                                <a class="cursor-pointer text-blue-500" @click="showInvoice(stock.invoice_id)">
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Balance
+                                </th>
+
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Other Reason
+                                </th>
+
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Unit Price
+                                </th>
+
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Currency
+                                </th>
+
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Invoice ID
+                                </th>
+
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Order ID
+                                </th>
+
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Style Panel Name
+                                </th>
+                            </tr>
+                            </thead>
+
+                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tr v-for="stock in stockIn.data">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ stock.created_at }}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ stock.unit }}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ stock.in }}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ stock.out }}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ stock.balance }}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ stock.other_reason }}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ stock.in_unit_price }}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ stock.in_unit_currency }}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        <div v-if="stock.invoice">
+                                            <a class="cursor-pointer text-blue-500" @click="showInvoice(stock.invoice_id)">
                                                 {{ stock.invoice.invoice_number }}
-                                                </a>
-                                            </div>
+                                            </a>
                                         </div>
-                                    </td>
+                                    </div>
+                                </td>
 
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ stock.description }}
-                                        </div>
-                                    </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ stock.out_order_id }}
+                                    </div>
+                                </td>
 
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ stock.quantity }}
-                                        </div>
-                                    </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ stock.out_style_panel_id }}
+                                    </div>
+                                </td>
 
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ stock.price }}
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <paginator
-                                :pagination="stockIn"
-                            ></paginator>
-                        </el-tab-pane>
-                        <el-tab-pane label="Stock Out History">
-                            <div class="px-6 flex justify-between">
-                                <h3 class="text-lg">Stock Out History</h3>
-                            </div>
-                        </el-tab-pane>
-                        <el-tab-pane label="Stock Reserve History">
-                            <div class="px-6 flex justify-between">
-                                <h3 class="text-lg">Stock Reserve History</h3>
-                            </div>
-
-                            <table class="mt-5 min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Date and Time
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Order Id
-                                    </th>
-
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Other Reason
-                                    </th>
-
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Quantity
-                                    </th>
-                                </tr>
-                                </thead>
-
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="stock in stockReserv.data">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ stock.created_at }}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            <div v-if="stock.order">
-                                                <a class="cursor-pointer text-blue-500">
-                                                    {{ stock.order.public_id }}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ stock.description }}
-                                        </div>
-                                    </td>
-
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ stock.quantity }}
-                                        </div>
-                                    </td>
-
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ stock.price }}
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </el-tab-pane>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <paginator
+                            :pagination="stockIn"
+                        ></paginator>
                     </el-tabs>
                 </div>
             </div>
