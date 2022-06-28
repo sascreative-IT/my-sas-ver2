@@ -18,4 +18,9 @@ class MaterialInvoiceItem extends Model implements Auditable
     {
         return $this->belongsTo(MaterialVariation::class, 'material_variation_id');
     }
+
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(MaterialInvoice::class, 'material_invoice_id');
+    }
 }

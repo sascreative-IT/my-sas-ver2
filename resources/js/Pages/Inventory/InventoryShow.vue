@@ -71,20 +71,7 @@
                                     Currency
                                 </th>
 
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Invoice ID
-                                </th>
 
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Order ID
-                                </th>
-
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Style Panel Name
-                                </th>
                             </tr>
                             </thead>
 
@@ -102,9 +89,14 @@
                                     </div>
                                 </td>
 
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4 whitespace-nowrap flex flex-row items-center justify-between">
                                     <div class="text-sm font-medium text-gray-900">
                                         {{ stock.in }}
+                                    </div>
+                                    <div v-if="stock.invoice_item">
+                                        <a class="cursor-pointer text-blue-500 text-sm" @click="showInvoice(stock.invoice_item.invoice.id)">
+                                            #{{ stock.invoice_item.invoice.invoice_number }}
+                                        </a>
                                     </div>
                                 </td>
 
@@ -135,28 +127,6 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
                                         {{ stock.in_unit_currency }}
-                                    </div>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        <div v-if="stock.invoice">
-                                            <a class="cursor-pointer text-blue-500" @click="showInvoice(stock.invoice_id)">
-                                                {{ stock.invoice.invoice_number }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        {{ stock.out_order_id }}
-                                    </div>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        {{ stock.out_style_panel_id }}
                                     </div>
                                 </td>
 

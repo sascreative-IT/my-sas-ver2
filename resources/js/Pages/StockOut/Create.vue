@@ -407,7 +407,7 @@ export default {
         },
         handleSaveStockOut() {
             console.log(this.stockOut);
-            this.$inertia.post(route('stock.out.store'), this.stockOut)
+            // this.$inertia.post(route('stock.out.store'), this.stockOut)
         },
         handleLoadOrderData() {
             this.$inertia.visit(this.$inertia.page.url, {

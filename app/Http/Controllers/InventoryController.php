@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Factory;
 use App\Models\InventoryIn;
+use App\Models\InventoryLog;
 use App\Models\InventoryReserv;
 use App\Models\MaterialInventory;
 use Illuminate\Http\Request;
@@ -66,14 +67,11 @@ class InventoryController extends Controller
         return Inertia::render('Inventory/InventoryShow',
             [
                 'inventory' => $materialInventory->loadMissing(['variation.material', 'variation.colour']),
-                'stockIn' => InventoryIn::where('material_inventory_id','=',$materialInventory->id)
-                    ->with('invoice')
+                'stockIn' => InventoryLog::query()
+                    ->where('material_inventories_aggregate_id', $materialInventory->aggregate_id)
+                    ->with('invoiceItem.invoice')
                     ->paginate(15)
                     ->withQueryString(),
-                'stockReserv' => InventoryReserv::where('material_inventory_id','=',$materialInventory->id)
-                    ->with('order')
-                    ->paginate(15)
-                    ->withQueryString()
             ]
         );
     }

@@ -29,6 +29,10 @@ class InventoryProjector extends Projector
 
     public function onStockAdded(StockAdded $stockAdded)
     {
+        $materialInventory = MaterialInventory::query()->where('aggregate_id', $stockAdded->aggregateRootUuid())->first();
+        $materialInventory->available_quantity = $stockAdded->newBalance;
+        $materialInventory->save();
+
         InventoryLog::create([
             'material_inventories_aggregate_id' => $stockAdded->aggregateRootUuid(),
             'unit' => $stockAdded->unit,

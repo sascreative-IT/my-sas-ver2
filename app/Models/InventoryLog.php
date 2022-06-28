@@ -9,4 +9,9 @@ class InventoryLog extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function invoiceItem()
+    {
+        return $this->belongsTo(MaterialInvoiceItem::class, 'in_invoice_item_id');
+    }
 }
