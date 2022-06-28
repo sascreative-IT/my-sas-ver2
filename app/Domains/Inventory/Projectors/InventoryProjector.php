@@ -35,11 +35,16 @@ class InventoryProjector extends Projector
             'available_quantity' => $stockAdded->newBalance
         ]);
 
+        $balance = $stockAdded->quantity;
+        $latestInventoryLog = $this->lastInventoryLog($stockAdded->aggregateRootUuid());
+        if ($latestInventoryLog) {
+            $balance += $latestInventoryLog->balance;
+        }
         InventoryLog::create([
             'material_inventories_aggregate_id' => $stockAdded->aggregateRootUuid(),
             'unit' => $stockAdded->unit,
             'in' => $stockAdded->quantity,
-            'balance' => $stockAdded->newBalance,
+            'balance' => $balance,
             'in_invoice_item_id' => $stockAdded->invoiceItemId,
             'in_unit_price' => $stockAdded->unitPrice,
             'in_unit_currency' => $stockAdded->currency,
@@ -55,15 +60,37 @@ class InventoryProjector extends Projector
             'available_quantity' => ($materialInventory->available_quantity - $stockRemoved->quantity),
         ]);
 
+        $balance = 0;
+        $latestInventoryLog = $this->lastInventoryLog($stockRemoved->aggregateRootUuid());
+        if ($latestInventoryLog) {
+            $balance = $latestInventoryLog->balance;
+        }
+        $balance = $balance - $stockRemoved->quantity;
+
         InventoryLog::create([
             'material_inventories_aggregate_id' => $stockRemoved->aggregateRootUuid(),
             'unit' => $stockRemoved->unit,
             'out' => $stockRemoved->quantity,
-            'balance' => 100,
+            'balance' => $balance,
             'out_order_id' => $stockRemoved->outOrderId,
             'out_style_panel_id' => $stockRemoved->stylePanelId,
             'created_at' => $stockRemoved->createdAt(),
             'updated_at' => $stockRemoved->createdAt(),
         ]);
+    }
+
+    private function lastInventoryLog(string $aggregateRootId): ?InventoryLog
+    {
+        return InventoryLog::query()
+            ->where('material_inventories_aggregate_id', $aggregateRootId)
+            ->latest()
+            ->limit(1)
+            ->first();
+    }
+
+    public function onStartingEventReplay()
+    {
+        MaterialInventory::truncate();
+        InventoryLog::truncate();
     }
 }

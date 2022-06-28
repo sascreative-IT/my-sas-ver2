@@ -32,8 +32,7 @@ class InventoryAggregateRoot extends AggregateRoot
 
     public function addStock(string $unit, float $quantity, ?int $invoiceItemId = null, ?float $unitPrice = null, ?string $currency = null)
     {
-        $balance = $this->balance + $quantity;  // this until we can figure out how to use the aggregate root balance
-        $this->recordThat(new StockAdded($unit, $quantity, $balance, $invoiceItemId, $unitPrice, $currency));
+        $this->recordThat(new StockAdded($unit, $quantity, $invoiceItemId, $unitPrice, $currency));
 
         return $this;
     }
