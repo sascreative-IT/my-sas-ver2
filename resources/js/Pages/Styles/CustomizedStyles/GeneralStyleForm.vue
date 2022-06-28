@@ -441,7 +441,6 @@ export default {
             this.show_panel_form = false;
         },
         handleEditPanelRow(dataRow) {
-            console.log(dataRow)
             this.show_panel_form = true;
             this.panel = dataRow;
 

@@ -141,6 +141,56 @@
             </div>
             <el-divider content-position="left"><h3 class="text-lg font-bold">Panels</h3></el-divider>
             <div class="py-4">
+                <div class="p-5 border-2 border-gray-200">
+                    <el-table
+                        :data="form.panels"
+                        stripe
+                        style="width: 100%"
+                    >
+
+                        <el-table-column
+                            prop="name"
+                            label="Name"
+                            width="180">
+                        </el-table-column>
+
+                        <el-table-column
+                            label="Fabrics"
+                        >
+                            <template slot-scope="scope">
+                                {{ scope.row.fabrics.map(fabric => fabric.name).join(', ') }}
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column
+                            prop="default_fabric.name"
+                            label="Default Fabric"
+                            width="180">
+                        </el-table-column>
+
+                        <el-table-column
+                            label="Consumption"
+                            width="180">
+                            <template slot-scope="scope">
+                                <div v-for="consumption in scope.row.consumption">
+                                    <label> <b>{{ consumption.size.name }} : </b></label>
+                                    <span> {{ consumption.amount }}</span>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column
+                            label="Action"
+                            width="180">
+                            <template slot-scope="scope">
+                                <form-button @handle-on-click="handleEditPanelRow(scope.row)">
+                                    Edit
+                                </form-button>
+                            </template>
+                        </el-table-column>
+
+                    </el-table>
+                </div>
                 <!-- Panel Add form -->
                 <div>
                     <div class="shadow overflow-hidden sm:rounded-md">
@@ -224,56 +274,6 @@
                 </div>
 
                 <!-- End of Panel Add form -->
-                <div class="p-5 border-2 border-gray-200">
-                    <el-table
-                        :data="form.panels"
-                        stripe
-                        style="width: 100%"
-                    >
-
-                        <el-table-column
-                            prop="name"
-                            label="Name"
-                            width="180">
-                        </el-table-column>
-
-                        <el-table-column
-                            label="Fabrics"
-                        >
-                            <template slot-scope="scope">
-                                {{ scope.row.fabrics.map(fabric => fabric.name).join(', ') }}
-                            </template>
-                        </el-table-column>
-
-                        <el-table-column
-                            prop="default_fabric.name"
-                            label="Default Fabric"
-                            width="180">
-                        </el-table-column>
-
-                        <el-table-column
-                            label="Consumption"
-                            width="180">
-                            <template slot-scope="scope">
-                                <div v-for="consumption in scope.row.consumption">
-                                    <label> <b>{{ consumption.size.name }} : </b></label>
-                                    <span> {{ consumption.amount }}</span>
-                                </div>
-                            </template>
-                        </el-table-column>
-
-                        <el-table-column
-                            label="Action"
-                            width="180">
-                            <template slot-scope="scope">
-                                <form-button @handle-on-click="handleEditPanelRow(scope.row)">
-                                    Edit
-                                </form-button>
-                            </template>
-                        </el-table-column>
-
-                    </el-table>
-                </div>
             </div>
             <el-divider content-position="left"><h3 class="text-lg font-bold">Trims / Accessories</h3></el-divider>
             <div class="py-4">
