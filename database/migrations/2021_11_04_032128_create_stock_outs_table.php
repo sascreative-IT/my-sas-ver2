@@ -11,7 +11,7 @@ class CreateStockOutsTable extends Migration
     {
         Schema::create('stock_outs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('orders');
+            $table->string('order_id');
             $table->foreignId('factory_id')->constrained('factories');
             $table->foreignId('customer_id')->constrained('customers');
             $table->foreignId('created_by_id')->constrained('users');
@@ -19,7 +19,6 @@ class CreateStockOutsTable extends Migration
             $table->timestamps();
         });
     }
-
 
     public function down()
     {

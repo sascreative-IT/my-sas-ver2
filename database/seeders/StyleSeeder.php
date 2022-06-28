@@ -32,6 +32,7 @@ class StyleSeeder extends Seeder
             'name' => 'Original Tee',
             'item_type_id' => $itemType->id,
             'belongs_to' => Style::INTERNAL,
+            'styles_type' => Style::GENERAL,
         ]);
 
         $style->factories()->syncWithoutDetaching($sLFactory->id);
@@ -56,6 +57,7 @@ class StyleSeeder extends Seeder
             'customer_id' => $customer->id,
             'production_time' => 120,
             'belongs_to' => Style::INTERNAL,
+            'styles_type' => Style::GENERAL,
         ]);
 
         $stylePanel = StylePanel::factory()->create([
