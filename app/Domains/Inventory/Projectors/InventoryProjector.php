@@ -4,6 +4,7 @@ namespace App\Domains\Inventory\Projectors;
 
 use App\Domains\Inventory\Events\Internal\InventoryMaterialAdded;
 use App\Domains\Inventory\Events\Internal\StockAdded;
+use App\Domains\Inventory\Events\Internal\StockRemoved;
 use App\Models\InventoryLog;
 use App\Models\MaterialInventory;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
@@ -30,8 +31,9 @@ class InventoryProjector extends Projector
     public function onStockAdded(StockAdded $stockAdded)
     {
         $materialInventory = MaterialInventory::query()->where('aggregate_id', $stockAdded->aggregateRootUuid())->first();
-        $materialInventory->available_quantity = $stockAdded->newBalance;
-        $materialInventory->save();
+        $materialInventory->update([
+            'available_quantity' => $stockAdded->newBalance
+        ]);
 
         InventoryLog::create([
             'material_inventories_aggregate_id' => $stockAdded->aggregateRootUuid(),
@@ -43,6 +45,25 @@ class InventoryProjector extends Projector
             'in_unit_currency' => $stockAdded->currency,
             'created_at' => $stockAdded->createdAt(),
             'updated_at' => $stockAdded->createdAt(),
+        ]);
+    }
+
+    public function onStockRemoved(StockRemoved $stockRemoved)
+    {
+        $materialInventory = MaterialInventory::query()->where('aggregate_id', $stockRemoved->aggregateRootUuid())->first();
+        $materialInventory->update([
+            'available_quantity' => ($materialInventory->available_quantity - $stockRemoved->quantity),
+        ]);
+
+        InventoryLog::create([
+            'material_inventories_aggregate_id' => $stockRemoved->aggregateRootUuid(),
+            'unit' => $stockRemoved->unit,
+            'out' => $stockRemoved->quantity,
+            'balance' => 100,
+            'out_order_id' => $stockRemoved->outOrderId,
+            'out_style_panel_id' => $stockRemoved->stylePanelId,
+            'created_at' => $stockRemoved->createdAt(),
+            'updated_at' => $stockRemoved->createdAt(),
         ]);
     }
 }

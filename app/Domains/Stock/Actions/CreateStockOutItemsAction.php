@@ -4,10 +4,12 @@
 namespace App\Domains\Stock\Actions;
 
 
+use App\Domains\Inventory\AggregateRoots\InventoryAggregateRoot;
 use App\Domains\Stock\Models\StockOut;
 use App\Domains\Stock\Models\StockOutItem;
 use App\Models\MaterialInventory;
 use App\Models\MaterialVariation;
+use Illuminate\Support\Str;
 
 class CreateStockOutItemsAction
 {
@@ -36,9 +38,14 @@ class CreateStockOutItemsAction
                     ->where('supplier_id', $stockOutItemData->supplier->id)
                     ->first();
                 if ($materialInventory) {
-                    $materialInventory->update([
-                        'available_quantity' => ($materialInventory->available_quantity - $stockOutItemData->usage),
-                    ]);
+                    $aggregateRoot = InventoryAggregateRoot::retrieve($materialInventory->aggregate_id);
+                    $aggregateRoot->removeStock(
+                        $stockOutItemData->material->unit,
+                        $stockOutItemData->usage,
+                        $stockOutItemData->stylePanel->id,
+                        $stockOut->order_id
+                    );
+                    $aggregateRoot->persist();
                 }
 
             }

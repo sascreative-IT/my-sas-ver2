@@ -43,9 +43,9 @@ class InventoryAggregateRoot extends AggregateRoot
         $this->balance += $stockAdded->quantity;
     }
 
-    public function removeStock(string $unit, float $quantity)
+    public function removeStock(string $unit, float $quantity, ?int $stylePanelId = null, ?int $outOrderId = null)
     {
-        $this->recordThat(new StockRemoved($unit, $quantity));
+        $this->recordThat(new StockRemoved($unit, $quantity, $stylePanelId, $outOrderId));
     }
 
     public function applyStockRemoved(StockRemoved $stockAdded)
