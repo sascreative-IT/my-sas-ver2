@@ -63,7 +63,31 @@
 
                                 </div>
                             </div>
+                            <div>
+                                <div>
+                                    <div v-if="styleForm.styles_type !== 'General'">
+                                        <div class="pt-2 pb-4">
 
+                                            <label
+                                                for="customer_name"
+                                                class="block text-base font-medium text-gray-700"
+                                            >
+                                                Customer Name
+                                            </label>
+
+                                            <v-select
+                                                id="customer_name"
+                                                v-model="styleForm.customer"
+                                                label="name"
+                                                item-id="id"
+                                                :options="customers"
+                                                :reduce="customer => customer.id"
+                                                @input="setSelectedCustomerId"
+                                            ></v-select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -285,7 +309,11 @@ export default {
             })
         },
         setSelectedCustomerId(value) {
-            this.styleForm.customer = value;
+
+            this.styleForm.customer = this.customers.find(item => {
+                return item.id === value
+            });
+
             this.$inertia.visit(this.$inertia.page.url, {
                 preserveState: true,
                 preserveScroll: true,

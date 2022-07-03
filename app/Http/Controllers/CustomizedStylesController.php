@@ -127,7 +127,7 @@ class CustomizedStylesController extends Controller
             }
             $request->merge(['style_image' => $image_path]);
             $style = resolve(CreateStyle::class)->execute($request->toDto());
-            return Redirect::route('style.customized.index', [$style->id])
+            return Redirect::route('style.customized.index')
                 ->with(['message' => 'successfully updated']);
         } catch (\Exception $ex) {
             return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
