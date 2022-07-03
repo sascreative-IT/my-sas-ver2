@@ -7,6 +7,7 @@ use App\Domains\Inventory\Events\Internal\StockAdded;
 use App\Domains\Inventory\Events\Internal\StockRemoved;
 use App\Domains\Inventory\Exceptions\InventoryException;
 use App\Domains\Inventory\Repositories\InventoryRepository;
+use App\Models\User;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
 class InventoryAggregateRoot extends AggregateRoot
@@ -19,20 +20,20 @@ class InventoryAggregateRoot extends AggregateRoot
         $this->inventoryRepository = $inventoryRepository;
     }
 
-    public function createMaterial(int $variationId, int $supplierId, int $factoryId)
+    public function createMaterial(int $variationId, int $supplierId, int $factoryId, $userId)
     {
         if ($this->inventoryRepository->isMaterialExist($variationId, $supplierId, $factoryId)) {
             throw InventoryException::materialExists();
         }
 
-        $this->recordThat(new InventoryMaterialAdded($variationId, $supplierId, $factoryId));
+        $this->recordThat(new InventoryMaterialAdded($variationId, $supplierId, $factoryId, $userId));
 
         return $this;
     }
 
-    public function addStock(string $unit, float $quantity, ?int $invoiceItemId = null, ?float $unitPrice = null, ?string $currency = null)
+    public function addStock(string $unit, float $quantity, ?int $invoiceItemId = null, ?float $unitPrice = null, ?string $currency = null, int $userId)
     {
-        $this->recordThat(new StockAdded($unit, $quantity, $invoiceItemId, $unitPrice, $currency));
+        $this->recordThat(new StockAdded($unit, $quantity, $invoiceItemId, $unitPrice, $currency, $userId));
 
         return $this;
     }
@@ -42,9 +43,9 @@ class InventoryAggregateRoot extends AggregateRoot
         $this->balance += $stockAdded->quantity;
     }
 
-    public function removeStock(string $unit, float $quantity, ?int $stylePanelId = null, ?int $outOrderId = null)
+    public function removeStock(string $unit, float $quantity, ?int $stylePanelId = null, ?int $outOrderId = null, int $userId)
     {
-        $this->recordThat(new StockRemoved($unit, $quantity, $stylePanelId, $outOrderId));
+        $this->recordThat(new StockRemoved($unit, $quantity, $stylePanelId, $outOrderId, $userId));
     }
 
     public function applyStockRemoved(StockRemoved $stockAdded)

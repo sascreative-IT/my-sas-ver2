@@ -34,6 +34,7 @@ export default {
         options: function (newVal, oldVal) {
             if (newVal.length > 0 && this.defaultSelected) {
                 this.selected_item = newVal[0];
+                this.setSelectedItem(this.selected_item);
             }
         }
     },

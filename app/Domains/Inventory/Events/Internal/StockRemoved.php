@@ -8,12 +8,14 @@ class StockRemoved extends \Spatie\EventSourcing\StoredEvents\ShouldBeStored
     public float $quantity;
     public int $stylePanelId;
     public int $outOrderId;
+    public int $userId;
 
-    public function __construct(string $unit, float $quantity, int $stylePanelId, int $outOrderId)
+    public function __construct(string $unit, float $quantity, int $stylePanelId, int $outOrderId, int $userId)
     {
         $this->unit = $unit;
         $this->quantity = $quantity;
         $this->stylePanelId = $stylePanelId;
         $this->outOrderId = $outOrderId;
+        $this->userId = $userId;
     }
 }

@@ -43,7 +43,8 @@ class CreateStockOutItemsAction
                         $stockOutItemData->material->unit,
                         $stockOutItemData->usage,
                         $stockOutItemData->stylePanel->id,
-                        $stockOut->order_id
+                        $stockOut->order_id,
+                        auth()->user()->id
                     );
                     $aggregateRoot->persist();
                 }

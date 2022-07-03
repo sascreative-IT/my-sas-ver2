@@ -34,10 +34,22 @@ class UpdateInventoryWhenInvoiceCreated
             $aggregateRoot = InventoryAggregateRoot::retrieve($InventoryMaterial ? $InventoryMaterial->aggregate_id : Str::uuid()->toString());
 
             if ($InventoryMaterial === null) {
-                $aggregateRoot->createMaterial($invoiceItem->material_variation_id, $invoiceCreated->invoice->supplier_id, $invoiceCreated->invoice->factory_id);
+                $aggregateRoot->createMaterial(
+                    $invoiceItem->material_variation_id,
+                    $invoiceCreated->invoice->supplier_id,
+                    $invoiceCreated->invoice->factory_id,
+                    auth()->user()->id
+                );
             }
 
-            $aggregateRoot->addStock($invoiceItem->unit, $invoiceItem->quantity, $invoiceItem->id, $invoiceItem->unit_price, $invoiceItem->currency);
+            $aggregateRoot->addStock(
+                $invoiceItem->unit,
+                $invoiceItem->quantity,
+                $invoiceItem->id,
+                $invoiceItem->unit_price,
+                $invoiceItem->currency,
+                auth()->user()->id
+            );
 
             $aggregateRoot->persist();
         });
