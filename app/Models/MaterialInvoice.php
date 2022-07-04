@@ -29,4 +29,9 @@ class MaterialInvoice extends Model implements Auditable
     {
         return $this->belongsTo(Supplier::class,'supplier_id');
     }
+
+    public function inventoryLog()
+    {
+        return $this->hasMany(InventoryLog::class);
+    }
 }

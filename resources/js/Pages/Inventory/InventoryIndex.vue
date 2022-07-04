@@ -61,14 +61,6 @@
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Available Quantity
                             </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Allocated Quantity
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Usable Quantity
-                            </th>
                             <th scope="col" class="relative px-6 py-3">
                                 <span class="sr-only">More</span>
                             </th>
@@ -94,16 +86,6 @@
                             <td class="px-6 py-3 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">
                                     {{ inventoryItem.available_quantity }} {{ inventoryItem.unit }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-3 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">
-                                    {{ inventoryItem.allocated_quantity }} {{ inventoryItem.unit }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-3 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">
-                                    {{ inventoryItem.usable_quantity }} {{ inventoryItem.unit }}
                                 </div>
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">

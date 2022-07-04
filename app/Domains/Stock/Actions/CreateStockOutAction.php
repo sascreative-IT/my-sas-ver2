@@ -13,7 +13,7 @@ class CreateStockOutAction
     {
         $materialPurchaseOrder = StockOut::create(
             [
-                'order_id' => $stockOutData->order->id,
+                'order_id' => $stockOutData->orderId,
                 'factory_id' => $stockOutData->factory->id,
                 'customer_id' => $stockOutData->customer->id,
                 'created_by_id' => $stockOutData->createdBy->id,

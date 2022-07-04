@@ -1,6 +1,7 @@
 <template>
     <div>
         <el-select
+            :clearable="clearable"
             :disabled="disabled"
             class="w-full"
             @input="input"
@@ -82,6 +83,11 @@ export default {
             type: String,
         },
         disabled: {
+            required: false,
+            default: false,
+            type: Boolean,
+        },
+        clearable: {
             required: false,
             default: false,
             type: Boolean,

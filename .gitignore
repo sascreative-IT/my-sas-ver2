@@ -4,7 +4,7 @@
 /public/js/app.js
 /public/css/app.css
 /public/css/custom.css
-/public/fonts
+/public/fonts/vendor/@fortawesome/*
 /storage/*.key
 /vendor
 .env
