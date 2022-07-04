@@ -247,23 +247,8 @@ export default {
         this.styleForm.styles_type = "General"
         this.styleForm = this.styleData
         if (this.parentStyleCode !== null && (typeof this.parentStyleCode  != 'undefined')) {
-            // wtf is this ??
-
-            // this.styleForm = this.parentStyleCode;
-            // this.parent_panels = this.styleForm.panels
-            // this.styleForm.panels.forEach((panel, index) => {
-            //     this.component_fabrics[panel.id] = [];
-            //     for( let i = 0; i < panel.fabrics.length; i++){
-            //         this.component_fabrics[panel.id].push({
-            //             material_id:panel.fabrics[i].id,
-            //             material_name:panel.fabrics[i].name,
-            //         })
-            //     }
-            //     // this.component_fabrics[panel.id] = panel.fabrics;
-            // });
-            // console.log(this.component_fabrics)
-            // this.styleForm.parent_style_code = this.parentStyleCode.code;
-            // this.styleForm.panels = [];
+            this.styleForm = this.parentStyleCode;
+            this.styleForm.parent_style_code = this.parentStyleCode.code;
         }
 
         if (this.styleType != null) {
@@ -322,7 +307,6 @@ export default {
             if (this.$refs.style_code_image) {
                 this.styleForm.image = this.$refs.style_code_image.files[0];
             }
-
             this.$inertia.post('/customized-styles', this.styleForm)
         },
         update() {

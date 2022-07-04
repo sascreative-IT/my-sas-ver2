@@ -145,13 +145,13 @@
                             <tr v-for="panel in parentStyle.panels" :key="panel.id">
                                 <td>{{ panel.name }}</td>
                                 <td>
-                                    <select @change="(event) => panelFabricSelected(panel.id, event.target.value)">
+                                    <select class="px-2 my-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5" @change="(event) => panelFabricSelected(panel.id, event.target.value)">
                                         <option>Select Material</option>
                                         <option v-for="fabric in panel.fabrics" :key="fabric.id" :value="fabric.id"> {{ fabric.name }}</option>
                                     </select>
                                 </td>
                                 <td>
-                                    <select @change="(event) => colourSelected(panel.id, event.target.value)" >
+                                    <select class="px-2 my-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5" @change="(event) => colourSelected(panel.id, event.target.value)" >
                                         <option>Select Colour</option>
                                         <option v-for="colour in panelColours[panel.id]" :key="colour.id" :value="colour.id"> {{ colour.name }} </option>
                                     </select>
@@ -234,6 +234,7 @@ export default {
             form: {
                 sizes: [],
                 panels: [],
+                customized_panels: []
             },
             selectedPanelOptions:{},
             panelColours: {},
@@ -241,7 +242,6 @@ export default {
             panel: this.defaultPanel(),
             component_materials : [],
             show_panel_form: false,
-            panels_for_customizations:[] // might not need this
         }
     },
     mounted() {
@@ -256,6 +256,7 @@ export default {
         value: {
             handler(newValue) {
                 this.form = newValue
+                this.form.customized_panels = [];
                 this.panels_for_customizations = this.parentPanels
             },
             deep: true
@@ -270,7 +271,8 @@ export default {
     },
     methods: {
         colourSelected(panelId, colourId) {
-            this.selectedPanelOptions[panelId].colourId = colourId
+            this.selectedPanelOptions[panelId].colourId = parseInt(colourId)
+            this.form.customized_panels.push(this.selectedPanelOptions[panelId]);
             this.$forceUpdate();
         },
 
@@ -278,7 +280,7 @@ export default {
             console.log('fabric selected', panelId, fabricId)
             this.selectedPanelOptions[panelId] = {
                 id: panelId,
-                fabricId: fabricId,
+                fabricId: parseInt(fabricId),
                 colourId: null,
             };
             const panel = this.parentStyle.panels.filter(panel => {
