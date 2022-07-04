@@ -5,39 +5,41 @@ namespace App\Domains\Inventory\Listeners;
 
 use App\Domains\Inventory\Actions\CreateInventoryStockIn;
 use App\Domains\Inventory\Actions\InventoryCreate;
+use App\Domains\Inventory\AggregateRoots\InventoryAggregateRoot;
+use App\Domains\Inventory\Repositories\InventoryRepository;
 use App\Domains\Invoices\Events\InvoiceCreated;
 use App\Models\MaterialInvoiceItem;
 use App\Models\Supplier;
+use Illuminate\Support\Str;
 
 class UpdateInventoryWhenInvoiceCreated
 {
-    private InventoryCreate $inventoryCreate;
-    private CreateInventoryStockIn $createInventoryStockIn;
+    private InventoryRepository $inventoryRepository;
 
-    public function __construct(InventoryCreate $inventoryCreate, CreateInventoryStockIn $createInventoryStockIn)
+    public function __construct(InventoryRepository $inventoryRepository)
     {
-        $this->createInventoryStockIn = $createInventoryStockIn;
-        $this->inventoryCreate = $inventoryCreate;
+        $this->inventoryRepository = $inventoryRepository;
     }
 
     public function handle(InvoiceCreated $invoiceCreated)
     {
-        $invoiceCreated->invoice->items
-            ->each(function (MaterialInvoiceItem $invoiceItem) use ($invoiceCreated) {
-                $inventoryItem = $this->inventoryCreate->execute(
-                    $invoiceItem->variation,
-                    $invoiceCreated->invoice->sawingFactory,
-                    $invoiceItem->variation->material->unit,
-                    $invoiceCreated->invoice->supplier
-                );
+        $invoiceCreated->invoice->loadMissing(['items']);
+        $invoiceCreated->invoice->items->each(function (MaterialInvoiceItem $invoiceItem) use ($invoiceCreated) {
+            $InventoryMaterial = $this->inventoryRepository->getMaterial(
+                $invoiceItem->material_variation_id,
+                $invoiceCreated->invoice->supplier_id,
+                $invoiceCreated->invoice->factory_id,
+            );
 
-                $this->createInventoryStockIn->execute(
-                    $inventoryItem,
-                    $invoiceCreated->invoice,
-                    $invoiceItem->quantity,
-                    $invoiceItem->unit_price,
-                    null
-                );
-            });
+            $aggregateRoot = InventoryAggregateRoot::retrieve($InventoryMaterial ? $InventoryMaterial->aggregate_id : Str::uuid()->toString());
+
+            if ($InventoryMaterial === null) {
+                $aggregateRoot->createMaterial($invoiceItem->material_variation_id, $invoiceCreated->invoice->supplier_id, $invoiceCreated->invoice->factory_id);
+            }
+
+            $aggregateRoot->addStock($invoiceItem->unit, $invoiceItem->quantity, $invoiceItem->id, $invoiceItem->unit_price, $invoiceItem->currency);
+
+            $aggregateRoot->persist();
+        });
     }
 }

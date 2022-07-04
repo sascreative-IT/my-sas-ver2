@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Domains\Currency\Models\Currency;
 use App\Models\Category;
 use App\Models\Colour;
 use App\Models\Country;
@@ -285,7 +286,8 @@ class DatabaseSeeder extends Seeder
             'supplier_id' => $supplierA->id,
             'purchase_order_number' => 'AB11234',
             'invoice_number' => 'ABC12211',
-            'factory_id' => Factory::find(1) ? Factory::find(1)->id : Factory::factory()->create()->id,
+//            'factory_id' => Factory::find(1) ? Factory::find(1)->id : Factory::factory()->create()->id,
+            'factory_id' => Factory::first(),
         ]);
 
         MaterialInvoiceItem::factory()->create([
@@ -324,7 +326,7 @@ class DatabaseSeeder extends Seeder
             'available_quantity' => 610,
             'allocated_quantity' => 100,
             'usable_quantity' => 500,
-            'factory_id' => Factory::find(1) ? Factory::find(1)->id : Factory::factory()->create()->id,
+            'factory_id' => Factory::first(),
             'supplier_id' => Supplier::find(1) ? Supplier::find(1)->id : Supplier::factory()->create()->id,
         ]);
 
@@ -334,25 +336,22 @@ class DatabaseSeeder extends Seeder
             'available_quantity' => 1000,
             'allocated_quantity' => 0,
             'usable_quantity' => 1000,
-            'factory_id' => Factory::find(1) ? Factory::find(1)->id : Factory::factory()->create()->id,
+            'factory_id' => Factory::first(),
             'supplier_id' => Supplier::find(1) ? Supplier::find(1)->id : Supplier::factory()->create()->id,
         ]);
 
-        InventoryIn::create([
-            'material_inventory_id' => $lightDritechBlackInventory->id,
-            'invoice_id' => $invoice1->id,
-            'quantity' => 600,
-            'price' => 800
+        Currency::factory()->create([
+            'name' => 'NZD',
+            'status' => 'Enabled',
         ]);
-
-        InventoryIn::create([
-            'material_inventory_id' => $lightDritechBlackInventory->id,
-            'description' => 'Monthly checking in',
-            'quantity' => 10,
-            'price' => 0
+        Currency::factory()->create([
+            'name' => 'USD',
+            'status' => 'Enabled',
         ]);
-
-        \App\Domains\Currency\Models\Currency::factory()->count(5)->create();
+        Currency::factory()->create([
+            'name' => '฿',
+            'status' => 'Enabled',
+        ]);
         \App\Domains\PurchaseOrder\Models\MaterialPurchaseOrder::factory()->withItems(3)->count(55)->create();
 
 

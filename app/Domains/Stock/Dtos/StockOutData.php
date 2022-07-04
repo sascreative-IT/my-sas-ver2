@@ -13,7 +13,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class StockOutData extends DataTransferObject
 {
-    public Order $order;
+    public string $orderId;
     public Factory $factory;
     public Customer $customer;
     public User $createdBy;
@@ -22,7 +22,7 @@ class StockOutData extends DataTransferObject
     public static function fromRequest(FormRequest $request): StockOutData
     {
         return new self([
-            'order' => Order::where('public_id', $request->input('order_public_id'))->firstOrFail(),
+            'orderId' => $request->input('order_public_id'),
             'factory' => Factory::findOrFail($request->input('factory_id')),
             'customer' => Customer::findOrFail($request->input('customer_id')),
             'createdBy' => User::findOrFail(auth()->id()),
