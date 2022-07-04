@@ -67,17 +67,21 @@ class CustomizedStylesController extends Controller
             print($style['id']."-".$style['code']."<BR/>");
         }
         */
-        $parent_style_code = null;
+        $parentStyleCode = null;
 
         if ($request->has('parent_id')) {
             $parent_id = $request->get('parent_id');
-            $parent_style_code = Style::find($parent_id);
-            $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
-            $categories = $parent_style_code->categories;
-            $sizes = $parent_style_code->sizes;
+            $parentStyleCode = Style::find($parent_id);
+            $parentStyleCode->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
+            $categories = $parentStyleCode->categories;
+            $sizes = $parentStyleCode->sizes;
 
+
+            $parentStyleCode->load(['panels.fabrics.variations.colour']);
+
+            // Following code might not be needed
             $material_ids = [];
-            foreach($parent_style_code->panels as $panel){
+            foreach($parentStyleCode->panels as $panel){
                 $material_ids[] = $panel->fabrics[0]->id;
             }
 
@@ -110,7 +114,7 @@ class CustomizedStylesController extends Controller
             'factories' => $factories,
             'materials' => $materials,
             'styles' => $styles,
-            'parentStyleCode' => $parent_style_code,
+            'parentStyleCode' => $parentStyleCode,
             'styleType' => 'Customized',
             'customer' => $request->get('customer'),
             'colours' => $colours
