@@ -137,7 +137,7 @@
                 <!-- Panel Table -->
                 <div class="p-5 border-2 border-gray-200">
                     <el-table
-                        :data="form.panels"
+                        :data="panels_for_customizations"
                         stripe
                         style="width: 100%"
                     >
@@ -152,7 +152,30 @@
                             label="Fabrics"
                         >
                             <template slot-scope="scope">
-                                {{ scope.row.fabrics.map(fabric => fabric.name).join(', ') }}
+                                <app-select
+                                    v-model="form.panel.fabrics"
+                                    placeholder="Select a Fabric"
+                                    :options="component_materials"
+                                    option-label="name"
+                                    option-value="id"
+                                ></app-select>
+<!--                                <div class="flex flex-col">-->
+<!--                                <div v-for="fabric in scope.row.fabrics" class="">-->
+<!--                                    <el-form-item label="Material Name">-->
+<!--                                        <el-input-->
+<!--                                            :placeholder="fabric.name"-->
+<!--                                            :disabled="true">-->
+<!--                                        </el-input>-->
+<!--                                    </el-form-item>-->
+<!--                                    <el-form-item label="Color">-->
+<!--                                        <el-select placeholder="Select a color">-->
+<!--                                            <el-option label="Zone one" value="shanghai"></el-option>-->
+<!--                                            <el-option label="Zone two" value="beijing"></el-option>-->
+<!--                                        </el-select>-->
+<!--                                    </el-form-item>-->
+<!--                                </div>-->
+<!--                                </div>-->
+<!--                                {{ scope.row.fabrics.map(fabric => fabric.name).join(', ') }}-->
                             </template>
                         </el-table-column>
 
@@ -339,6 +362,13 @@ export default {
             type: Array,
             required: true
         },
+        parentPanels:{
+            required: true
+        },
+        componentFabrics:{
+            type: Array,
+            required: true
+        },
         errors: {
             type: Object,
             required: false,
@@ -354,7 +384,8 @@ export default {
             customized_style_code: '',
             panel: this.defaultPanel(),
             component_materials : [],
-            show_panel_form: false
+            show_panel_form: false,
+            panels_for_customizations:[]
         }
     },
     mounted() {
@@ -369,6 +400,7 @@ export default {
         value: {
             handler(newValue) {
                 this.form = newValue
+                this.panels_for_customizations = this.parentPanels
             },
             deep: true
         },

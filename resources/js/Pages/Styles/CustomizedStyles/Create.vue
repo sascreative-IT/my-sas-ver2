@@ -129,6 +129,8 @@
                                 :factories="factories"
                                 v-model="styleForm"
                                 :errors="errors"
+                                :parentPanels="parent_panels"
+                                :componentFabrics="component_fabrics"
                                 :styleCodeType="styleForm.styles_type"
                             ></general-style-form>
                         </div>
@@ -235,6 +237,8 @@ export default {
             },
             reset_forms: false,
             styleForm: {},
+            parent_panels:{},
+            component_fabrics:[],
             url: '',
         }
     },
@@ -243,7 +247,20 @@ export default {
         this.styleForm = this.styleData
         if (this.parentStyleCode !== null && (typeof this.parentStyleCode  != 'undefined')) {
             this.styleForm = this.parentStyleCode;
+            this.parent_panels = this.styleForm.panels
+            this.styleForm.panels.forEach((panel, index) => {
+                this.component_fabrics[panel.id] = [];
+                for( let i = 0; i < panel.fabrics.length; i++){
+                    this.component_fabrics[panel.id].push({
+                        material_id:panel.fabrics[i].id,
+                        material_name:panel.fabrics[i].name,
+                    })
+                }
+                // this.component_fabrics[panel.id] = panel.fabrics;
+            });
+            console.log(this.component_fabrics)
             this.styleForm.parent_style_code = this.parentStyleCode.code;
+            this.styleForm.panels = [];
         }
 
         if (this.styleType != null) {
