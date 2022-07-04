@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('stock_outs', function (Blueprint $table) {
+            $table->dropForeign('stock_outs_order_id_foreign');
             $table->dropColumn('order_id');
         });
         Schema::table('stock_outs', function (Blueprint $table) {
