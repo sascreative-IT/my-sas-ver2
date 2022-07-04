@@ -11,6 +11,7 @@ use App\Http\Requests\Styles\StyleUpdateRequest;
 use App\Models\Colour;
 use App\Models\Factory;
 use App\Models\Style;
+use App\Models\StylePanelFabric;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CustomerRepositoryInterface as CustomerRepository;
 use App\Repositories\ItemTypeRepository;
@@ -162,6 +163,8 @@ class CustomizedStylesController extends Controller
         $parent_style_code = Style::find($style->parent_style_id);
         $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer']);
 
+        $parent_style_code->load(['panels.fabrics.variations.colour']);
+
         $material_ids = [];
         foreach($parent_style_code->panels as $panel){
             $material_ids[] = $panel->fabrics[0]->id;
@@ -178,16 +181,27 @@ class CustomizedStylesController extends Controller
             ->get();
 
         $colours = $avail_materials_colours;
+        $selectedPanels = [];
+        foreach ($style->panels as $panel) {
+            $selectedPanels[$panel->id] = array(
+                'colourId' => $panel->color_id,
+                'fabricId' => $panel->default_fabric_id,
+                'id' => $panel->id
+            );
+        }
 
-        return Inertia::render('Styles/CustomizedStyles/Create', [
+        return Inertia::render('Styles/CustomizedStyles/Edit', [
             'styleData' => $styleDto,
-            'customers' => $parent_style_code->customer,
+            'customers' => $style->customer,
+            'customer' => $style->customer->id,
             'categories' => $parent_style_code->categories,
             'itemTypes' => $parent_style_code->itemType,
             'sizes' => $parent_style_code->sizes,
             'factories' => $parent_style_code->factories,
             'materials' => $materials,
             'colours' => $colours,
+            'parentStyle' => $parent_style_code,
+            'selectedPanels' => $selectedPanels
         ]);
     }
 

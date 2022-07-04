@@ -246,6 +246,7 @@ export default {
     },
     mounted() {
         this.form = this.value
+        console.log(this.parentStyle)
     },
     watch: {
         resetForm: function (newValue, oldValue) {
@@ -257,7 +258,6 @@ export default {
             handler(newValue) {
                 this.form = newValue
                 this.form.customized_panels = [];
-                this.panels_for_customizations = this.parentPanels
             },
             deep: true
         },

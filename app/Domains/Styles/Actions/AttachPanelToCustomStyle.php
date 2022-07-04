@@ -24,7 +24,7 @@ class AttachPanelToCustomStyle
         return StylePanel::create([
             'name' => StylePanel::query()->find($customizedPanel->id)->name,
             'style_id' => $style->id,
-            'default_fabric_id' => optional($customizedPanel->fabricId)->id,
+            'default_fabric_id' => $customizedPanel->fabricId,
             'color_id' => $customizedPanel->colourId,
         ]);
     }

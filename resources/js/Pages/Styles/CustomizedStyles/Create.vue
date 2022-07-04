@@ -214,6 +214,9 @@ export default {
         colours: {
             type: Array,
             required: true,
+        },
+        selectedPanels: {
+            type: Object
         }
     },
     components: {
@@ -259,6 +262,8 @@ export default {
             this.styleForm.customer = this.customers.find(item => {
                 return item.id == this.customer
             });
+
+            this.setSelectedCustomerId(this.customer)
         }
 
         if (this.parentStyleCode != null) {
