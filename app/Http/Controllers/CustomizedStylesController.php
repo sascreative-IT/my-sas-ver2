@@ -158,6 +158,7 @@ class CustomizedStylesController extends Controller
 
 
         $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle','panels.color']);
+        $style->load(['panels.fabrics.variations.colour']);
         $styleDto = new StyleDto($style->toArray());
 
         $parent_style_code = Style::find($style->parent_style_id);
@@ -201,6 +202,7 @@ class CustomizedStylesController extends Controller
             'materials' => $materials,
             'colours' => $colours,
             'parentStyle' => $parent_style_code,
+            'thisStyle' => $style,
             'selectedPanels' => $selectedPanels
         ]);
     }

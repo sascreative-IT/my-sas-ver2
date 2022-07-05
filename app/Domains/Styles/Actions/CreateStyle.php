@@ -32,7 +32,7 @@ class CreateStyle
     {
         /** @var StyleModel $style */
         $style = StyleModel::create([
-            'code' => $styleDto->code,
+            'code' => strtolower($styleDto->code),
             'name' => $styleDto->name,
             'production_time' => $styleDto->production_time,
             'item_type_id' => $styleDto->item_type->id,

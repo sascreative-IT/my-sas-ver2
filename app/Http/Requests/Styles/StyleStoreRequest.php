@@ -58,4 +58,10 @@ class StyleStoreRequest extends FormRequest
     {
         return new Style(array_merge($this->all(), ['status' => 'active']));
     }
+
+    protected function prepareForValidation()
+    {
+        if ($this->has('code'))
+            $this->merge(['code'=> strtolower($this->code)]);
+    }
 }

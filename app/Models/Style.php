@@ -76,4 +76,13 @@ class Style extends Model implements Auditable
     {
         return $this->belongsTo(Style::class, 'parent_style_id');
     }
+
+    public function deleteRelations()
+    {
+        $this->categories()->delete();
+        $this->sizes()->delete();
+        $this->factories()->delete();
+        $this->itemType()->delete();
+        $this->panels()->delete();
+    }
 }
