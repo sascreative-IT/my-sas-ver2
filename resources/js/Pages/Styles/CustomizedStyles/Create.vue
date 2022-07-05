@@ -3,10 +3,10 @@
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <template v-if="styleData.id">
-                Edit Style - {{styleData.code}}
+                Edit customized style - {{styleData.code}}
                 </template>
                 <template v-else>
-                    Add a new style
+                    Create a customized style
                 </template>
 
             </h2>
@@ -41,30 +41,23 @@
                                         Style image
                                     </label>
 
-                                    <div
-                                        class="mt-1 pb-4 border-dotted h-48 rounded-lg border-dashed border-2 border-gray-400 flex justify-center items-center">
-
-                                        <div class="p-2 flex flex-col justify-between leading-normal">
-                                            <label
-                                                class="w-52 py-2 px-4 rounded inline-flex items-center">
-                                                <input
-                                                    name="style_image"
-                                                    id="style_image"
-                                                    type="file"
-                                                    @change="previewImage"
-                                                    ref="style_code_image"
-                                                    class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none"
-                                                />
-                                            </label>
-                                        </div>
-
-                                        <div
-                                            class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden">
-                                            <img
-                                                v-if="url"
-                                                :src="url"
-                                                class="mt-4 h-32"
-                                            />
+                                    <div class="flex justify-center items-center w-full relative">
+                                        <label for="dropzone-file"
+                                               :class="{'bg-contain bg-center bg-no-repeat' : uploadFieldNotEmpty}" :style="{ backgroundImage: 'url('+url+')'}"
+                                               class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                            <div class="flex flex-col justify-center items-center pt-5 pb-6">
+                                                <svg class="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span></p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400">JPEG, JPG or PNG</p>
+                                            </div>
+                                            <input name="style_image" id="dropzone-file" type="file" @change="previewImage" ref="style_code_image" class="hidden" />
+                                        </label>
+                                        <div class="absolute top-4 right-4 cursor-pointer" v-show="uploadFieldNotEmpty" @click="setUploadFieldEmpty">
+                                            <el-tooltip content="Remove image" placement="top">
+                                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            </el-tooltip>
                                         </div>
                                     </div>
 
@@ -127,6 +120,7 @@
                         <div>
                             <general-style-form
                                 @general-style-data="save"
+                                :parentStyle="parentStyleCode"
                                 :reset-form="reset_forms"
                                 :categories="categories"
                                 :materials="materials"
@@ -136,6 +130,8 @@
                                 :factories="factories"
                                 v-model="styleForm"
                                 :errors="errors"
+                                :parentPanels="parent_panels"
+                                :componentFabrics="component_fabrics"
                                 :styleCodeType="styleForm.styles_type"
                             ></general-style-form>
                         </div>
@@ -164,6 +160,8 @@ import DeleteButton from "@/UIElements/DeleteButton";
 import GeneralStyleForm from "@/Pages/Styles/CustomizedStyles/GeneralStyleForm";
 import CustomStyleForm from "@/Pages/Styles/CustomizedStyles/CustomStyleForm";
 import NewCustomStyleForm from "@/Pages/Styles/CustomizedStyles/NewCustomStyleForm";
+import vue2Dropzone from 'vue2-dropzone'
+import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
 export default {
     name: "Create",
@@ -216,6 +214,9 @@ export default {
         colours: {
             type: Array,
             required: true,
+        },
+        selectedPanels: {
+            type: Object
         }
     },
     components: {
@@ -224,7 +225,8 @@ export default {
         DeleteButton,
         GeneralStyleForm,
         CustomStyleForm,
-        NewCustomStyleForm
+        NewCustomStyleForm,
+        vueDropzone: vue2Dropzone
     },
     data() {
         return {
@@ -239,7 +241,9 @@ export default {
             },
             reset_forms: false,
             styleForm: {},
-            url: null,
+            parent_panels:{},
+            component_fabrics:[],
+            url: '',
         }
     },
     mounted() {
@@ -258,9 +262,23 @@ export default {
             this.styleForm.customer = this.customers.find(item => {
                 return item.id == this.customer
             });
+
+            this.setSelectedCustomerId(this.customer)
         }
 
-        this.url = "/" + this.styleForm.style_image;
+        if (this.parentStyleCode != null) {
+            this.styleForm.parent_style = {
+                code: this.parentStyleCode.code,
+                id: this.parentStyleCode.id,
+                name: this.parentStyleCode.name
+            }
+        }
+
+        if ( this.styleForm.style_image === "" || this.styleForm.style_image == null) {
+            this.url = ''
+        } else {
+            this.url = this.styleForm.style_image;
+        }
 
         if (typeof(this.styleForm.parent_style) != 'undefined' && this.styleForm.parent_style != null) {
             this.styleForm.parent_style_code = this.styleForm.parent_style.code;
@@ -294,7 +312,6 @@ export default {
             if (this.$refs.style_code_image) {
                 this.styleForm.image = this.$refs.style_code_image.files[0];
             }
-
             this.$inertia.post('/customized-styles', this.styleForm)
         },
         update() {
@@ -361,6 +378,15 @@ export default {
             const file = e.target.files[0];
             this.url = URL.createObjectURL(file);
         },
+        setUploadFieldEmpty(){
+            this.url = '';
+            this.$refs.style_code_image.value = null;
+        }
+    },
+    computed: {
+        uploadFieldNotEmpty(){
+            return this.url !== '';
+        }
     }
 }
 </script>

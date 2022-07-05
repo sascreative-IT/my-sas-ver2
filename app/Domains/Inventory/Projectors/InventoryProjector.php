@@ -23,6 +23,7 @@ class InventoryProjector extends Projector
             'available_quantity' => 0,
             'allocated_quantity' => 0,
             'usable_quantity' => 0,
+            'action_taken_by' => $inventoryMaterialAdded->userId,
             'created_at' => $inventoryMaterialAdded->createdAt(),
             'updated_at' => $inventoryMaterialAdded->createdAt(),
         ]);
@@ -31,8 +32,9 @@ class InventoryProjector extends Projector
     public function onStockAdded(StockAdded $stockAdded)
     {
         $materialInventory = MaterialInventory::query()->where('aggregate_id', $stockAdded->aggregateRootUuid())->first();
+
         $materialInventory->update([
-            'available_quantity' => $stockAdded->newBalance
+            'available_quantity' => $materialInventory->available_quantity + $stockAdded->quantity
         ]);
 
         $balance = $stockAdded->quantity;
@@ -48,6 +50,7 @@ class InventoryProjector extends Projector
             'in_invoice_item_id' => $stockAdded->invoiceItemId,
             'in_unit_price' => $stockAdded->unitPrice,
             'in_unit_currency' => $stockAdded->currency,
+            'action_taken_by' => $stockAdded->userId,
             'created_at' => $stockAdded->createdAt(),
             'updated_at' => $stockAdded->createdAt(),
         ]);
@@ -74,6 +77,7 @@ class InventoryProjector extends Projector
             'balance' => $balance,
             'out_order_id' => $stockRemoved->outOrderId,
             'out_style_panel_id' => $stockRemoved->stylePanelId,
+            'action_taken_by' => $stockRemoved->userId,
             'created_at' => $stockRemoved->createdAt(),
             'updated_at' => $stockRemoved->createdAt(),
         ]);

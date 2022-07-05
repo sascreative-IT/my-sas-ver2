@@ -12,17 +12,20 @@ class CreateStyle
     private AttachCategoryToStyle $attachCategoryToStyle;
     private AttachFactoriesToStyle $attachFactoriesToStyle;
     private AttachPanelToStyle $attachPanelToStyle;
+    private AttachPanelToCustomStyle $attachPanelToCustomStyle;
 
     public function __construct(
         AttachSizeToStyle $attachSizeToStyle,
         AttachCategoryToStyle $attachCategoryToStyle,
         AttachFactoriesToStyle $attachFactoriesToStyle,
         AttachPanelToStyle $attachPanelToStyle,
+        AttachPanelToCustomStyle $attachPanelToCustomStyle
     ) {
         $this->attachSizeToStyle = $attachSizeToStyle;
         $this->attachCategoryToStyle = $attachCategoryToStyle;
         $this->attachFactoriesToStyle = $attachFactoriesToStyle;
         $this->attachPanelToStyle = $attachPanelToStyle;
+        $this->attachPanelToCustomStyle = $attachPanelToCustomStyle;
     }
 
     public function execute(Style $styleDto): StyleModel
@@ -54,11 +57,20 @@ class CreateStyle
             $this->attachFactoriesToStyle->execute($style, $factory);
         }
 
-        if (!is_null($styleDto->panels)) {
-            foreach ($styleDto->panels as $panel) {
-                $this->attachPanelToStyle->execute($style, $panel);
+        if ($styleDto->styles_type != StyleModel::CUSTOMIZED) {
+            if (!is_null($styleDto->panels)) {
+                foreach ($styleDto->panels as $panel) {
+                    $this->attachPanelToStyle->execute($style, $panel);
+                }
+            }
+        }  else {
+            if (!is_null($styleDto->customized_panels)) {
+                foreach ($styleDto->customized_panels as $panel) {
+                    $this->attachPanelToCustomStyle->execute($style, $panel);
+                }
             }
         }
+
 
         $style->refresh();
 

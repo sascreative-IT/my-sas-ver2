@@ -38,6 +38,10 @@ class Style extends DataTransferObject
     /** @var \App\Domains\Styles\Dto\Panel[] */
     #[CastWith(PanelCaster::class)]
     public ?array $panels;
+
+    /** @var \App\Domains\Styles\Dto\CustomizedPanel[] */
+    #[CastWith(CustomizedPanelCaster::class)]
+    public ?array $customized_panels;
 }
 
 

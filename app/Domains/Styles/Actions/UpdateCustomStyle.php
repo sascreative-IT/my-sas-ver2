@@ -27,8 +27,10 @@ class UpdateCustomStyle
 
     public function execute(StyleModel $style,Style $styleDto): StyleModel
     {
+        $style->delete();
         /** @var StyleModel $style */
-        $style->update([
+
+        $style = StyleModel::create([
             'code' => $styleDto->code,
             'name' => $styleDto->name,
             'production_time' => $styleDto->production_time,
@@ -38,7 +40,8 @@ class UpdateCustomStyle
             'belongs_to' => $styleDto->belongs_to,
             'status' => $styleDto->status,
             'customer_id' => optional($styleDto->customer)->id,
-            'parent_style_id' => optional($styleDto->parent_style)->id
+            'parent_style_id' => optional($styleDto->parent_style)->id,
+            'style_image' => $styleDto->style_image
         ]);
 
 
