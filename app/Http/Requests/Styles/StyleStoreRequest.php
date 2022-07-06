@@ -5,6 +5,8 @@ namespace App\Http\Requests\Styles;
 
 use App\Domains\Styles\Dto\Style;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class StyleStoreRequest extends FormRequest
 {
@@ -57,5 +59,24 @@ class StyleStoreRequest extends FormRequest
     public function toDto(): Style
     {
         return new Style(array_merge($this->all(), ['status' => 'active']));
+    }
+
+    protected function prepareForValidation()
+    {
+        if ($this->has('code')) {
+            $this->merge(['code'=> Str::upper($this->code)]);
+        }
+
+        if ($this->has('customized_panels')) {
+            if (empty($this->customized_panels)) {
+                throw ValidationException::withMessages(['panel' => 'Panels cannot be empty. Please add panels']);
+            } else {
+                foreach ($this->customized_panels as $panel) {
+                    if ($panel['fabricId'] == null || $panel['colourId'] == null) {
+                        throw ValidationException::withMessages(['panel' => 'Panel fields cannot be empty. Please fill in all fields']);
+                    }
+                }
+            }
+        }
     }
 }

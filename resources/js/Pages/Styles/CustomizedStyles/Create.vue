@@ -86,7 +86,7 @@
                                         ></v-select>
                                     </div>
                                     <div class="pt-2 pb-4" v-if="styleForm.styles_type === 'Customized'">
-                                        <div class="pt-2 pb-4">
+                                        <div class="pt-2 pb-4 z-10 absolute">
 
                                             <label for="parent_style_code"
                                                    class="block text-base font-medium text-gray-700">

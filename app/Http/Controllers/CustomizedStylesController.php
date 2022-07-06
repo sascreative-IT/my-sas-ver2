@@ -11,6 +11,7 @@ use App\Http\Requests\Styles\StyleUpdateRequest;
 use App\Models\Colour;
 use App\Models\Factory;
 use App\Models\Style;
+use App\Models\StylePanel;
 use App\Models\StylePanelFabric;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CustomerRepositoryInterface as CustomerRepository;
@@ -158,6 +159,7 @@ class CustomizedStylesController extends Controller
 
 
         $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle','panels.color']);
+        $style->load(['panels.fabrics.variations.colour']);
         $styleDto = new StyleDto($style->toArray());
 
         $parent_style_code = Style::find($style->parent_style_id);
@@ -201,24 +203,32 @@ class CustomizedStylesController extends Controller
             'materials' => $materials,
             'colours' => $colours,
             'parentStyle' => $parent_style_code,
+            'thisStyle' => $style,
             'selectedPanels' => $selectedPanels
         ]);
     }
 
-    public function update(Style $style, StyleUpdateRequest $request)
+    public function update(Style $style, Request $request)
     {
         try {
-            $image_path = '';
-            if ($request->hasFile('image')) {
-                $image_path = $request->file('image')->store('style_images', 'public');
-                if ($image_path != "") {
-                    $request->merge(['style_image' => $image_path]);
-                }
+            $request->validate([
+                'customized_panels' => 'sometimes|array',
+                'customized_panels.*.colourId' => 'integer',
+                'customized_panels.*.fabricId' => 'integer',
+                'customized_panels.*.id' => 'integer'
+            ]);
+
+            foreach($request->customized_panels as $panel){
+
+               $stylePanel = StylePanel::query()->find($panel['id']);
+
+               $stylePanel->update([
+                   'default_fabric_id' => $panel['fabricId'],
+                   'color_id' => $panel['colourId']
+               ]);
             }
 
-            resolve(UpdateCustomStyle::class)->execute($style, $request->toDto());
-
-            return Redirect::route('style.customized.edit', [$style->id])
+            return Redirect::route('style.customized.index')
                 ->with(['message' => 'successfully updated']);
 
         } catch (\Exception $ex) {

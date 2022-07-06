@@ -246,7 +246,6 @@ export default {
     },
     mounted() {
         this.form = this.value
-        console.log(this.parentStyle)
     },
     watch: {
         resetForm: function (newValue, oldValue) {

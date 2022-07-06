@@ -7,59 +7,65 @@ use App\Models\Style as StyleModel;
 
 class UpdateCustomStyle
 {
-    private AttachSizeToCustomStyle $attachSizeToCustomStyle;
-    private AttachCategoryToCustomStyle $attachCategoryToCustomStyle;
-    private AttachFactoriesToCustomStyle $attachFactoriesToCustomStyle;
-    private AttachPanelToStyle $attachPanelToStyle;
+    private AttachSizeToStyle $attachSizeToStyle;
+    private AttachCategoryToStyle $attachCategoryToStyle;
+    private AttachFactoriesToStyle $attachFactoriesToStyle;
+    private AttachPanelToCustomStyle $attachPanelToCustomStyle;
 
     public function __construct(
-        AttachSizeToCustomStyle      $attachSizeToCustomStyle,
-        AttachCategoryToCustomStyle  $attachCategoryToCustomStyle,
-        AttachFactoriesToCustomStyle $attachFactoriesToStyle,
-        AttachPanelToStyle     $attachPanelToStyle,
+    AttachSizeToStyle $attachSizeToStyle,
+    AttachCategoryToStyle $attachCategoryToStyle,
+    AttachFactoriesToStyle $attachFactoriesToStyle,
+    AttachPanelToCustomStyle $attachPanelToCustomStyle
     )
     {
-        $this->attachSizeToCustomStyle = $attachSizeToCustomStyle;
-        $this->attachCategoryToCustomStyle = $attachCategoryToCustomStyle;
-        $this->attachFactoriesToCustomStyle = $attachFactoriesToStyle;
-        $this->attachPanelToStyle = $attachPanelToStyle;
+        $this->attachSizeToStyle = $attachSizeToStyle;
+        $this->attachCategoryToStyle = $attachCategoryToStyle;
+        $this->attachFactoriesToStyle = $attachFactoriesToStyle;
+        $this->attachPanelToCustomStyle = $attachPanelToCustomStyle;
     }
 
     public function execute(StyleModel $style,Style $styleDto): StyleModel
     {
-        $style->delete();
-        /** @var StyleModel $style */
+        if($styleDto->styles_type == StyleModel::CUSTOMIZED) {
 
-        $style = StyleModel::create([
-            'code' => $styleDto->code,
-            'name' => $styleDto->name,
-            'production_time' => $styleDto->production_time,
-            'item_type_id' => $styleDto->item_type->id,
-            'styles_type' => $styleDto->styles_type,
-            'description' => $styleDto->description,
-            'belongs_to' => $styleDto->belongs_to,
-            'status' => $styleDto->status,
-            'customer_id' => optional($styleDto->customer)->id,
-            'parent_style_id' => optional($styleDto->parent_style)->id,
-            'style_image' => $styleDto->style_image
-        ]);
+            /** @var StyleModel $style */
 
+            $style = StyleModel::create([
+                'code' => strtolower($styleDto->code),
+                'name' => $styleDto->name,
+                'production_time' => $styleDto->production_time,
+                'item_type_id' => $styleDto->item_type->id,
+                'styles_type' => $styleDto->styles_type,
+                'description' => $styleDto->description,
+                'belongs_to' => $styleDto->belongs_to,
+                'status' => $styleDto->status,
+                'customer_id' => optional($styleDto->customer)->id,
+                'parent_style_id' => optional($styleDto->parent_style)->id,
+                'style_image' => $styleDto->style_image
+            ]);
 
-        if ($styleDto->style_image) {
-            $style->update(
-                ['style_image' => $styleDto->style_image]
-            );
+            foreach ($styleDto->sizes as $size) {
+                $this->attachSizeToStyle->execute($style, $size);
+            }
+
+            foreach ($styleDto->categories as $category) {
+                $this->attachCategoryToStyle->execute($style, $category);
+            }
+
+            foreach ($styleDto->factories as $factory) {
+                $this->attachFactoriesToStyle->execute($style, $factory);
+            }
+
+            if (!is_null($styleDto->customized_panels)) {
+                foreach ($styleDto->customized_panels as $panel) {
+                    $this->attachPanelToCustomStyle->execute($style, $panel);
+                }
+            }
+
+            $style->refresh();
+
+            return $style;
         }
-        $this->attachSizeToCustomStyle->execute($style, $styleDto->sizes);
-        $this->attachCategoryToCustomStyle->execute($style, $styleDto->categories);
-        $this->attachFactoriesToCustomStyle->execute($style, $styleDto->factories);
-
-        foreach ($styleDto->panels as $panel) {
-            $this->attachPanelToStyle->execute($style, $panel);
-        }
-
-        $style->refresh();
-
-        return $style;
     }
 }

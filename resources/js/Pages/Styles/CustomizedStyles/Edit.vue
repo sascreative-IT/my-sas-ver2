@@ -48,6 +48,7 @@
                                             </label>
 
                                             <input
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5"
                                                 type="text"
                                                 :placeholder="styleData.customer.name"
                                                 disabled="true">
@@ -62,6 +63,7 @@
                                                 </label>
 
                                                 <input
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5"
                                                     type="text"
                                                     :placeholder="styleData.parent_style.code"
                                                     disabled="true">
@@ -201,16 +203,16 @@
                                         </thead>
 
                                         <tbody>
-                                        <tr v-for="panel in parentStyle.panels" :key="panel.id">
+                                        <tr v-for="panel in thisStyle.panels" :key="panel.id" v-show="selectedPanelsObj !== typeof('undefined')">
                                             <td>{{ panel.name }}</td>
                                             <td>
-                                                <select class="px-2 my-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5" @change="(event) => panelFabricSelected(panel.id, event.target.value)">
+                                                <select v-model="selectedPanelsObj[panel.id].fabricId" class="px-2 my-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5" @change="(event) => panelFabricSelected(panel.id, event.target.value)">
                                                     <option>Select Material</option>
                                                     <option v-for="fabric in panel.fabrics" :key="fabric.id" :value="fabric.id"> {{ fabric.name }}</option>
                                                 </select>
                                             </td>
                                             <td>
-                                                <select class="px-2 my-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5" @change="(event) => colourSelected(panel.id, event.target.value)" >
+                                                <select v-model="selectedPanelsObj[panel.id].colourId"  class="px-2 my-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5" @change="(event) => colourSelected(panel.id, event.target.value)" >
                                                     <option>Select Colour</option>
                                                     <option v-for="colour in panelColours[panel.id]" :key="colour.id" :value="colour.id"> {{ colour.name }} </option>
                                                 </select>
@@ -222,15 +224,27 @@
                             </div>
                         </div>
                     </div>
+                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                        <form-button @handle-on-click="update">
+                            Update
+                        </form-button>
+                    </div>
                 </div>
             </div>
         </div>
+
+
     </app-layout>
 </template>
 
 <script>
+import FormButton from "@/UIElements/FormButton";
+
 export default {
     name: "Edit",
+    components:{
+        FormButton
+    },
     props: {
         customers: {
             type: Array,
@@ -288,12 +302,14 @@ export default {
             required: true,
             type: Object
         },
+        thisStyle: {
+            required: true,
+            type: Object
+        },
     },
     data() {
         return {
             form: {
-                sizes: [],
-                panels: [],
                 customized_panels: []
             },
             selectedPanelOptions:{},
@@ -303,30 +319,30 @@ export default {
             component_materials : [],
             show_panel_form: false,
             selectedPanelsObj: {},
-
         }
     },
     mounted() {
-        // Object.entries(this.selectedPanels).forEach(item => {
-        //     this.panelFabricSelected(item[1].id, item[1].fabricId)
-        // })
-
+        this.selectedPanelsObj = this.selectedPanels;
+        this.form.customized_panels = [];
+        Object.entries(this.selectedPanelsObj).forEach(item => {
+            this.panelFabricSelected(item[1].id, item[1].fabricId)
+            this.colourSelected(item[1].id, item[1].colourId)
+        })
+        this.form.customized_panels = [];
     },
     methods: {
         colourSelected(panelId, colourId) {
             this.selectedPanelOptions[panelId].colourId = parseInt(colourId)
-            this.form.customized_panels.push(this.selectedPanelOptions[panelId]);
             this.$forceUpdate();
         },
 
         panelFabricSelected(panelId, fabricId) {
-            console.log('fabric selected', panelId, fabricId)
             this.selectedPanelOptions[panelId] = {
                 id: panelId,
                 fabricId: parseInt(fabricId),
                 colourId: null,
             };
-            const panel = this.parentStyle.panels.filter(panel => {
+            const panel = this.thisStyle.panels.filter(panel => {
                 return panel.id == panelId
             })[0];
 
@@ -365,20 +381,14 @@ export default {
         resetPanels() {
             this.panel = this.defaultPanel()
         },
+        update() {
+            this.form.customized_panels = this.selectedPanelsObj;
+            this.$inertia.put('/customized-styles/' + this.thisStyle.id, this.form)
+        },
     },
     computed: {
         selectedFabrics() {
             return this.panel.fabrics;
-        },
-        selectedSizes() {
-            return this.form.sizes;
-            // if (this.value.sizes === undefined) {
-            //     return []
-            // }
-            //
-            // return this.sizes.filter((size) => {
-            //     return this.value.sizes.includes(size.id)
-            // })
         },
         disableAddPanelButton() {
             return false;

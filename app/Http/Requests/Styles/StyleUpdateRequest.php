@@ -57,4 +57,10 @@ class StyleUpdateRequest extends FormRequest
     {
         return new Style(array_merge($this->all(), ['status' => 'draft']));
     }
+
+    protected function prepareForValidation()
+    {
+        if ($this->has('code'))
+            $this->merge(['code'=> strtolower($this->code)]);
+    }
 }

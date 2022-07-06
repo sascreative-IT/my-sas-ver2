@@ -6,6 +6,7 @@ use App\Domains\Styles\Dto\CustomizedPanel;
 use App\Domains\Styles\Dto\Panel;
 use App\Models\Style;
 use App\Models\StylePanel;
+use Illuminate\Validation\ValidationException;
 
 class AttachPanelToCustomStyle
 {

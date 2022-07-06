@@ -19,6 +19,10 @@
                                     <span class="mr-4 inline-block hidden md:block">:</span>
                                     <div class="flex-1">
                                         <input
+                                            tabindex="0"
+                                            @focusout="handleFocusOut"
+                                            @keypress="handleOrderIdChange(stockOut.order_public_id)"
+                                            :disabled="isItemReadOnly"
                                             v-model="stockOut.order_public_id"
                                             class="appearance-none w-48 py-2 px-4 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm sm:text-sm border-gray-300 rounded-md"
                                             id="inline-full-name" type="text" placeholder="100001">
@@ -38,6 +42,7 @@
                                             :filterable="true"
                                             :options="customers"
                                             v-model="stockOut.customer"
+                                            :disabled="isItemReadOnly"
                                             @input="setSelectedCustomer"
                                         ></app-select>
                                     </div>
@@ -61,6 +66,7 @@
                                             :filterable="true"
                                             :options="factories"
                                             v-model="stockOut.factory"
+                                            :disabled="isItemReadOnly"
                                             @input="setFactoryId"
                                         ></app-select>
                                     </div>
@@ -363,6 +369,9 @@ export default {
         },
         materialInventory: {
             type: Object
+        },
+        factoryId: {
+            type: Number
         }
     },
     components: {
@@ -400,16 +409,41 @@ export default {
             },
             stockOutItems: [],
             resetSelectOptions: false,
+            isItemReadOnly: false,
         }
     },
     mounted() {
         this.stockOutItem.usageMeasurement = this.stockOutItem.material.unit;
     },
     methods: {
+        lockFieldsInStockOut(){
+            if (this.stockOut.order_public_id !== null &&
+                this.stockOut.customer !== null &&
+                this.stockOut.factory !== null
+            ){
+                this.setItemsReadOnly()
+            }
+        },
         handleAddStockItems() {
             if (this.isValidItem()) {
                 this.stockOut.items.push(this.stockOutItem);
+                if (this.stockOut.order_public_id !== null || this.stockOut.order_public_id !== ''){
+                    this.lockFieldsInStockOut();
+                }
                 this.resetStockOutItem();
+            }
+        },
+        handleOrderIdChange(value){
+            this.stockOut.order_public_id = value.replaceAll(/\s/g,'')
+        },
+        handleFocusOut() {
+            if (this.stockOut.order_public_id === " " || this.stockOut.order_public_id === "") {
+                this.stockOut.order_public_id = null
+            }
+
+            if (this.stockOut.order_public_id !== null &&
+                this.stockOut.items.length !== 0 ){
+                this.lockFieldsInStockOut();
             }
         },
         handleSaveStockOut() {
@@ -469,7 +503,9 @@ export default {
         },
         setSelectedCustomer() {
             this.stockOut.customer_id = this.stockOut.customer.id;
+            this.lockFieldsInStockOut();
         },
+
         setFactoryId(value) {
             this.stockOut.factory = value;
             this.stockOut.factory_id = value.id;
@@ -480,6 +516,7 @@ export default {
                     factory_id: value.id
                 }
             })
+            this.lockFieldsInStockOut();
         },
         setSelectedSupplier(value) {
             this.stockOut.supplier = value;
@@ -524,7 +561,10 @@ export default {
                 alert("Invalid usage");
                 return false;
             }
-        }
+        },
+        setItemsReadOnly() {
+            this.isItemReadOnly = true;
+        },
     }
 }
 </script>
