@@ -310,8 +310,6 @@ export default {
     data() {
         return {
             form: {
-                sizes: [],
-                panels: [],
                 customized_panels: []
             },
             selectedPanelOptions:{},
@@ -335,12 +333,10 @@ export default {
     methods: {
         colourSelected(panelId, colourId) {
             this.selectedPanelOptions[panelId].colourId = parseInt(colourId)
-            this.form.customized_panels.push(this.selectedPanelOptions[panelId]);
             this.$forceUpdate();
         },
 
         panelFabricSelected(panelId, fabricId) {
-            console.log('fabric selected', panelId, fabricId)
             this.selectedPanelOptions[panelId] = {
                 id: panelId,
                 fabricId: parseInt(fabricId),
@@ -386,22 +382,13 @@ export default {
             this.panel = this.defaultPanel()
         },
         update() {
+            this.form.customized_panels = this.selectedPanelsObj;
             this.$inertia.put('/customized-styles/' + this.thisStyle.id, this.form)
         },
     },
     computed: {
         selectedFabrics() {
             return this.panel.fabrics;
-        },
-        selectedSizes() {
-            return this.form.sizes;
-            // if (this.value.sizes === undefined) {
-            //     return []
-            // }
-            //
-            // return this.sizes.filter((size) => {
-            //     return this.value.sizes.includes(size.id)
-            // })
         },
         disableAddPanelButton() {
             return false;

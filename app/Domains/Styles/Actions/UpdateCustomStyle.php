@@ -28,8 +28,6 @@ class UpdateCustomStyle
     public function execute(StyleModel $style,Style $styleDto): StyleModel
     {
         if($styleDto->styles_type == StyleModel::CUSTOMIZED) {
-            $style->deleteRelations();
-            $style->delete();
 
             /** @var StyleModel $style */
 
