@@ -15,9 +15,12 @@ class CreatePurchaseOrderAction
         $materialPurchaseOrder = MaterialPurchaseOrder::create(
             [
                 'supplier_id' => $purchaseOrderData->supplier->id,
-                'factory_id' => $purchaseOrderData->factory->id
+                'factory_id' => $purchaseOrderData->factory->id,
+                'created_by' => auth()->user()->id
             ]
         );
+
+
 
         (new CreatePurchaseOrderItemsAction())
             ->execute($purchaseOrderData->purchase_order_items, $materialPurchaseOrder);

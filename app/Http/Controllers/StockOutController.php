@@ -129,6 +129,7 @@ class StockOutController extends Controller
 
         return Inertia::render('StockOut/Create', [
             'factories' => $factories,
+            'factoryId' => $factoryId,
             'styles' => $styles,
             'style_type' => $styleType,
             'style_panels' => $style_panels,

@@ -401,13 +401,23 @@ export default {
             purchase_order_item_has_error: false,
             purchase_order_has_error: false,
             error_message: '',
+            locked: false
         }
     },
     mounted() {
         this.extractFactoryName(this.factories);
         this.selectedCurrency = this.currencies[Object.keys(this.currencies)[0]];
+
     },
     methods: {
+        lockFieldsInPO(){
+            if (this.purchaseOrder.supplier !== '' &&
+                this.purchaseOrder.factory !== '' &&
+                this.selectedCurrency !== ''
+            ){
+                this.setItemsReadOnly()
+            }
+        },
         extractFactoryName(prop) {
             this.factoryNames = [];
             if (Array.isArray(prop)) {
@@ -426,10 +436,12 @@ export default {
                     supplier_id: value.id
                 }
             })
+            this.lockFieldsInPO();
         },
         setFactoryId(value) {
             this.purchaseOrder.factory = value;
             this.purchaseOrder.factory_id = value.id;
+            this.lockFieldsInPO();
         },
         setSelectedMaterial(value) {
             this.material = value;
@@ -462,6 +474,7 @@ export default {
         },
         setSelectedCurrency(value) {
             this.selectedCurrency = value;
+            this.lockFieldsInPO();
         },
         resetPurchaseOrder() {
             this.purchaseOrder = {
