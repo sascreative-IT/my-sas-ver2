@@ -50,6 +50,7 @@ class InventoryProjector extends Projector
             'in_invoice_item_id' => $stockAdded->invoiceItemId,
             'in_unit_price' => $stockAdded->unitPrice,
             'in_unit_currency' => $stockAdded->currency,
+            'reason' => $stockAdded->reason,
             'action_taken_by' => $stockAdded->userId,
             'created_at' => $stockAdded->createdAt(),
             'updated_at' => $stockAdded->createdAt(),
@@ -78,6 +79,7 @@ class InventoryProjector extends Projector
             'out_order_id' => $stockRemoved->outOrderId,
             'out_style_panel_id' => $stockRemoved->stylePanelId,
             'action_taken_by' => $stockRemoved->userId,
+            'reason' => $stockRemoved->reason,
             'created_at' => $stockRemoved->createdAt(),
             'updated_at' => $stockRemoved->createdAt(),
         ]);

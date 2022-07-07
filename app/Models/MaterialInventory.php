@@ -20,11 +20,6 @@ class MaterialInventory extends Model implements Auditable
         return $this->belongsTo( MaterialVariation::class, 'material_variation_id');
     }
 
-    public function stockIn(): HasMany
-    {
-        return $this->hasMany(InventoryIn::class);
-    }
-
     public function supplier(): BelongsTo
     {
         return $this->belongsTo( Supplier::class, 'supplier_id');

@@ -11,9 +11,10 @@ class StockAdded extends ShouldBeStored
     public ?int $invoiceItemId;
     public ?float $unitPrice;
     public ?string $currency;
+    public ?string $reason;
     public int $userId;
 
-    public function __construct(string $unit, float $quantity, ?int $invoiceItemId = null, ?float $unitPrice = null, ?string $currency = null, int $userId)
+    public function __construct(string $unit, float $quantity, ?int $invoiceItemId = null, ?float $unitPrice = null, ?string $currency = null, int $userId, ?string $reason = null)
     {
         $this->unit = $unit;
         $this->quantity = $quantity;
@@ -21,5 +22,6 @@ class StockAdded extends ShouldBeStored
         $this->unitPrice = $unitPrice;
         $this->currency = $currency;
         $this->userId = $userId;
+        $this->reason = $reason;
     }
 }
