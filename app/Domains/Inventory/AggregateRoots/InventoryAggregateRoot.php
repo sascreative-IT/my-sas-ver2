@@ -4,7 +4,9 @@ namespace App\Domains\Inventory\AggregateRoots;
 
 use App\Domains\Inventory\Events\Internal\InventoryMaterialAdded;
 use App\Domains\Inventory\Events\Internal\StockAdded;
+use App\Domains\Inventory\Events\Internal\StockAddedManually;
 use App\Domains\Inventory\Events\Internal\StockRemoved;
+use App\Domains\Inventory\Events\Internal\StockRemovedManually;
 use App\Domains\Inventory\Exceptions\InventoryException;
 use App\Domains\Inventory\Repositories\InventoryRepository;
 use App\Models\User;
@@ -31,9 +33,9 @@ class InventoryAggregateRoot extends AggregateRoot
         return $this;
     }
 
-    public function addStock(string $unit, float $quantity, ?int $invoiceItemId = null, ?float $unitPrice = null, ?string $currency = null, int $userId, ?string $reason = null)
+    public function addStock(string $unit, float $quantity, ?int $invoiceItemId = null, ?float $unitPrice = null, ?string $currency = null, int $userId)
     {
-        $this->recordThat(new StockAdded($unit, $quantity, $invoiceItemId, $unitPrice, $currency, $userId, $reason));
+        $this->recordThat(new StockAdded($unit, $quantity, $invoiceItemId, $unitPrice, $currency, $userId));
 
         return $this;
     }
@@ -43,13 +45,37 @@ class InventoryAggregateRoot extends AggregateRoot
         $this->balance += $stockAdded->quantity;
     }
 
-    public function removeStock(string $unit, float $quantity, ?int $stylePanelId = null, ?int $outOrderId = null, int $userId, ?string $reason = null)
+    public function removeStock(string $unit, float $quantity, ?int $stylePanelId = null, ?int $outOrderId = null, int $userId)
     {
-        $this->recordThat(new StockRemoved($unit, $quantity, $stylePanelId, $outOrderId, $userId, $reason));
+        $this->recordThat(new StockRemoved($unit, $quantity, $stylePanelId, $outOrderId, $userId));
     }
 
     public function applyStockRemoved(StockRemoved $stockAdded)
     {
         $this->balance -= $stockAdded->quantity;
+    }
+
+    public function addStockManually(string $unit, float $quantity, ?float $unitPrice = null, ?string $currency = null, int $userId, ?string $reason = null)
+    {
+        $this->recordThat(new StockAddedManually($unit, $quantity, $unitPrice, $currency, $userId, $reason));
+
+        return $this;
+    }
+
+    public function applyStockAddedManually(StockAddedManually $stockAddedManually)
+    {
+        $this->balance += $stockAddedManually->quantity;
+    }
+
+    public function removeStockManually(string $unit, float $quantity, int $userId, ?string $reason = null)
+    {
+        $this->recordThat(new StockRemovedManually($unit, $quantity, $userId, $reason));
+
+        return $this;
+    }
+
+    public function applyStockRemovedManually(StockRemovedManually $stockRemovedManually)
+    {
+        $this->balance -= $stockRemovedManually->quantity;
     }
 }

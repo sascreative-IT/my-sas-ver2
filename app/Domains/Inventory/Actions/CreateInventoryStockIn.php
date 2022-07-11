@@ -14,12 +14,10 @@ class CreateInventoryStockIn
         $aggregateRoot = InventoryAggregateRoot::retrieve($inventory->aggregate_id);
 
         if ($quantity > 0) {
-
-            $aggregateRoot->addStock(
+            $aggregateRoot->addStockManually(
                 $inventory->unit,
                 $quantity,
                 null,
-                $price,
                 $inventory->currency,
                 $userId,
                 $reason
@@ -29,14 +27,10 @@ class CreateInventoryStockIn
         }
 
         if ($quantity < 0) {
-
             $quantity = abs($quantity);
-
-            $aggregateRoot->removeStock(
+            $aggregateRoot->removeStockManually(
                 $inventory->unit,
                 $quantity,
-                null,
-                null,
                 $userId,
                 $reason
             );
