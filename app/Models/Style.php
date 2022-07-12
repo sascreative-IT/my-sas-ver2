@@ -47,6 +47,11 @@ class Style extends Model implements Auditable
         return $this->BelongsToMany(Factory::class);
     }
 
+    public function customizedStyles(): HasMany
+    {
+        return $this->hasMany(CustomizedStyle::class);
+    }
+
     public function itemType(): BelongsTo
     {
         return $this->belongsTo(ItemType::class, 'item_type_id');
@@ -72,8 +77,8 @@ class Style extends Model implements Auditable
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    public function parentStyle(): BelongsTo
-    {
-        return $this->belongsTo(Style::class, 'parent_style_id');
-    }
+//    public function parentStyle(): BelongsTo
+//    {
+//        return $this->belongsTo(Style::class, 'parent_style_id');
+//    }
 }

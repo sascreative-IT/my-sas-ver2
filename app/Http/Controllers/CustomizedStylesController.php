@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\Styles\Actions\CreateCustomizedStyle;
 use App\Domains\Styles\Actions\CreateStyle;
+use App\Domains\Styles\Actions\GetAvailableMaterialColors;
+use App\Domains\Styles\Actions\GetStyleIndex;
+use App\Domains\Styles\Actions\SaveImageAndGetPath;
 use App\Domains\Styles\Actions\UpdateCustomStyle;
 use App\Domains\Styles\Actions\UpdateStyle;
 use App\Domains\Styles\Dto\Style as StyleDto;
+use App\Http\Requests\Styles\StoreCustomizedStyleRequest;
 use App\Http\Requests\Styles\StyleStoreRequest;
 use App\Http\Requests\Styles\StyleUpdateRequest;
+use App\Http\Requests\Styles\UpdateCustomizedStyleRequest;
 use App\Models\Colour;
+use App\Models\CustomizedStyle;
 use App\Models\Factory;
 use App\Models\Style;
 use App\Models\StylePanel;
@@ -30,18 +37,7 @@ class CustomizedStylesController extends Controller
     {
         $q = $request->get('q');
 
-        /** @var Collection $internalStyles */
-        $internalStyles = Style::query()
-            ->internal()
-            ->with('itemType')
-            ->where('styles_type', "Customized")
-            ->when($q, function ($query, $q) {
-                return $query
-                    ->where('code', 'like', "%{$q}%")
-                    ->orWhere('name', 'like', "%{$q}%");
-            })
-            ->paginate()
-            ->withQueryString();
+        $internalStyles = resolve(GetStyleIndex::class)->execute(new CustomizedStyle(), 'internal', $q);
 
         return Inertia::render('Styles/CustomizedStyles/Index', [
             'internal-styles' => $internalStyles
@@ -56,19 +52,10 @@ class CustomizedStylesController extends Controller
         MaterialRepository $materialRepository,
         Request $request,
     ) {
-        $factories = Factory::all();
-        $customers = $customerRepository->getAll();
         $categories = $categoryRepository->getAll();
-        $itemTypes = $itemTypeRepository->getAll();
         $sizes = $sizeRepository->getAll();
-        $materials = $materialRepository->getAll();
-        $styles = Style::where('styles_type','LIKE', "General")->get()->toArray();
         $colours = Colour::query()->get();
-        /*
-        foreach ($styles as $style) {
-            print($style['id']."-".$style['code']."<BR/>");
-        }
-        */
+
         $parentStyleCode = null;
 
         if ($request->has('parent_id')) {
@@ -77,28 +64,8 @@ class CustomizedStylesController extends Controller
             $parentStyleCode->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
             $categories = $parentStyleCode->categories;
             $sizes = $parentStyleCode->sizes;
-
-
             $parentStyleCode->load(['panels.fabrics.variations.colour']);
-
-            // Following code might not be needed
-            $material_ids = [];
-            foreach($parentStyleCode->panels as $panel){
-                $material_ids[] = $panel->fabrics[0]->id;
-            }
-
-            $avail_materials_colours = DB::table('material_variations')
-                ->join('material_inventories', function ($join) use ($material_ids) {
-                    $join->on('material_variations.id', '=', 'material_inventories.material_variation_id')
-                        ->whereIn('material_variations.material_id', $material_ids);
-                })
-                ->join('colours', 'material_variations.colour_id', '=', 'colours.id')
-                ->groupBy('colours.id')
-                ->select('colours.*')
-                ->get();
-
-            $colours = $avail_materials_colours;
-
+            $colours = resolve(GetAvailableMaterialColors::class)->execute($parentStyleCode);
         }
 
         $style = new StyleDto([
@@ -109,13 +76,13 @@ class CustomizedStylesController extends Controller
 
         return Inertia::render('Styles/CustomizedStyles/Create', [
             'styleData' => $style,
-            'customers' => $customers,
+            'customers' => $customerRepository->getAll(),
             'categories' => $categories,
-            'itemTypes' => $itemTypes,
+            'itemTypes' => $itemTypeRepository->getAll(),
             'sizes' => $sizes,
-            'factories' => $factories,
-            'materials' => $materials,
-            'styles' => $styles,
+            'factories' => Factory::all(),
+            'materials' => $materialRepository->getAll(),
+            'styles' => Style::where('styles_type','LIKE', "General")->get()->toArray(),
             'parentStyleCode' => $parentStyleCode,
             'styleType' => 'Customized',
             'customer' => $request->get('customer'),
@@ -123,16 +90,13 @@ class CustomizedStylesController extends Controller
         ]);
     }
 
-    public function store(StyleStoreRequest $request)
+    public function store(StoreCustomizedStyleRequest $request)
     {
         try {
-            $image_path = '';
+            $imagePath = resolve(SaveImageAndGetPath::class)->execute($request);
+            $request->merge(['style_image' => $imagePath]);
+            $style = resolve(CreateCustomizedStyle::class)->execute($request->toDto());
 
-            if ($request->hasFile('image')) {
-                $image_path = $request->file('image')->store('style_images', 'public');
-            }
-            $request->merge(['style_image' => $image_path]);
-            $style = resolve(CreateStyle::class)->execute($request->toDto());
             return Redirect::route('style.customized.index')
                 ->with(['message' => 'successfully updated']);
         } catch (\Exception $ex) {
@@ -141,22 +105,11 @@ class CustomizedStylesController extends Controller
     }
 
     public function edit(
-        CustomerRepository $customerRepository,
-        CategoryRepository $categoryRepository,
-        ItemTypeRepository $itemTypeRepository,
-        SizeRepository $sizeRepository,
         MaterialRepository $materialRepository,
-        Style $style,
+        CustomizedStyle $style,
         Request $request
     ) {
-        $factories = Factory::all();
-        $customers = $customerRepository->getAll();
-        $categories = $categoryRepository->getAll();
-        $itemTypes = $itemTypeRepository->getAll();
-        $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
-        $colours = Colour::query()->get();
-
 
         $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle','panels.color']);
         $style->load(['panels.fabrics.variations.colour']);
@@ -167,22 +120,8 @@ class CustomizedStylesController extends Controller
 
         $parent_style_code->load(['panels.fabrics.variations.colour']);
 
-        $material_ids = [];
-        foreach($parent_style_code->panels as $panel){
-            $material_ids[] = $panel->fabrics[0]->id;
-        }
+        $colours = resolve(GetAvailableMaterialColors::class)->execute($parent_style_code);
 
-        $avail_materials_colours = DB::table('material_variations')
-            ->join('material_inventories', function ($join) use ($material_ids) {
-                $join->on('material_variations.id', '=', 'material_inventories.material_variation_id')
-                    ->whereIn('material_variations.material_id', $material_ids);
-            })
-            ->join('colours', 'material_variations.colour_id', '=', 'colours.id')
-            ->groupBy('colours.id')
-            ->select('colours.*')
-            ->get();
-
-        $colours = $avail_materials_colours;
         $selectedPanels = [];
         foreach ($style->panels as $panel) {
             $selectedPanels[$panel->id] = array(
@@ -208,16 +147,9 @@ class CustomizedStylesController extends Controller
         ]);
     }
 
-    public function update(Style $style, Request $request)
+    public function update(Style $style, UpdateCustomizedStyleRequest $request)
     {
         try {
-            $request->validate([
-                'customized_panels' => 'sometimes|array',
-                'customized_panels.*.colourId' => 'integer',
-                'customized_panels.*.fabricId' => 'integer',
-                'customized_panels.*.id' => 'integer'
-            ]);
-
             foreach($request->customized_panels as $panel){
 
                $stylePanel = StylePanel::query()->find($panel['id']);
