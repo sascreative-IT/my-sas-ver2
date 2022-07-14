@@ -9,16 +9,14 @@ use App\Models\MaterialInvoice;
 
 class CreateInventoryStockIn
 {
-    public function execute(MaterialInventory $inventory, ?MaterialInvoice $invoice, float $quantity, ?float $price = null, $userId, $reason)
+    public function execute(MaterialInventory $inventory, ?MaterialInvoice $invoice, float $quantity, $userId, $reason)
     {
         $aggregateRoot = InventoryAggregateRoot::retrieve($inventory->aggregate_id);
 
         if ($quantity > 0) {
-            $aggregateRoot->addStockManually(
+            $aggregateRoot->addStockViaStockAdjust(
                 $inventory->unit,
                 $quantity,
-                null,
-                $inventory->currency,
                 $userId,
                 $reason
             );
@@ -28,7 +26,7 @@ class CreateInventoryStockIn
 
         if ($quantity < 0) {
             $quantity = abs($quantity);
-            $aggregateRoot->removeStockManually(
+            $aggregateRoot->removeStockViaStockAdjust(
                 $inventory->unit,
                 $quantity,
                 $userId,

@@ -35,7 +35,6 @@ class InventoryAdjustmentController
                 $inventory,
                 null,
                 (float)$request->input('quantity'),
-                null,
                 auth()->user()->id,
                 $request->input('reason')
             );

@@ -5,8 +5,10 @@ namespace App\Domains\Inventory\Projectors;
 use App\Domains\Inventory\Events\Internal\InventoryMaterialAdded;
 use App\Domains\Inventory\Events\Internal\StockAdded;
 use App\Domains\Inventory\Events\Internal\StockAddedManually;
+use App\Domains\Inventory\Events\Internal\StockAddedViaStockAdjust;
 use App\Domains\Inventory\Events\Internal\StockRemoved;
 use App\Domains\Inventory\Events\Internal\StockRemovedManually;
+use App\Domains\Inventory\Events\Internal\StockRemovedViaStockAdjust;
 use App\Models\InventoryLog;
 use App\Models\MaterialInventory;
 use Illuminate\Database\Eloquent\Builder;
@@ -59,31 +61,29 @@ class InventoryProjector extends Projector
         ]);
     }
 
-    public function onStockAddedManually(StockAddedManually $stockAddedManually)
+    public function onStockAddedViaStockAdjust(StockAddedViaStockAdjust $stockAddedViaStockAdjust)
     {
-        $materialInventory = $this->getMaterialFromInventory($stockAddedManually->aggregateRootUuid());
+        $materialInventory = $this->getMaterialFromInventory($stockAddedViaStockAdjust->aggregateRootUuid());
 
         $materialInventory->update([
-            'available_quantity' => $materialInventory->available_quantity + $stockAddedManually->quantity
+            'available_quantity' => $materialInventory->available_quantity + $stockAddedViaStockAdjust->quantity
         ]);
 
-        $balance = $stockAddedManually->quantity;
-        $latestInventoryLog = $this->lastInventoryLog($stockAddedManually->aggregateRootUuid());
+        $balance = $stockAddedViaStockAdjust->quantity;
+        $latestInventoryLog = $this->lastInventoryLog($stockAddedViaStockAdjust->aggregateRootUuid());
         if ($latestInventoryLog) {
             $balance += $latestInventoryLog->balance;
         }
 
         InventoryLog::create([
-            'material_inventories_aggregate_id' => $stockAddedManually->aggregateRootUuid(),
-            'unit' => $stockAddedManually->unit,
-            'in' => $stockAddedManually->quantity,
+            'material_inventories_aggregate_id' => $stockAddedViaStockAdjust->aggregateRootUuid(),
+            'unit' => $stockAddedViaStockAdjust->unit,
+            'in' => $stockAddedViaStockAdjust->quantity,
             'balance' => $balance,
-            'in_unit_price' => $stockAddedManually->unitPrice,
-            'in_unit_currency' => $stockAddedManually->currency,
-            'reason' => $stockAddedManually->reason,
-            'action_taken_by' => $stockAddedManually->userId,
-            'created_at' => $stockAddedManually->createdAt(),
-            'updated_at' => $stockAddedManually->createdAt(),
+            'reason' => $stockAddedViaStockAdjust->reason,
+            'action_taken_by' => $stockAddedViaStockAdjust->userId,
+            'created_at' => $stockAddedViaStockAdjust->createdAt(),
+            'updated_at' => $stockAddedViaStockAdjust->createdAt(),
         ]);
     }
 
@@ -115,30 +115,30 @@ class InventoryProjector extends Projector
         ]);
     }
 
-    public function onStockRemovedManually(StockRemovedManually $stockRemovedManually)
+    public function onStockRemovedViaStockAdjust(StockRemovedViaStockAdjust $stockRemovedViaStockAdjust)
     {
-        $materialInventory = $this->getMaterialFromInventory($stockRemovedManually->aggregateRootUuid());
+        $materialInventory = $this->getMaterialFromInventory($stockRemovedViaStockAdjust->aggregateRootUuid());
 
         $materialInventory->update([
-            'available_quantity' => ($materialInventory->available_quantity - $stockRemovedManually->quantity),
+            'available_quantity' => ($materialInventory->available_quantity - $stockRemovedViaStockAdjust->quantity),
         ]);
 
         $balance = 0;
-        $latestInventoryLog = $this->lastInventoryLog($stockRemovedManually->aggregateRootUuid());
+        $latestInventoryLog = $this->lastInventoryLog($stockRemovedViaStockAdjust->aggregateRootUuid());
         if ($latestInventoryLog) {
             $balance = $latestInventoryLog->balance;
         }
-        $balance = $balance - $stockRemovedManually->quantity;
+        $balance = $balance - $stockRemovedViaStockAdjust->quantity;
 
         InventoryLog::create([
-            'material_inventories_aggregate_id' => $stockRemovedManually->aggregateRootUuid(),
-            'unit' => $stockRemovedManually->unit,
-            'out' => $stockRemovedManually->quantity,
+            'material_inventories_aggregate_id' => $stockRemovedViaStockAdjust->aggregateRootUuid(),
+            'unit' => $stockRemovedViaStockAdjust->unit,
+            'out' => $stockRemovedViaStockAdjust->quantity,
             'balance' => $balance,
-            'action_taken_by' => $stockRemovedManually->userId,
-            'reason' => $stockRemovedManually->reason,
-            'created_at' => $stockRemovedManually->createdAt(),
-            'updated_at' => $stockRemovedManually->createdAt(),
+            'action_taken_by' => $stockRemovedViaStockAdjust->userId,
+            'reason' => $stockRemovedViaStockAdjust->reason,
+            'created_at' => $stockRemovedViaStockAdjust->createdAt(),
+            'updated_at' => $stockRemovedViaStockAdjust->createdAt(),
         ]);
     }
 
