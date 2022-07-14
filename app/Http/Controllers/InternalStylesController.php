@@ -72,18 +72,6 @@ class InternalStylesController extends Controller
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
         $styles = Style::all('id', 'code', 'name')->toArray();
-        /*
-        foreach ($styles as $style) {
-            print($style['id']."-".$style['code']."<BR/>");
-        }
-        */
-        $parent_style_code = null;
-
-            if ($request->has('parent_id')) {
-                $parent_id = $request->get('parent_id');
-                $parent_style_code = Style::find($parent_id);
-                $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
-            }
 
             $style = new StyleDto([
                 'sizes' => [],
@@ -91,7 +79,7 @@ class InternalStylesController extends Controller
                 'belongs_to' => 'internal'
             ]);
 
-            return Inertia::render('Styles/InternalStyles/Create', [
+            return Inertia::render('Styles/InternalStyles/General/Create', [
                 'styleData' => $style,
                 'customers' => $customers,
                 'categories' => $categories,
@@ -100,7 +88,6 @@ class InternalStylesController extends Controller
                 'factories' => $factories,
                 'materials' => $materials,
                 'styles' => $styles,
-                'parentStyleCode' => $parent_style_code,
                 'styleType' => 'General',
                 'customer' => $request->get('customer'),
             ]);
@@ -143,10 +130,10 @@ class InternalStylesController extends Controller
         $materials = $materialRepository->getAll();
 
 
-            $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
-            $styleDto = new StyleDto($style->toArray());
+        $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
+        $styleDto = new StyleDto($style->toArray());
 
-        return Inertia::render('Styles/InternalStyles/Create', [
+        return Inertia::render('Styles/InternalStyles/General/Edit', [
             'styleData' => $styleDto,
             'customers' => $customers,
             'categories' => $categories,
