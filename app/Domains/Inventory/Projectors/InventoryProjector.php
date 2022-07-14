@@ -4,9 +4,14 @@ namespace App\Domains\Inventory\Projectors;
 
 use App\Domains\Inventory\Events\Internal\InventoryMaterialAdded;
 use App\Domains\Inventory\Events\Internal\StockAdded;
+use App\Domains\Inventory\Events\Internal\StockAddedManually;
+use App\Domains\Inventory\Events\Internal\StockAddedViaStockAdjust;
 use App\Domains\Inventory\Events\Internal\StockRemoved;
+use App\Domains\Inventory\Events\Internal\StockRemovedManually;
+use App\Domains\Inventory\Events\Internal\StockRemovedViaStockAdjust;
 use App\Models\InventoryLog;
 use App\Models\MaterialInventory;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 use Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEvent;
 
@@ -31,7 +36,7 @@ class InventoryProjector extends Projector
 
     public function onStockAdded(StockAdded $stockAdded)
     {
-        $materialInventory = MaterialInventory::query()->where('aggregate_id', $stockAdded->aggregateRootUuid())->first();
+        $materialInventory = $this->getMaterialFromInventory($stockAdded->aggregateRootUuid());
 
         $materialInventory->update([
             'available_quantity' => $materialInventory->available_quantity + $stockAdded->quantity
@@ -56,9 +61,36 @@ class InventoryProjector extends Projector
         ]);
     }
 
+    public function onStockAddedViaStockAdjust(StockAddedViaStockAdjust $stockAddedViaStockAdjust)
+    {
+        $materialInventory = $this->getMaterialFromInventory($stockAddedViaStockAdjust->aggregateRootUuid());
+
+        $materialInventory->update([
+            'available_quantity' => $materialInventory->available_quantity + $stockAddedViaStockAdjust->quantity
+        ]);
+
+        $balance = $stockAddedViaStockAdjust->quantity;
+        $latestInventoryLog = $this->lastInventoryLog($stockAddedViaStockAdjust->aggregateRootUuid());
+        if ($latestInventoryLog) {
+            $balance += $latestInventoryLog->balance;
+        }
+
+        InventoryLog::create([
+            'material_inventories_aggregate_id' => $stockAddedViaStockAdjust->aggregateRootUuid(),
+            'unit' => $stockAddedViaStockAdjust->unit,
+            'in' => $stockAddedViaStockAdjust->quantity,
+            'balance' => $balance,
+            'reason' => $stockAddedViaStockAdjust->reason,
+            'action_taken_by' => $stockAddedViaStockAdjust->userId,
+            'created_at' => $stockAddedViaStockAdjust->createdAt(),
+            'updated_at' => $stockAddedViaStockAdjust->createdAt(),
+        ]);
+    }
+
     public function onStockRemoved(StockRemoved $stockRemoved)
     {
-        $materialInventory = MaterialInventory::query()->where('aggregate_id', $stockRemoved->aggregateRootUuid())->first();
+        $materialInventory = $this->getMaterialFromInventory($stockRemoved->aggregateRootUuid());
+
         $materialInventory->update([
             'available_quantity' => ($materialInventory->available_quantity - $stockRemoved->quantity),
         ]);
@@ -81,6 +113,38 @@ class InventoryProjector extends Projector
             'created_at' => $stockRemoved->createdAt(),
             'updated_at' => $stockRemoved->createdAt(),
         ]);
+    }
+
+    public function onStockRemovedViaStockAdjust(StockRemovedViaStockAdjust $stockRemovedViaStockAdjust)
+    {
+        $materialInventory = $this->getMaterialFromInventory($stockRemovedViaStockAdjust->aggregateRootUuid());
+
+        $materialInventory->update([
+            'available_quantity' => ($materialInventory->available_quantity - $stockRemovedViaStockAdjust->quantity),
+        ]);
+
+        $balance = 0;
+        $latestInventoryLog = $this->lastInventoryLog($stockRemovedViaStockAdjust->aggregateRootUuid());
+        if ($latestInventoryLog) {
+            $balance = $latestInventoryLog->balance;
+        }
+        $balance = $balance - $stockRemovedViaStockAdjust->quantity;
+
+        InventoryLog::create([
+            'material_inventories_aggregate_id' => $stockRemovedViaStockAdjust->aggregateRootUuid(),
+            'unit' => $stockRemovedViaStockAdjust->unit,
+            'out' => $stockRemovedViaStockAdjust->quantity,
+            'balance' => $balance,
+            'action_taken_by' => $stockRemovedViaStockAdjust->userId,
+            'reason' => $stockRemovedViaStockAdjust->reason,
+            'created_at' => $stockRemovedViaStockAdjust->createdAt(),
+            'updated_at' => $stockRemovedViaStockAdjust->createdAt(),
+        ]);
+    }
+
+    private function getMaterialFromInventory(string $aggregateRootId)
+    {
+        return MaterialInventory::query()->where('aggregate_id', $aggregateRootId)->first();
     }
 
     private function lastInventoryLog(string $aggregateRootId): ?InventoryLog
