@@ -17,6 +17,10 @@ class CountrySeeder extends Seeder
             [
                 'name' => 'New Zealand',
                 'sort' => 'NZ',
+            ],
+            [
+                'name' => 'Thailand',
+                'sort' => 'TH',
             ]
         ];
 

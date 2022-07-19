@@ -24,7 +24,7 @@ class StoreSizesRequest extends FormRequest
     public function rules()
     {
         return [
-            '*.name' => 'required|unique:sizes,name',
+            '*.name' => 'bail|required|unique:sizes,name',
         ];
     }
 

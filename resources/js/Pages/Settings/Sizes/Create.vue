@@ -1,5 +1,5 @@
 <template>
-    <settings-layout>
+    <settings-layout :nested-fields="this.submittedValues.sizeTags">
         <h3 class="text-lg">Sizes Create</h3>
         <div class="mt-5">
             <div>
@@ -11,8 +11,8 @@
                             </label>
                             <div class="py-2">
                                 <el-tag
-                                    :key="tag"
-                                    v-for="tag in form.sizeTags"
+                                    v-for="(tag, index) in form.sizeTags"
+                                    :key="index"
                                     closable
                                     :disable-transitions="false"
                                     @close="handleClose(tag)">
@@ -65,6 +65,9 @@ export default {
             form: {
                 sizeTags: []
             },
+            submittedValues: {
+                sizeTags: []
+            },
             inputVisible: false,
             inputValue: '',
             submitted: false,
@@ -96,6 +99,7 @@ export default {
                 this.submitted = false;
             }).catch(error => {
                 this.submitted = false;
+                this.submittedValues.sizeTags = [...this.form.sizeTags];
             })
         }
     }

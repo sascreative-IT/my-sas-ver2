@@ -48,7 +48,10 @@
                 </div>
 
                 <div class="w-10/12">
-                    <jet-validation-errors class="mb-4" />
+                    <jet-validation-errors
+                        :nested-fields="nestedFields"
+                        :nested-field-type="true"
+                        class="mb-4" />
                     <slot></slot>
                 </div>
             </div>
@@ -65,6 +68,12 @@ export default {
     components: {
         JetNavLink,
         JetValidationErrors
+    },
+    props: {
+        nestedFields: {
+            required: false,
+            type: Array
+        },
     },
     data() {
         return {
@@ -140,8 +149,7 @@ export default {
     padding-bottom: 0;
 }
 .input-new-tag {
-    width: 90px;
-    margin-left: 10px;
+    width: 320px;
     vertical-align: bottom;
 }
 </style>

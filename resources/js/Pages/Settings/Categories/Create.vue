@@ -1,5 +1,5 @@
 <template>
-    <settings-layout>
+    <settings-layout :nested-fields="this.submittedValues.categoryTags">
         <h3 class="text-lg">Categories Create</h3>
         <div class="mt-5">
             <div>
@@ -64,6 +64,9 @@ export default {
             form: {
                 categoryTags: []
             },
+            submittedValues: {
+                categoryTags: []
+            },
             inputVisible: false,
             inputValue: '',
             submitted: false,
@@ -105,6 +108,7 @@ export default {
                 this.submitted = false;
             }).catch(error => {
                 this.submitted = false;
+                this.submittedValues.categoryTags = [...this.form.categoryTags];
             })
         },
     }
