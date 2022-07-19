@@ -7,7 +7,7 @@
                     <div class="px-4 py-5 bg-white sm:p-6">
                         <div class="col-span-6 sm:col-span-3">
                             <label for="full_name" class="block text-sm font-medium text-gray-700">
-                                Categories <span class="text-xs">(Type and press enter then hit save)</span>:
+                                Categories <span class="text-xs">(type and press enter then hit save)</span>:
                             </label>
                             <div class="py-2">
                                 <el-tag

@@ -44,7 +44,9 @@ class SettingCategoriesController extends Controller
                     ['name' => $category['name']]
                 );
             });
-            return Redirect::route('settings.categories.index');
+
+            return Redirect::route('settings.categories.index')
+                ->with(['message' => 'successfully saved']);
         } catch (\Exception $ex) {
             return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
         }

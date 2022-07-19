@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
-class ItemTypesController extends Controller
+class SettingsItemTypesController extends Controller
 {
     public function index(Request $request)
     {
@@ -38,11 +38,15 @@ class ItemTypesController extends Controller
     public function store(StoreItemTypeRequest $request)
     {
         try {
-            $validated = $request->validated();
-            ItemType::create($validated);
+            collect($request->validated())->map(function ($itemType){
+                ItemType::create(
+                    ['name' => $itemType['name']]
+                );
+            });
 
             return Redirect::route('settings.item-types.index')
                 ->with(['message' => 'successfully saved']);
+
         } catch (\Exception $ex) {
             return back()->withInput()->withErrors(['message' => $ex->getMessage()]);
         }

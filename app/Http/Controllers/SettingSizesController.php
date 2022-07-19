@@ -43,7 +43,8 @@ class SettingSizesController extends Controller
                     ['name' => $size['name'], 'slug' => strtolower($size['name'])]
                 );
             });
-            return Redirect::route('settings.sizes.index');
+            return Redirect::route('settings.sizes.index')
+                ->with(['message' => 'successfully saved']);
 
         } catch (\Exception $ex) {
             return back()->withInput()->withErrors(['message' => $ex->getMessage()]);

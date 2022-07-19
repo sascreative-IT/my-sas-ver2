@@ -24,14 +24,15 @@ class StoreItemTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|min:2|max:100',
+            '*.name' => 'bail|required|unique:item_types,name',
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required' => 'Name field is required!',
+            '*.name.required' => 'Item Type field is required!',
+            '*.name.unique' => 'Item Type already exists!',
         ];
     }
 }
