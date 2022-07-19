@@ -66,6 +66,11 @@
                                     Unit Price
                                 </th>
 
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Total Price
+                                </th>
+
                             </tr>
                             </thead>
 
@@ -118,6 +123,11 @@
                                     </div>
                                 </td>
 
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ stock.total_price }} {{ stock.in_unit_currency }}
+                                    </div>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
