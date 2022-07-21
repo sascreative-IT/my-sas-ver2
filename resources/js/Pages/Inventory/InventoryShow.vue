@@ -125,7 +125,7 @@
 
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ stock.total_price }} {{ stock.in_unit_currency }}
+                                        {{ showTotalPrice(stock.total_price) }} {{ stock.in_unit_currency }}
                                     </div>
                                 </td>
                             </tr>
@@ -224,6 +224,9 @@ export default {
         },
         showInvoice(id) {
             this.$inertia.visit('/invoices/'+id);
+        },
+        showTotalPrice(price) {
+            return price === 0 ? '' : price;
         }
     }
 }
