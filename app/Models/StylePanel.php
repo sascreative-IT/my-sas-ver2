@@ -46,4 +46,14 @@ class StylePanel extends Model implements Auditable
     {
         return $this->belongsTo(Colour::class, 'color_id');
     }
+
+    public function customizedStyle()
+    {
+        return $this->belongsTo(CustomizedStyle::class, 'style_id');
+    }
+
+    public function newCustomizedStyle()
+    {
+        return $this->belongsTo(CustomizedStyle::class, 'style_id');
+    }
 }

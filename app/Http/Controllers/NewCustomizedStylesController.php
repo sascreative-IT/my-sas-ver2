@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\Styles\Actions\CreateNewCustomizedStyle;
 use App\Domains\Styles\Actions\CreateStyle;
+use App\Domains\Styles\Actions\GetAvailableMaterialColors;
+use App\Domains\Styles\Actions\GetColorsFromMaterialVariations;
+use App\Domains\Styles\Actions\SaveImageAndGetPath;
+use App\Domains\Styles\Actions\UpdateNewCustomizedStyle;
 use App\Domains\Styles\Actions\UpdateStyle;
 use App\Domains\Styles\Dto\Style as StyleDto;
+use App\Http\Requests\Styles\StoreNewCustomizedStyleRequest;
 use App\Http\Requests\Styles\StyleStoreRequest;
 use App\Http\Requests\Styles\StyleUpdateRequest;
+use App\Http\Requests\Styles\UpdateCustomizedStyleRequest;
 use App\Models\Colour;
 use App\Models\Factory;
 use App\Models\MaterialVariation;
+use App\Models\NewCustomizedStyle;
 use App\Models\Style;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CustomerRepositoryInterface as CustomerRepository;
@@ -29,10 +37,9 @@ class NewCustomizedStylesController extends Controller
         $q = $request->get('q');
 
         /** @var Collection $internalStyles */
-        $internalStyles = Style::query()
+        $internalStyles = NewCustomizedStyle::query()
             ->internal()
             ->with('itemType')
-            ->where('styles_type', "New-Customized")
             ->when($q, function ($query, $q) {
                 return $query
                     ->where('code', 'like', "%{$q}%")
@@ -61,26 +68,8 @@ class NewCustomizedStylesController extends Controller
         $sizes = $sizeRepository->getAll();
         $materials = $materialRepository->getAll();
         $styles = Style::all('id', 'code', 'name')->toArray();
-        $colours = '';
 
-        $parent_style_code = null;
-
-//        if ($request->has('parent_id')) {
-//            $parent_id = $request->get('parent_id');
-//            $parent_style_code = Style::find($parent_id);
-//            $parent_style_code->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption']);
-//        }
-
-        if ($request->filled('material_id')) {
-            $material_id = $request->get('material_id');
-            $colourIds = collect(
-                MaterialVariation::query()
-                    ->where('material_id', $material_id)
-                    ->get()
-            )->pluck('colour_id')->toArray();
-            $colours = Colour::query()->whereIn('id', $colourIds)->get();
-        }
-
+        $colours = resolve(GetColorsFromMaterialVariations::class)->execute($request);
 
         $style = new StyleDto([
             'sizes' => [],
@@ -103,16 +92,12 @@ class NewCustomizedStylesController extends Controller
         ]);
     }
 
-    public function store(StyleStoreRequest $request)
+    public function store(StoreNewCustomizedStyleRequest $request)
     {
         try {
-            $image_path = '';
-
-            if ($request->hasFile('image')) {
-                $image_path = $request->file('image')->store('style_images', 'public');
-            }
-            $request->merge(['style_image' => $image_path]);
-            $style = resolve(CreateStyle::class)->execute($request->toDto());
+            $imagePath = resolve(SaveImageAndGetPath::class)->execute($request->file('image'));
+            $request->merge(['style_image' => $imagePath]);
+            $style = resolve(CreateNewCustomizedStyle::class)->execute($request->toDto());
 
             return Redirect::route('style.new-customized.index')
                 ->with(['message' => 'successfully updated']);
@@ -127,7 +112,7 @@ class NewCustomizedStylesController extends Controller
         ItemTypeRepository $itemTypeRepository,
         SizeRepository $sizeRepository,
         MaterialRepository $materialRepository,
-        Style $style,
+        NewCustomizedStyle $style,
         Request $request
     )
     {
@@ -141,21 +126,7 @@ class NewCustomizedStylesController extends Controller
         $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle', 'panels.color']);
         $styleDto = new StyleDto($style->toArray());
 
-        $material_ids = [];
-
-        foreach($style->panels as $panel){
-            $material_ids[] = $panel->fabrics[0]->id;
-        }
-
-        $avail_materials_colours = DB::table('material_variations')
-            ->join('material_inventories', function ($join) use ($material_ids) {
-                $join->on('material_variations.id', '=', 'material_inventories.material_variation_id')
-                    ->whereIn('material_variations.material_id', $material_ids);
-            })
-            ->join('colours', 'material_variations.colour_id', '=', 'colours.id')
-            ->groupBy('colours.id')
-            ->select('colours.*')
-            ->get();
+        $colours = resolve(GetAvailableMaterialColors::class)->execute($style);
 
         return Inertia::render('Styles/NewCustomizedStyles/Create', [
             'styleData' => $styleDto,
@@ -165,22 +136,19 @@ class NewCustomizedStylesController extends Controller
             'sizes' => $sizes,
             'factories' => $factories,
             'materials' => $materials,
-            'colours' => $avail_materials_colours,
+            'colours' => $colours,
         ]);
     }
 
-    public function update(Style $style, StyleUpdateRequest $request)
+    public function update(Style $style, UpdateCustomizedStyleRequest $request)
     {
         try {
-            $image_path = '';
-            if ($request->hasFile('image')) {
-                $image_path = $request->file('image')->store('style_images', 'public');
-                if ($image_path != "") {
-                    $request->merge(['style_image' => $image_path]);
-                }
+            $imagePath = resolve(SaveImageAndGetPath::class)->execute($request);
+            if ($imagePath != "") {
+                $request->merge(['style_image' => $imagePath]);
             }
 
-            resolve(UpdateStyle::class)->execute($style, $request->toDto());
+            resolve(UpdateNewCustomizedStyle::class)->execute($style, $request->toDto());
 
             return Redirect::route('style.new-customized.edit', [$style->id])
                 ->with(['message' => 'successfully updated']);

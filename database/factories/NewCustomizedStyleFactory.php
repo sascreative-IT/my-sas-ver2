@@ -3,14 +3,14 @@
 namespace Database\Factories;
 
 use App\Models\ItemType;
-use App\Models\Style;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Arr;
 
-class StyleFactory extends Factory
+class NewCustomizedStyleFactory extends Factory
 {
-    protected $model = Style::class;
 
+    /**
+     * @inheritDoc
+     */
     public function definition()
     {
         $randomId = random_int(10000, 100000);
@@ -18,19 +18,28 @@ class StyleFactory extends Factory
         return [
             'code' => 'code-' . $randomId ,
             'name' => 'name ' . $randomId,
+            'production_time' => 5,
             'item_type_id' => ItemType::factory(),
             'description' => $this->faker->paragraph,
-            'belongs_to' => Arr::random(['internal', 'external']),
-            'status' => 'active',
+            'status' => 'active'
         ];
     }
 
     public function belongsToInternal()
     {
         return $this->state(function (array $attributes){
-           return [
-               'belongs_to' => 'internal'
-           ];
+            return [
+                'belongs_to' => 'internal'
+            ];
+        });
+    }
+
+    public function belongsToExternal()
+    {
+        return $this->state(function (array $attributes){
+            return [
+                'belongs_to' => 'external'
+            ];
         });
     }
 }
