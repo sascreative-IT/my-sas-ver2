@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domains\Styles\Actions;
 
+use App\Domains\Styles\Dto\CustomizedStyle;
 use App\Domains\Styles\Dto\Style;
 use App\Models\Style as StyleModel;
 
@@ -28,7 +29,7 @@ class CreateStyle
         $this->attachPanelToCustomStyle = $attachPanelToCustomStyle;
     }
 
-    public function execute(Style $styleDto): StyleModel
+    public function execute(Style|CustomizedStyle $styleDto): StyleModel
     {
         /** @var StyleModel $style */
         $style = StyleModel::create([
