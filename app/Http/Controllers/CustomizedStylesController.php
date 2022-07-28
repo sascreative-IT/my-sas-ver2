@@ -43,7 +43,7 @@ class CustomizedStylesController extends Controller
             ->paginate()
             ->withQueryString();
 
-        return Inertia::render('Styles/CustomizedStyles/Index', [
+        return Inertia::render('Styles/InternalStyles/Customized/Index', [
             'internal-styles' => $internalStyles
         ]);
     }
@@ -107,7 +107,7 @@ class CustomizedStylesController extends Controller
             'belongs_to' => 'internal'
         ]);
 
-        return Inertia::render('Styles/CustomizedStyles/Create', [
+        return Inertia::render('Styles/InternalStyles/Customized/Create', [
             'styleData' => $style,
             'customers' => $customers,
             'categories' => $categories,
@@ -118,7 +118,7 @@ class CustomizedStylesController extends Controller
             'styles' => $styles,
             'parentStyleCode' => $parentStyleCode,
             'styleType' => 'Customized',
-            'customer' => $request->get('customer'),
+            'customer' => (int)$request->get('customer'),
             'colours' => $colours
         ]);
     }

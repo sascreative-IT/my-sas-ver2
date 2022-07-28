@@ -6,7 +6,6 @@
             class="w-full"
             @input="input"
             @change="change"
-            @remove-tag="cleared"
             :value="preparedValue"
             :filterable=filterable
             :multiple="multiple"
@@ -22,6 +21,9 @@
                 :value="option[optionValue]">
             </el-option>
         </el-select>
+        <div v-if="errorMessage.show">
+            <div class="text-xs text-red-500">{{errorMessage.message}}</div>
+        </div>
     </div>
 </template>
 
@@ -95,15 +97,24 @@ export default {
     },
     data() {
         return {
-
+            clearableState: false,
+            errorMessage: {
+                show: false,
+                message:  ''
+            }
         }
     },
+    mounted() {
+        this.clearableState = this.allRemovable;
+    },
     methods: {
-        cleared(value){
-            if (!this.allRemovable) {
-                console.log('clicked clear'+value)
-            }
-        },
+        // handleTagRemove(value){
+        //     if (!this.clearableState) {
+        //         if(this.preparedValue.length === 1) {
+        //             this.input(this.preparedValue)
+        //         }
+        //     }
+        // },
         getOptionObjectByID(selectedOptionId) {
             return this.options.filter((option) => {
                 return option[this.optionValue] === selectedOptionId
@@ -119,11 +130,19 @@ export default {
                 objectifiedSelectedOptions = this.getOptionObjectByID(selectedOptions)[0]
             }
 
-
             this.$emit('input', objectifiedSelectedOptions)
             this.$emit('changed', objectifiedSelectedOptions)
         },
         change(value){
+            if (!this.allRemovable && value.length === 0) {
+                this.errorMessage.show = true
+                this.errorMessage.message = 'You must select at least one option'
+            }
+            if (!this.allRemovable && value.length > 0) {
+                this.errorMessage.show = false
+                this.errorMessage.message = ''
+            }
+
             this.$emit('change', value)
         }
     },

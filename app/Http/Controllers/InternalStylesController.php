@@ -38,7 +38,7 @@ class InternalStylesController extends Controller
             ->paginate()
             ->withQueryString();
 
-        return Inertia::render('Styles/InternalStyles/Index', [
+        return Inertia::render('Styles/InternalStyles/General/Index', [
             'internal-styles' => $internalStyles
         ]);
     }
