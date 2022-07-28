@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Styles\Dto;
 
 use Spatie\DataTransferObject\Attributes\CastWith;
 use Spatie\DataTransferObject\DataTransferObject;
 
-class Style extends DataTransferObject
+class CustomizedStyle extends DataTransferObject
 {
     public ?int $id;
     public ?string $belongs_to;
@@ -36,4 +38,10 @@ class Style extends DataTransferObject
     /** @var \App\Domains\Styles\Dto\Panel[] */
     #[CastWith(PanelCaster::class)]
     public ?array $panels;
+
+    /** @var \App\Domains\Styles\Dto\CustomizedPanel[] */
+    #[CastWith(CustomizedPanelCaster::class)]
+    public ?array $customized_panels;
 }
+
+

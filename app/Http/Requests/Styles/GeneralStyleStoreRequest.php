@@ -1,12 +1,12 @@
 <?php
-declare(strict_types=1);
 
 namespace App\Http\Requests\Styles;
 
-use App\Domains\Styles\Dto\CustomizedStyle;
+use App\Domains\Styles\Dto\Style;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
-class StyleUpdateRequest extends FormRequest
+class GeneralStyleStoreRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -16,7 +16,7 @@ class StyleUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'required',
+            'code' => 'required|unique:styles,code',
             'name' => 'required',
             'categories' => ['required', 'array'],
             'categories.*.ids' => 'exists:categories,id',
@@ -31,7 +31,7 @@ class StyleUpdateRequest extends FormRequest
             'sizes.*.id' => 'exists:sizes,id',
             'factories' => 'required',
             'factories.*.id' => 'exists:factories,id',
-//            'panels'
+            'panels' => 'sometimes|required|array'
         ];
     }
 
@@ -39,12 +39,13 @@ class StyleUpdateRequest extends FormRequest
     {
         return [
             'code.required' => 'Please enter a style code',
-            'code.unique' => 'This style code is already been used',
+            'code.unique' => 'This style code is already been used. Please use another one',
             'name.unique' => 'Please enter a style name',
             'category_ids.required' => 'Please select a category',
             'category_ids.exists' => 'Trying to select a category that doesnt exists',
+            'item_type_id.required' => 'Please select a type',
             'customer_id.exists' => 'Trying to select a customer that doesnt exists',
-            'parent_style.exists' => 'Trying to select a extending style that doesnt exists',
+            'extending_style_id.exists' => 'Trying to select a extending style that doesnt exists',
             'production_time.required' => 'Please enter production time',
             'production_time.integer' => 'Production time must be enter as minutes',
             'sizes.required' => 'Please select sizes',
@@ -53,14 +54,18 @@ class StyleUpdateRequest extends FormRequest
         ];
     }
 
-    public function toDto(): CustomizedStyle
+    /**
+     * @throws \Spatie\DataTransferObject\Exceptions\UnknownProperties
+     */
+    public function toDto(): Style
     {
-        return new CustomizedStyle(array_merge($this->all(), ['status' => 'draft']));
+        return new Style(array_merge($this->all(), ['status' => 'active']));
     }
 
     protected function prepareForValidation()
     {
-        if ($this->has('code'))
-            $this->merge(['code'=> strtolower($this->code)]);
+        if ($this->has('code')) {
+            $this->merge(['code'=> Str::upper($this->code)]);
+        }
     }
 }

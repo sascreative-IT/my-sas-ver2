@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Styles;
 
-use App\Domains\Styles\Dto\Style;
+use App\Domains\Styles\Dto\CustomizedStyle;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -33,7 +33,7 @@ class StyleStoreRequest extends FormRequest
             'sizes.*.id' => 'exists:sizes,id',
             'factories' => 'required',
             'factories.*.id' => 'exists:factories,id',
-//            'panels'
+            'panels' => 'sometimes|required|array'
         ];
     }
 
@@ -56,9 +56,12 @@ class StyleStoreRequest extends FormRequest
         ];
     }
 
-    public function toDto(): Style
+    /**
+     * @throws \Spatie\DataTransferObject\Exceptions\UnknownProperties
+     */
+    public function toDto(): CustomizedStyle
     {
-        return new Style(array_merge($this->all(), ['status' => 'active']));
+        return new CustomizedStyle(array_merge($this->all(), ['status' => 'active']));
     }
 
     protected function prepareForValidation()
