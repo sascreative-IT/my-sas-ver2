@@ -7,7 +7,7 @@ use App\Domains\Styles\Actions\AttachCategoryToStyle;
 use App\Domains\Styles\Actions\AttachFactoriesToStyle;
 use App\Domains\Styles\Actions\AttachSizeToStyle;
 use App\Domains\Styles\Actions\CreateStyle;
-use App\Domains\Styles\Dto\Style;
+use App\Domains\Styles\Dto\CustomizedStyle;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Factory;
@@ -29,10 +29,10 @@ class CreateStyleTest extends TestCase
         $factories = Factory::factory()->count(2)->create();
         $customer = Customer::factory()->create();
 
-        $style = new Style([
+        $style = new CustomizedStyle([
             'belongs_to' => 'internal',
             'code' => '001',
-            'name' => 'Style 001',
+            'name' => 'CustomizedStyle 001',
             'description' => 'test',
             'customer' => $customer->toArray(),
             'categories' => [$category->toArray()],
@@ -64,7 +64,7 @@ class CreateStyleTest extends TestCase
         $style = \App\Models\Style::query()->where('code', '001')->first();
 
         $this->assertEquals('001', $style->code);
-        $this->assertEquals('Style 001', $style->name);
+        $this->assertEquals('CustomizedStyle 001', $style->name);
         $this->assertEquals($type->id, $style->type_id);
         $this->assertEquals('test', $style->description);
         $this->assertEquals($customer->id, $style->customer_id);

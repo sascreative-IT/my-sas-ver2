@@ -26,10 +26,6 @@
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     email
                                 </th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    currency
-                                </th>
                                 <th scope="col" class="relative px-6 py-3">
                                     <span class="sr-only">Edit</span>
                                 </th>
@@ -45,11 +41,6 @@
                             <td class="px-6 py-3 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">
                                     {{ supplier.email }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-3 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">
-                                    {{ supplier.currency.toUpperCase() }}
                                 </div>
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">

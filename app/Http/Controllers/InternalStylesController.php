@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Domains\Styles\Actions\CreateStyle;
 use App\Domains\Styles\Actions\UpdateStyle;
 use App\Domains\Styles\Dto\Style as StyleDto;
+use App\Http\Requests\Styles\GeneralStyleStoreRequest;
 use App\Http\Requests\Styles\StyleStoreRequest;
 use App\Http\Requests\Styles\StyleUpdateRequest;
 use App\Models\Factory;
@@ -93,7 +94,7 @@ class InternalStylesController extends Controller
             ]);
     }
 
-    public function store(StyleStoreRequest $request)
+    public function store(GeneralStyleStoreRequest $request)
     {
         try {
             $image_path = '';

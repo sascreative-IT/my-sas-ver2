@@ -2,7 +2,7 @@
 namespace App\Domains\Styles\Actions;
 
 use App\Domains\Styles\Dto\Factories;
-use App\Domains\Styles\Dto\Style;
+use App\Domains\Styles\Dto\CustomizedStyle;
 use App\Models\Style as StyleModel;
 
 class UpdateCustomStyle
@@ -25,7 +25,7 @@ class UpdateCustomStyle
         $this->attachPanelToCustomStyle = $attachPanelToCustomStyle;
     }
 
-    public function execute(StyleModel $style,Style $styleDto): StyleModel
+    public function execute(StyleModel $style, CustomizedStyle $styleDto): StyleModel
     {
         if($styleDto->styles_type == StyleModel::CUSTOMIZED) {
 

@@ -48,7 +48,7 @@ class UpdateInventoryWhenInvoiceCreated
                 $invoiceItem->id,
                 $invoiceItem->unit_price,
                 $invoiceItem->currency,
-                auth()->user()->id
+                auth()->user()->id,
             );
 
             $aggregateRoot->persist();

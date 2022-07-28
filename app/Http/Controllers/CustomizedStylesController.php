@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Domains\Styles\Actions\CreateStyle;
 use App\Domains\Styles\Actions\UpdateCustomStyle;
 use App\Domains\Styles\Actions\UpdateStyle;
-use App\Domains\Styles\Dto\Style as StyleDto;
+use App\Domains\Styles\Dto\CustomizedStyle as StyleDto;
 use App\Http\Requests\Styles\StyleStoreRequest;
 use App\Http\Requests\Styles\StyleUpdateRequest;
 use App\Models\Colour;
@@ -83,6 +83,7 @@ class CustomizedStylesController extends Controller
 
             // Following code might not be needed
             $material_ids = [];
+
             foreach($parentStyleCode->panels as $panel){
                 $material_ids[] = $panel->fabrics[0]->id;
             }

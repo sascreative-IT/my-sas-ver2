@@ -48,7 +48,10 @@
                 </div>
 
                 <div class="w-10/12">
-                    <jet-validation-errors class="mb-4" />
+                    <jet-validation-errors
+                        :nested-fields="nestedFields"
+                        :nested-field-type="true"
+                        class="mb-4" />
                     <slot></slot>
                 </div>
             </div>
@@ -65,6 +68,12 @@ export default {
     components: {
         JetNavLink,
         JetValidationErrors
+    },
+    props: {
+        nestedFields: {
+            required: false,
+            type: Array
+        },
     },
     data() {
         return {
@@ -96,7 +105,25 @@ export default {
                         name: 'Colour',
                         route: 'settings.colours.index'
                     }
-                ]
+                ],
+                sizes: [
+                    {
+                        name: 'Sizes',
+                        route: 'settings.sizes.index'
+                    }
+                ],
+                style_categories: [
+                    {
+                        name: 'Style Categories',
+                        route: 'settings.categories.index'
+                    }
+                ],
+                item_types: [
+                    {
+                        name: 'Item Types',
+                        route: 'settings.item-types.index'
+                    }
+                ],
             }
         }
     }
@@ -107,5 +134,22 @@ export default {
 .break {
     background-color: #dcdcdc;
     height: 1px;
+}
+</style>
+
+<style>
+.el-tag + .el-tag {
+    margin-left: 10px;
+}
+.button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.input-new-tag {
+    width: 320px;
+    vertical-align: bottom;
 }
 </style>

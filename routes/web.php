@@ -10,13 +10,16 @@ use App\Http\Controllers\CustomizedStylesController;
 use App\Http\Controllers\InventoryAdjustmentController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InvoicesController;
+use App\Http\Controllers\SettingsItemTypesController;
 use App\Http\Controllers\MaterialSupplierController;
 use App\Http\Controllers\NewCustomizedStylesController;
+use App\Http\Controllers\SettingCategoriesController;
 use App\Http\Controllers\SettingsColourController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SettingsCurrencyController;
 use App\Http\Controllers\SettingsCurrencyExchangeRateController;
 use App\Http\Controllers\SettingsFactoryController;
+use App\Http\Controllers\SettingSizesController;
 use App\Http\Controllers\SettingsMaterialController;
 use App\Http\Controllers\SettingsWarehouseController;
 use App\Http\Controllers\SettingsOutletController;
@@ -113,6 +116,27 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/settings/currencies/{currency}/edit', [SettingsCurrencyController::class, 'edit'])->name('settings.currencies.edit');
     Route::put('/settings/currencies/{currency}', [SettingsCurrencyController::class, 'update'])->name('settings.currencies.update');
     Route::delete('/settings/currencies/{currency}', [SettingsCurrencyController::class, 'delete'])->name('settings.currencies.delete');
+
+    Route::get('/settings/sizes', [SettingSizesController::class, 'index'])->name('settings.sizes.index');
+    Route::get('/settings/sizes/create', [SettingSizesController::class, 'create'])->name('settings.sizes.create');
+    Route::post('/settings/sizes', [SettingSizesController::class, 'store'])->name('settings.sizes.store');
+    Route::delete('/settings/sizes/{size}', function (){
+        return back()->with(['message' => 'Not allowed']);
+    })->name('settings.sizes.delete');
+
+    Route::get('/settings/categories', [SettingCategoriesController::class, 'index'])->name('settings.categories.index');
+    Route::get('/settings/categories/create', [SettingCategoriesController::class, 'create'])->name('settings.categories.create');
+    Route::post('/settings/categories', [SettingCategoriesController::class, 'store'])->name('settings.categories.store');
+    Route::delete('/settings/categories/{category}', function (){
+        return back()->with(['message' => 'Not allowed']);
+    })->name('settings.categories.delete');
+
+    Route::get('/settings/item-types', [SettingsItemTypesController::class, 'index'])->name('settings.item-types.index');
+    Route::get('/settings/item-types/create', [SettingsItemTypesController::class, 'create'])->name('settings.item-types.create');
+    Route::post('/settings/item-types', [SettingsItemTypesController::class, 'store'])->name('settings.item-types.store');
+    Route::delete('/settings/item-types/{itemType}', function (){
+        return back()->with(['message' => 'Not allowed']);
+    })->name('settings.item-types.delete');
 
     Route::get('/users', [UsersController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UsersController::class, 'create'])->name('users.create');

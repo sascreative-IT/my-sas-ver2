@@ -4,7 +4,11 @@ namespace App\Domains\Inventory\AggregateRoots;
 
 use App\Domains\Inventory\Events\Internal\InventoryMaterialAdded;
 use App\Domains\Inventory\Events\Internal\StockAdded;
+use App\Domains\Inventory\Events\Internal\StockAddedManually;
+use App\Domains\Inventory\Events\Internal\StockAddedViaStockAdjust;
 use App\Domains\Inventory\Events\Internal\StockRemoved;
+use App\Domains\Inventory\Events\Internal\StockRemovedManually;
+use App\Domains\Inventory\Events\Internal\StockRemovedViaStockAdjust;
 use App\Domains\Inventory\Exceptions\InventoryException;
 use App\Domains\Inventory\Repositories\InventoryRepository;
 use App\Models\User;
@@ -51,5 +55,31 @@ class InventoryAggregateRoot extends AggregateRoot
     public function applyStockRemoved(StockRemoved $stockAdded)
     {
         $this->balance -= $stockAdded->quantity;
+    }
+
+    public function addStockViaStockAdjust(string $unit, float $quantity, int $userId, ?string $reason = null)
+    {
+        $this->recordThat(new StockAddedViaStockAdjust($unit, $quantity, $userId, $reason));
+
+        return $this;
+    }
+
+    public function applyStockAddedViaStockAdjust(StockAddedViaStockAdjust $stockAddedViaStockAdjust)
+    {
+        $this->balance += $stockAddedViaStockAdjust->quantity;
+    }
+
+    public function removeStockViaStockAdjust(string $unit, float $quantity, int $userId, ?string $reason = null)
+    {
+        $this->recordThat(new StockRemovedViaStockAdjust($unit, $quantity, $userId, $reason));
+
+        return $this;
+    }
+
+    public function applyStockRemovedViaStockAdjust(StockRemovedViaStockAdjust $stockRemovedViaStockAdjust)
+    {
+        $this->balance -= $stockRemovedViaStockAdjust->quantity;
+
+        return $this;
     }
 }
