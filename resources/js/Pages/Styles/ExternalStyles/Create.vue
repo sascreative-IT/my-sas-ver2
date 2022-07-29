@@ -148,9 +148,6 @@
 import FormButton from "@/UIElements/FormButton";
 import EditButton from "@/UIElements/EditButton";
 import DeleteButton from "@/UIElements/DeleteButton";
-import GeneralStyleForm from "@/Pages/Styles/InternalStyles/GeneralStyleForm";
-import CustomStyleForm from "@/Pages/Styles/InternalStyles/CustomStyleForm";
-import NewCustomStyleForm from "@/Pages/Styles/InternalStyles/NewCustomStyleForm";
 
 export default {
     name: "Create",
@@ -192,9 +189,6 @@ export default {
         FormButton,
         EditButton,
         DeleteButton,
-        GeneralStyleForm,
-        CustomStyleForm,
-        NewCustomStyleForm
     },
     data() {
         return {

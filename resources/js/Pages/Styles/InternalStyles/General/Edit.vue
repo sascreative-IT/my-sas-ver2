@@ -339,9 +339,6 @@
 import FormButton from "@/UIElements/FormButton";
 import EditButton from "@/UIElements/EditButton";
 import DeleteButton from "@/UIElements/DeleteButton";
-import GeneralStyleForm from "@/Pages/Styles/InternalStyles/GeneralStyleForm";
-import CustomStyleForm from "@/Pages/Styles/InternalStyles/CustomStyleForm";
-import NewCustomStyleForm from "@/Pages/Styles/InternalStyles/NewCustomStyleForm";
 import { SweetModal, SweetModalTab } from 'sweet-modal-vue';
 import AppSelect from "@/UIElements/AppSelect";
 
@@ -351,9 +348,6 @@ export default {
         FormButton,
         EditButton,
         DeleteButton,
-        GeneralStyleForm,
-        CustomStyleForm,
-        NewCustomStyleForm,
         SweetModal,
         AppSelect
     },

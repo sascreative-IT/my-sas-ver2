@@ -49,7 +49,7 @@ class InternalStylesController extends Controller
         $style->load(['itemType', 'categories', 'sizes', 'factories', 'panels.consumption', 'customer', 'parentStyle']);
         $styleDto = new StyleDto($style->toArray());
 
-        return Inertia::render('Styles/InternalStyles/Show', [
+        return Inertia::render('Styles/InternalStyles/General/Show', [
             'styleData' => $styleDto,
         ]);
     }

@@ -326,19 +326,6 @@
                                     </div>
                                 </form>
                             </div>
-
-<!--                            <general-style-form-->
-<!--                                @general-style-data="save"-->
-<!--                                :reset-form="reset_forms"-->
-<!--                                :categories="categories"-->
-<!--                                :materials="materials"-->
-<!--                                :item-types="itemTypes"-->
-<!--                                :sizes="sizes"-->
-<!--                                :factories="factories"-->
-<!--                                v-model="styleForm"-->
-<!--                                :errors="errors"-->
-<!--                                :styleCodeType="styleForm.styles_type"-->
-<!--                            ></general-style-form>-->
                         </div>
                     </div>
                 </div>
@@ -357,9 +344,6 @@
 import FormButton from "@/UIElements/FormButton";
 import EditButton from "@/UIElements/EditButton";
 import DeleteButton from "@/UIElements/DeleteButton";
-import GeneralStyleForm from "@/Pages/Styles/InternalStyles/GeneralStyleForm";
-import CustomStyleForm from "@/Pages/Styles/InternalStyles/CustomStyleForm";
-import NewCustomStyleForm from "@/Pages/Styles/InternalStyles/NewCustomStyleForm";
 import { SweetModal, SweetModalTab } from 'sweet-modal-vue';
 import AppSelect from "@/UIElements/AppSelect";
 
@@ -413,9 +397,6 @@ export default {
         FormButton,
         EditButton,
         DeleteButton,
-        GeneralStyleForm,
-        CustomStyleForm,
-        NewCustomStyleForm,
         SweetModal,
         AppSelect
     },
