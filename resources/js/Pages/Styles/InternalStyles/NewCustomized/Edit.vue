@@ -5,10 +5,6 @@
                 <template v-if="styleData.id">
                     Edit Style - {{styleData.code}}
                 </template>
-                <template v-else>
-                    Add a new - New customized style
-                </template>
-
             </h2>
         </template>
 
@@ -220,19 +216,6 @@
                                     </div>
                                 </form>
                             </div>
-<!--                            <general-style-form-->
-<!--                                @general-style-data="save"-->
-<!--                                :reset-form="reset_forms"-->
-<!--                                :categories="categories"-->
-<!--                                :materials="materials"-->
-<!--                                :colours="colours"-->
-<!--                                :item-types="itemTypes"-->
-<!--                                :sizes="sizes"-->
-<!--                                :factories="factories"-->
-<!--                                v-model="styleForm"-->
-<!--                                :errors="errors"-->
-<!--                                :styleCodeType="styleForm.styles_type"-->
-<!--                            ></general-style-form>-->
                         </div>
                     </div>
                     <el-divider content-position="left"><h3 class="text-lg font-bold">Panels</h3></el-divider>
@@ -398,14 +381,8 @@
                         Update
                     </form-button>
                 </div>
-                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6" v-else>
-                    <form-button @handle-on-click="save">
-                        save
-                    </form-button>
-                </div>
             </div>
         </div>
-
     </app-layout>
 </template>
 
@@ -413,14 +390,11 @@
 import FormButton from "@/UIElements/FormButton";
 import EditButton from "@/UIElements/EditButton";
 import DeleteButton from "@/UIElements/DeleteButton";
-import GeneralStyleForm from "@/Pages/Styles/NewCustomizedStyles/GeneralStyleForm";
-import CustomStyleForm from "@/Pages/Styles/InternalStyles/CustomStyleForm";
-import NewCustomStyleForm from "@/Pages/Styles/InternalStyles/NewCustomStyleForm";
 import { SweetModal, SweetModalTab } from 'sweet-modal-vue';
 import AppSelect from "@/UIElements/AppSelect";
 
 export default {
-    name: "Create",
+    name: "Edit",
     props: {
         customers: {
             type: Array,
@@ -454,13 +428,6 @@ export default {
             type: Object,
             required: false
         },
-        styles: {
-            type: Array,
-            required: true
-        },
-        parentStyleCode: {
-            type: Object
-        },
         styleType: {
             type: String
         },
@@ -476,19 +443,11 @@ export default {
         FormButton,
         EditButton,
         DeleteButton,
-        GeneralStyleForm,
-        CustomStyleForm,
-        NewCustomStyleForm,
         AppSelect,
         SweetModal
     },
     data() {
         return {
-            is_customized: false,
-            show_new_customized_form: false,
-            show_customized_fields: false,
-            show_customized_form: false,
-            reset_forms: false,
             styleForm: {},
             url: '',
             form: {styles_type:"New-Customized",belongs_to:"internal", sizes: [], panels: []},
@@ -496,8 +455,7 @@ export default {
         }
     },
     mounted() {
-        this.styleForm.styles_type = "General"
-        this.styleForm = this.styleData
+        this.form = this.styleData
 
         if (this.customer != null) {
             this.styleForm.customer = this.customers.find(item => {
@@ -527,15 +485,8 @@ export default {
         }
     },
     methods: {
-        save() {
-            if (this.$refs.style_code_image) {
-                this.styleForm.image = this.$refs.style_code_image.files[0];
-            }
-
-            this.$inertia.post('/new-customized-styles', this.form)
-        },
         update() {
-            this.$inertia.put('/new-customized-styles/' + this.styleForm.id, this.styleForm)
+            this.$inertia.put('/new-customized-styles/' + this.styleData.id, this.form)
         },
         setSelectedCustomerId(value) {
 
@@ -653,9 +604,5 @@ export default {
 </script>
 
 <style scoped>
-input:checked ~ .dot {
-    transform: translateX(100%);
-    background-color: #374151;
-}
 
 </style>

@@ -193,7 +193,7 @@ class CustomizedStylesController extends Controller
             );
         }
 
-        return Inertia::render('Styles/CustomizedStyles/Edit', [
+        return Inertia::render('Styles/InternalStyles/Customized/Edit', [
             'styleData' => $styleDto,
             'customers' => $style->customer,
             'customer' => $style->customer->id,

@@ -400,15 +400,6 @@ export default {
             })
         },
         updateConsumptionWhenSizeChanges() {
-            /*
-            this.panel.consumption = this.form.sizes.map(size => {
-                console.log(">>>",size)
-               return {
-                   size: size,
-                   amount: null
-               }
-            });
-             */
 
             let temp_consumption = [...this.panel.consumption]
             this.panel.consumption = this.form.sizes.map(selected_size => {

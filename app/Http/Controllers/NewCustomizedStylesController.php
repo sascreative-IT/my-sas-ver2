@@ -41,7 +41,7 @@ class NewCustomizedStylesController extends Controller
             ->paginate()
             ->withQueryString();
 
-        return Inertia::render('Styles/NewCustomizedStyles/Index', [
+        return Inertia::render('Styles/InternalStyles/NewCustomized/Index', [
             'internal-styles' => $internalStyles
         ]);
     }
@@ -88,7 +88,7 @@ class NewCustomizedStylesController extends Controller
             'belongs_to' => 'internal'
         ]);
 
-        return Inertia::render('Styles/NewCustomizedStyles/Create', [
+        return Inertia::render('Styles/InternalStyles/NewCustomized/Create', [
             'styleData' => $style,
             'customers' => $customers,
             'categories' => $categories,
@@ -157,7 +157,7 @@ class NewCustomizedStylesController extends Controller
             ->select('colours.*')
             ->get();
 
-        return Inertia::render('Styles/NewCustomizedStyles/Create', [
+        return Inertia::render('Styles/InternalStyles/NewCustomized/Edit', [
             'styleData' => $styleDto,
             'customers' => $customers,
             'categories' => $categories,
@@ -182,7 +182,7 @@ class NewCustomizedStylesController extends Controller
 
             resolve(UpdateStyle::class)->execute($style, $request->toDto());
 
-            return Redirect::route('style.new-customized.edit', [$style->id])
+            return Redirect::route('style.new-customized.index')
                 ->with(['message' => 'successfully updated']);
 
         } catch (\Exception $ex) {
