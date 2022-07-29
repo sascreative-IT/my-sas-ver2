@@ -423,17 +423,7 @@ export default {
                 this.styleForm.image = this.$refs.style_code_image.files[0];
             }
 
-            if (this.styleForm.id !== null) {
-                this.$inertia.put('/internal-styles/' + this.styleForm.id, this.form)
-            } else {
-                this.$inertia.post('/internal-styles', this.form,{
-                    onFinish: () => {
-                        if (Object.keys(this.errors).length > 0) {
-                            this.$refs.errorModal.open()
-                        }
-                    },
-                })
-            }
+            this.$inertia.put('/internal-styles/' + this.styleData.id, this.form)
         },
         previewImage(e) {
             const file = e.target.files[0];
