@@ -572,6 +572,14 @@ export default {
             } else {
                 this.panel.id = null;
             }
+            this.$inertia.visit(this.$inertia.page.url, {
+                preserveState: true,
+                preserveScroll: true,
+                data: {
+                    material_id: this.panel.fabrics[0].id
+                },
+            })
+
             this.component_materials = [];
             if (typeof this.panel.fabrics != 'undefined') {
                 this.panel.fabrics.forEach((item) => {

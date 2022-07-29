@@ -147,7 +147,7 @@ class NewCustomizedStylesController extends Controller
             $material_ids[] = $panel->fabrics[0]->id;
         }
 
-        $avail_materials_colours = DB::table('material_variations')
+        $colours = DB::table('material_variations')
             ->join('material_inventories', function ($join) use ($material_ids) {
                 $join->on('material_variations.id', '=', 'material_inventories.material_variation_id')
                     ->whereIn('material_variations.material_id', $material_ids);
@@ -157,6 +157,17 @@ class NewCustomizedStylesController extends Controller
             ->select('colours.*')
             ->get();
 
+        if ($request->filled('material_id')) {
+            $material_id = $request->get('material_id');
+            $colourIds = collect(
+                MaterialVariation::query()
+                    ->where('material_id', $material_id)
+                    ->get()
+            )->pluck('colour_id')->toArray();
+            $colours = Colour::query()->whereIn('id', $colourIds)->get();
+        }
+
+
         return Inertia::render('Styles/InternalStyles/NewCustomized/Edit', [
             'styleData' => $styleDto,
             'customers' => $customers,
@@ -165,7 +176,7 @@ class NewCustomizedStylesController extends Controller
             'sizes' => $sizes,
             'factories' => $factories,
             'materials' => $materials,
-            'colours' => $avail_materials_colours,
+            'colours' => $colours,
         ]);
     }
 
